@@ -58,7 +58,7 @@ module axis_mesh_tb();
         axis_in_tvalid[1][0] = 1'b1;
         axis_in_tdest[1][0] = 4'h1;
         axis_in_tlast[1][0] = 1'b1;
-        axis_in_tdata[1][0] = TDATAW'h1;
+        axis_in_tdata[1][0] = 32'h1;
 
         #(640ns);
     	$finish;
