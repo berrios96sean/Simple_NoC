@@ -8,7 +8,6 @@ set TOP_LEVEL_NAME lsfr_tb
 # set USER_DEFINED_ELAB_OPTIONS <elaboration options>
 #
 # Call command to elaborate your design and testbench.
-elab_debug
 #
 
 # Run the simulation.
