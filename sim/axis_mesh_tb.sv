@@ -26,17 +26,20 @@ module axis_mesh_tb();
         end
     end
 
-    logic axis_in_tvalid          [ROWS][COLUMNS];
-    logic axis_in_tready          [ROWS][COLUMNS];
+    // -------------------------------------
+    // NoC Connections
+    // -------------------------------------
+    logic        axis_in_tvalid   [ROWS][COLUMNS];
+    logic        axis_in_tready   [ROWS][COLUMNS];
     logic [31:0] axis_in_tdata    [ROWS][COLUMNS];
-    logic axis_in_tlast           [ROWS][COLUMNS];
-    logic [3:0] axis_in_tdest     [ROWS][COLUMNS];
+    logic        axis_in_tlast    [ROWS][COLUMNS];
+    logic [ 3:0] axis_in_tdest    [ROWS][COLUMNS];
 
-    logic axis_out_tvalid         [ROWS][COLUMNS];
-    logic axis_out_tready         [ROWS][COLUMNS];
+    logic        axis_out_tvalid  [ROWS][COLUMNS];
+    logic        axis_out_tready  [ROWS][COLUMNS];
     logic [31:0] axis_out_tdata   [ROWS][COLUMNS];
-    logic axis_out_tlast          [ROWS][COLUMNS];
-    logic [3:0] axis_out_tdest    [ROWS][COLUMNS];
+    logic        axis_out_tlast   [ROWS][COLUMNS];
+    logic [ 3:0] axis_out_tdest   [ROWS][COLUMNS];
 
     initial begin
 
@@ -55,10 +58,10 @@ module axis_mesh_tb();
 
         #(120ns);
 
-        axis_in_tvalid[1][0] = 1'b1;
-        axis_in_tdest[1][0] = 4'h1;
-        axis_in_tlast[1][0] = 1'b1;
-        axis_in_tdata[1][0] = 32'h1;
+        axis_in_tvalid [1][0] =  1'b1;
+        axis_in_tdest  [1][0] =  4'h1;
+        axis_in_tlast  [1][0] =  1'b1;
+        axis_in_tdata  [1][0] = 32'h1;
 
         #(640ns);
     	$finish;
@@ -81,26 +84,26 @@ module axis_mesh_tb();
         .FLIT_BUFFER_DEPTH          (4),
         .ROUTING_TABLE_PREFIX       ("../routing_tables/mesh_2x2/"),
         .ROUTER_PIPELINE_OUTPUT     (1),
-        .DISABLE_SELFLOOP    (0),
+        .DISABLE_SELFLOOP           (0),
         .ROUTER_FORCE_MLAB          (0)
     ) dut (
-        .clk_noc(clk_noc),
-        .clk_usr(clk),
-        .rst_n,
+        .clk_noc         (clk_noc),
+        .clk_usr         (clk),
+        .rst_n           (rst_n),
 
-        .axis_in_tvalid ,
-        .axis_in_tready ,
-        .axis_in_tdata  ,
-        .axis_in_tlast  ,
-        // .axis_in_tid    ,
-        .axis_in_tdest  ,
+        .axis_in_tvalid  (axis_in_tvalid),
+        .axis_in_tready  (axis_in_tready),
+        .axis_in_tdata   (axis_in_tdata),
+        .axis_in_tlast   (axis_in_tlast),
+        // .axis_in_tid  (axis_in_tid),
+        .axis_in_tdest   (axis_in_tdest),
 
-        .axis_out_tvalid,
-        .axis_out_tready,
-        .axis_out_tdata ,
-        .axis_out_tlast ,
-        // .axis_out_tid   ,
-        .axis_out_tdest
+        .axis_out_tvalid (axis_out_tvalid),
+        .axis_out_tready (axis_out_tready),
+        .axis_out_tdata  (axis_out_tdata),
+        .axis_out_tlast  (axis_out_tlast),
+        // .axis_out_tid (axis_out_tid),
+        .axis_out_tdest  (axis_out_tdest)
     );
 
 endmodule: axis_mesh_tb
