@@ -6,6 +6,8 @@
 parameter int ROWS         = 2;
 parameter int COLUMNS      = 2;
 parameter int TDATAW       = 32;
+parameter int TIDW         = 2;
+parameter int TDESTW       = 4;
 
 // LFSR parameters
 parameter int LFSR_DW      = 7;
