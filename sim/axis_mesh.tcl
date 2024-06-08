@@ -44,31 +44,7 @@ set TOP_LEVEL_NAME axis_mesh_tb
 # Call command to elaborate your design and testbench.
 elab_debug
 #
-add wave -position insertpoint  \
-sim:/axis_mesh_tb/clk \
-sim:/axis_mesh_tb/rst_n \
-sim:/axis_mesh_tb/axis_in_tvalid \
-sim:/axis_mesh_tb/axis_in_tready \
-sim:/axis_mesh_tb/axis_in_tdata \
-sim:/axis_mesh_tb/axis_in_tlast \
-sim:/axis_mesh_tb/axis_in_tdest \
-sim:/axis_mesh_tb/axis_out_tvalid \
-sim:/axis_mesh_tb/axis_out_tready \
-sim:/axis_mesh_tb/axis_out_tdata \
-sim:/axis_mesh_tb/axis_out_tlast \
-sim:/axis_mesh_tb/axis_out_tdest
-
-add wave -position insertpoint  \
-sim:/axis_mesh_tb/dut/noc/send_router_in \
-sim:/axis_mesh_tb/dut/noc/send_router_out
-
-# add wave -position insertpoint  \
-# sim:/axis_mesh_tb/dut/noc/send_in \
-# sim:/axis_mesh_tb/dut/noc/send_out \
-# sim:/axis_mesh_tb/dut/noc/send_north \
-# sim:/axis_mesh_tb/dut/noc/send_south \
-# sim:/axis_mesh_tb/dut/noc/send_east \
-# sim:/axis_mesh_tb/dut/noc/send_west
+do wave.do
 # Run the simulation.
 run -a
 #
