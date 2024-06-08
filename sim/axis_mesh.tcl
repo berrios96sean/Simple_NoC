@@ -9,7 +9,7 @@
 # generated the IP script, relative to the directory from which you launch
 # the simulator.
 #
-set QSYS_SIMDIR /mnt/vault0/sfberrio/repos/noc/sim
+set QSYS_SIMDIR /mnt/vault0/sfberrio/repos/Simple_NoC/sim
 #
 # Source the generated IP simulation script.
 # Script may fail if modelsim.ini file is not in read only mode
