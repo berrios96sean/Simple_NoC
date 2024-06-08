@@ -16,7 +16,7 @@ module lfsr_tb();
         end
     end
 
-    inital begin
+    initial begin
 
     rst_n = 1'b0;
 
