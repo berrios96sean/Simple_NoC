@@ -15,7 +15,7 @@ module lfsr #(
 
     always @ (posedge CLK or negedge RST_N) begin
 
-        if (RST_N) begin
+        if (~RST_N) begin
             O_DATA <= LFSR_DEFAULT;
         end else begin
             O_DATA <= {O_DATA[LFSR_DW - 1:0], feedback};
