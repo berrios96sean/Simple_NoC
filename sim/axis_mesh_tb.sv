@@ -53,34 +53,12 @@ module axis_mesh_tb();
 
         rst_n = 1'b1;
 
-        #(110ns);
+        #(120ns);
 
-        // axis_in_tdest[0][0] = 4'h1;
-        // axis_in_tlast[0][0] = 1'b1;
-        // axis_in_tdata[0][0] = 512'h1;
-        // axis_in_tvalid[0][0] = 1'b1;
-        // @(negedge clk);
-        // axis_in_tdest[0][0] = 4'h2;
-        // @(negedge clk);
-        // axis_in_tdest[0][0] = 4'h3;
-        // @(negedge clk);
-        // axis_in_tvalid[0][0] = 1'b0;
-        // axis_in_tdest[0][1] = 4'h0;
-        // axis_in_tlast[0][1] = 1'b1;
-        // axis_in_tdata[0][1] = 512'h1;
-        // axis_in_tvalid[0][1] = 1'b1;
-        // @(negedge clk);
-        // axis_in_tdest[0][1] = 4'h2;
-        // @(negedge clk);
-        // axis_in_tdest[0][1] = 4'h3;
-        // @(negedge clk);
-        // axis_in_tvalid[0][1] = 1'b0;
-
-        #(10ns);
         axis_in_tvalid[1][0] = 1'b1;
         axis_in_tdest[1][0] = 4'h1;
         axis_in_tlast[1][0] = 1'b1;
-        axis_in_tdata[1][0] = 31'h1;
+        axis_in_tdata[1][0] = TDATAW'h1;
 
         #(640ns);
     	$finish;
@@ -92,7 +70,7 @@ module axis_mesh_tb();
         .PIPELINE_LINKS             (1),
 
         .TDEST_WIDTH                (4),
-        .TDATA_WIDTH                (32),
+        .TDATA_WIDTH                (TDATAW),
         .SERIALIZATION_FACTOR       (4),
         .CLKCROSS_FACTOR            (1),
         .SINGLE_CLOCK               (1),
