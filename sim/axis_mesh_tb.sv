@@ -46,6 +46,7 @@ module axis_mesh_tb();
     // -------------------------------------------------------
 
     logic        start;
+    logic        start2;
 
     // -------------------------------------------------------
     // Num Gen 1
@@ -79,19 +80,24 @@ module axis_mesh_tb();
 
     initial begin
 
-        rst_n = 1'b0;
+        rst_n  = 1'b0;
 
         #(50ns);
 
-        rst_n = 1'b1;
+        rst_n  = 1'b1;
 
         #(120ns);
 
-        start = 1'b1;
+        start  = 1'b1;
 
         #(10ns);
 
-        start = 1'b1;
+        start  = 1'b0;
+        start2 = 1'b1;
+
+        #(10ns);
+
+        start2 = 1'b0;
 
         #(640ns);
     	$finish;
@@ -110,11 +116,12 @@ module axis_mesh_tb();
     assign axis_in_tlast    [0][0] = axis_numgen1_m_tlast;
     assign axis_in_tdest    [0][0] = axis_numgen1_m_tdest;
 
-    assign axis_out_tvalid  [0][0] = axis_numgen1_s_tvalid;
-    assign axis_in_tready   [0][0] = axis_numgen1_m_tready;
-    assign axis_out_tdata   [0][0] = axis_numgen1_s_tdata;
-    assign axis_out_tlast   [0][0] = axis_numgen1_s_tlast;
-    assign axis_out_tdest   [0][0] = axis_numgen1_s_tdest;
+    // Note Move this to the Input of Num Gen Module
+    // assign axis_out_tvalid  [0][0] = axis_numgen1_s_tvalid;
+    // assign axis_in_tready   [0][0] = axis_numgen1_m_tready;
+    // assign axis_out_tdata   [0][0] = axis_numgen1_s_tdata;
+    // assign axis_out_tlast   [0][0] = axis_numgen1_s_tlast;
+    // assign axis_out_tdest   [0][0] = axis_numgen1_s_tdest;
 
     // -------------------------------------------------------
     // Num Gen 2
@@ -125,11 +132,12 @@ module axis_mesh_tb();
     assign axis_in_tlast    [1][0] = axis_numgen2_m_tlast;
     assign axis_in_tdest    [1][0] = axis_numgen2_m_tdest;
 
-    assign axis_out_tvalid  [1][0] = axis_numgen2_s_tvalid;
-    assign axis_in_tready   [1][0] = axis_numgen2_m_tready;
-    assign axis_out_tdata   [1][0] = axis_numgen2_s_tdata;
-    assign axis_out_tlast   [1][0] = axis_numgen2_s_tlast;
-    assign axis_out_tdest   [1][0] = axis_numgen2_s_tdest;
+    // Note Move this to the Input of Num Gen Module
+    // assign axis_out_tvalid  [1][0] = axis_numgen2_s_tvalid;
+    // assign axis_in_tready   [1][0] = axis_numgen2_m_tready;
+    // assign axis_out_tdata   [1][0] = axis_numgen2_s_tdata;
+    // assign axis_out_tlast   [1][0] = axis_numgen2_s_tlast;
+    // assign axis_out_tdest   [1][0] = axis_numgen2_s_tdest;
 
     // -------------------------------------------------------
     // Module Instantions
@@ -182,11 +190,11 @@ module axis_mesh_tb();
         .TIDW           (TIDW),
         .LFSR_DW        (LFSR_DW),
         .LFSR_DEFAULT   (LFSR_DEFAULT)
-    ) num_gen1_inst (
+    ) num_gen2_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
 
-        .START         (start),
+        .START         (start2),
 
         // -------------------------------------------------------
         // AXI-Stream Slave Interface
