@@ -80,13 +80,15 @@ module axis_mesh_tb();
 
     initial begin
 
+        axis_out_tready [0][1] = 1'b1;
+
         rst_n  = 1'b0;
 
         #(50ns);
 
         rst_n  = 1'b1;
 
-        #(120ns);
+        #(125ns);
 
         start  = 1'b1;
 
@@ -176,12 +178,12 @@ module axis_mesh_tb();
         .TDESTW         (TDESTW),
         .TIDW           (TIDW),
         .LFSR_DW        (LFSR_DW),
-        .LFSR_DEFAULT   (LFSR_DEFAULT)
+        .LFSR_DEFAULT   (8'h10)
     ) num_gen2_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
 
-        .START         (start2),
+        .START         (start),
 
         // -------------------------------------------------------
         // AXI-Stream Slave Interface

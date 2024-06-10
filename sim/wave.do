@@ -12,44 +12,27 @@ add wave -noupdate /axis_mesh_tb/axis_out_tready
 add wave -noupdate /axis_mesh_tb/axis_out_tdata
 add wave -noupdate /axis_mesh_tb/axis_out_tlast
 add wave -noupdate /axis_mesh_tb/axis_out_tdest
-add wave -noupdate /axis_mesh_tb/dut/noc/send_router_in
-add wave -noupdate /axis_mesh_tb/dut/noc/send_router_out
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/lsfr_inst_data/O_DATA
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/lsfr_inst_dest/O_DATA
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_S_TREADY
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_M_TVALID
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_M_TLAST
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_M_TID
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_M_TDEST
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_M_TDATA
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/START
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_S_TVALID
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_S_TLAST
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_S_TID
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_S_TDEST
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_S_TDATA
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/AXIS_M_TREADY
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/o_dest
-add wave -noupdate /axis_mesh_tb/num_gen1_inst/g_dest
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/lsfr_inst_data/O_DATA
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/lsfr_inst_dest/O_DATA
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_S_TREADY
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_M_TVALID
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_M_TLAST
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_M_TID
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_M_TDEST
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_M_TDATA
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/START
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_S_TVALID
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_S_TLAST
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_S_TID
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_S_TDEST
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_S_TDATA
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/AXIS_M_TREADY
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/o_dest
-add wave -noupdate /axis_mesh_tb/num_gen2_inst/g_dest
+add wave -noupdate -divider -height 25 {Valid - Debugging}
+add wave -noupdate -divider Deserializer
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_in_tdata}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_in_tdest}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_in_tlast}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_in_tready}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_in_tvalid}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_out_tdata}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_out_tdest}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_out_tlast}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_out_tready}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/deserializer_gen/genblk1/deserializer_inst/axis_out_tvalid}
+add wave -noupdate -divider Shim
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/clkcross_gen/genblk1/shim_inst/axis_tdata}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/clkcross_gen/genblk1/shim_inst/axis_tdest}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/clkcross_gen/genblk1/shim_inst/axis_tlast}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/clkcross_gen/genblk1/shim_inst/axis_tready}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/clkcross_gen/genblk1/shim_inst/axis_tvalid}
+add wave -noupdate {/axis_mesh_tb/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[1]/shim_out/clkcross_gen/genblk1/shim_inst/buffer_empty}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {454672 ps} 0}
+WaveRestoreCursors {{Cursor 1} {855291 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 281
 configure wave -valuecolwidth 100
@@ -65,4 +48,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {736773 ps}
+WaveRestoreZoom {135066 ps} {871839 ps}
