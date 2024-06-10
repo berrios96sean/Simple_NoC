@@ -69,13 +69,11 @@ module num_gen #(
                 o_data <= g_data;
                 o_dest <= 2'b01;
 
-                AXIS_S_TREADY <= 1'b1;
                 AXIS_M_TVALID <= 1'b1;
                 AXIS_M_TLAST  <= 1'b1;
 
             end else begin
 
-                AXIS_S_TREADY <= 1'b0;
                 AXIS_M_TVALID <= 1'b0;
                 AXIS_M_TLAST  <= 1'b0;
 
