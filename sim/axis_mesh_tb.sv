@@ -102,14 +102,6 @@ module axis_mesh_tb();
 
         start2 = 1'b0;
 
-        #(100ns);
-
-        start  = 1'b1;
-
-        #(10ns);
-
-        start  = 1'b0;
-
         #(640ns);
     	$finish;
     end
