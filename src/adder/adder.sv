@@ -27,6 +27,14 @@ module adder #(
     output  logic   [TDESTW-1:0]  AXIS_M_TDEST
 );
 
+    typedef enum logic [4:0] {
+
+        IDLE,
+        WAIT_SECOND,
+        SEND_RESULT
+
+    } state_t;
+
     state_t state, next_state;
     logic [TDATAW-1:0] buffer;
     logic [TDATAW-1:0] sum;
