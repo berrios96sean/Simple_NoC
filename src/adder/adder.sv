@@ -44,8 +44,6 @@ module adder #(
         if (~RST_N) begin
 
             state  <= IDLE;
-            buffer <= 0;
-            sum    <= 0;
 
         end else begin
 
