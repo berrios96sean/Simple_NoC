@@ -57,7 +57,7 @@ module axis_mesh_tb();
         #(50ns);
 
         rst_n  = 1'b1;
-        axis_out_tready [0][1] = 1'b1;
+        axis_out_tready [1][1] = 1'b1;
 
         #(125ns);
 
