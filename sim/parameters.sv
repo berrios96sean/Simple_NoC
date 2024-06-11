@@ -8,7 +8,7 @@ parameter int COLUMNS      = 2;
 parameter int TDATAW       = 32;
 parameter int TIDW         = 2;
 parameter int TDESTW       = 4;
-parameter int NUM_PACKETS  = 3;
+parameter int NUM_PACKETS  = 1;
 
 // LFSR parameters
 parameter int LFSR_DW      = 7;
