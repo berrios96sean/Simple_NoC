@@ -93,12 +93,12 @@ module axis_mesh_tb();
 
         start  = 1'b1;
 
-        #(10ns);
+        #(30ns);
 
         start  = 1'b0;
         start2 = 1'b1;
 
-        #(10ns);
+        #(30ns);
 
         start2 = 1'b0;
 
