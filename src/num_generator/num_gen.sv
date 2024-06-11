@@ -68,7 +68,7 @@ module num_gen #(
 
             end
 
-            if (START == 1) begin
+            if (START & AXIS_M_TREADY) begin
 
                 o_data         <= g_data;
                 o_dest         <= 2'b01;
@@ -81,8 +81,9 @@ module num_gen #(
 
             end else begin
 
-                AXIS_M_TVALID <= 1'b0;
-                AXIS_M_TLAST  <= 1'b0;
+                packet_counter <= 0;
+                AXIS_M_TVALID  <= 1'b0;
+                AXIS_M_TLAST   <= 1'b0;
 
             end
 
