@@ -48,36 +48,6 @@ module axis_mesh_tb();
     logic        start;
     logic        start2;
 
-    // -------------------------------------------------------
-    // Num Gen 1
-    // -------------------------------------------------------
-    logic        axis_numgen1_s_tvalid;
-    logic        axis_numgen1_s_tready;
-    logic [31:0] axis_numgen1_s_tdata ;
-    logic        axis_numgen1_s_tlast ;
-    logic [ 3:0] axis_numgen1_s_tdest ;
-
-    logic        axis_numgen1_m_tvalid;
-    logic        axis_numgen1_m_tready;
-    logic [31:0] axis_numgen1_m_tdata ;
-    logic        axis_numgen1_m_tlast ;
-    logic [ 3:0] axis_numgen1_m_tdest ;
-
-    // -------------------------------------------------------
-    // Num Gen 2
-    // -------------------------------------------------------
-    logic        axis_numgen2_s_tvalid;
-    logic        axis_numgen2_s_tready;
-    logic [31:0] axis_numgen2_s_tdata ;
-    logic        axis_numgen2_s_tlast ;
-    logic [ 3:0] axis_numgen2_s_tdest ;
-
-    logic        axis_numgen2_m_tvalid;
-    logic        axis_numgen2_m_tready;
-    logic [31:0] axis_numgen2_m_tdata ;
-    logic        axis_numgen2_m_tlast ;
-    logic [ 3:0] axis_numgen2_m_tdest ;
-
     initial begin
 
 
@@ -111,25 +81,6 @@ module axis_mesh_tb();
     // -------------------------------------------------------
 
     // -------------------------------------------------------
-    // Num Gen 1
-    // -------------------------------------------------------
-    // assign axis_in_tvalid   [0][0] = axis_numgen1_m_tvalid;
-    // assign axis_out_tready  [0][0] = axis_numgen1_m_tready;
-    // assign axis_in_tdata    [0][0] = axis_numgen1_m_tdata;
-    // assign axis_in_tlast    [0][0] = axis_numgen1_m_tlast;
-    // assign axis_in_tdest    [0][0] = axis_numgen1_m_tdest;
-
-    // -------------------------------------------------------
-    // Num Gen 2
-    // -------------------------------------------------------
-    // assign axis_in_tvalid   [1][0] = axis_numgen2_m_tvalid;
-    // assign axis_out_tready  [1][0] = axis_numgen2_m_tready;
-    // assign axis_in_tdata    [1][0] = axis_numgen2_m_tdata;
-    // assign axis_in_tlast    [1][0] = axis_numgen2_m_tlast;
-    // assign axis_in_tdest    [1][0] = axis_numgen2_m_tdest;
-
-
-    // -------------------------------------------------------
     // Module Instantions
     // -------------------------------------------------------
 
@@ -138,12 +89,12 @@ module axis_mesh_tb();
     // -------------------------------------------------------
 
     num_gen #(
-        .TDATAW         (TDATAW),
-        .TDESTW         (TDESTW),
-        .TIDW           (TIDW),
-        .LFSR_DW        (LFSR_DW),
-        .LFSR_DEFAULT   (LFSR_DEFAULT),
-        .NUM_PACKETS    (NUM_PACKETS)
+        .TDATAW        (TDATAW),
+        .TDESTW        (TDESTW),
+        .TIDW          (TIDW),
+        .LFSR_DW       (LFSR_DW),
+        .LFSR_DEFAULT  (LFSR_DEFAULT),
+        .NUM_PACKETS   (NUM_PACKETS)
     ) num_gen1_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
@@ -172,16 +123,49 @@ module axis_mesh_tb();
     );
 
     // -------------------------------------------------------
+    // Adder
+    // -------------------------------------------------------
+
+    adder #(
+        .TDATAW        (TDATAW),
+        .TDESTW        (TDESTW),
+        .TIDW          (TIDW)
+    ) adder_inst (
+        .CLK           (clk),
+        .RST_N         (rst_n),
+
+        // -------------------------------------------------------
+        // AXI-Stream Slave Interface
+        // -------------------------------------------------------
+        .AXIS_S_TVALID (axis_out_tvalid [0][1]),
+        .AXIS_S_TREADY (axis_out_tready [0][1]),
+        .AXIS_S_TDATA  (axis_out_tdata  [0][1]),
+        .AXIS_S_TLAST  (axis_out_tlast  [0][1]),
+        // .AXIS_S_TID (axis_out_tid    [0][1]),
+        .AXIS_S_TDEST  (axis_out_tdest  [0][1]),
+
+        // -------------------------------------------------------
+        // AXI-Stream Master Interface
+        // -------------------------------------------------------
+        .AXIS_M_TVALID (axis_in_tvalid  [0][1]),
+        .AXIS_M_TREADY (axis_in_tready  [0][1]),
+        .AXIS_M_TDATA  (axis_in_tdata   [0][1]),
+        .AXIS_M_TLAST  (axis_in_tlast   [0][1]),
+        // .AXIS_M_TID (axis_in_tid     [0][1]),
+        .AXIS_M_TDEST  (axis_in_tdest   [0][1])
+    );
+
+    // -------------------------------------------------------
     // Num Gen 2
     // -------------------------------------------------------
 
     num_gen #(
-        .TDATAW         (TDATAW),
-        .TDESTW         (TDESTW),
-        .TIDW           (TIDW),
-        .LFSR_DW        (LFSR_DW),
-        .LFSR_DEFAULT   (8'h10),
-        .NUM_PACKETS    (NUM_PACKETS)
+        .TDATAW        (TDATAW),
+        .TDESTW        (TDESTW),
+        .TIDW          (TIDW),
+        .LFSR_DW       (LFSR_DW),
+        .LFSR_DEFAULT  (8'h10),
+        .NUM_PACKETS   (NUM_PACKETS)
     ) num_gen2_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
@@ -214,42 +198,42 @@ module axis_mesh_tb();
     // -------------------------------------------------------
 
     axis_mesh #(
-    .NUM_ROWS                   (ROWS),
-    .NUM_COLS                   (COLUMNS),
-    .PIPELINE_LINKS             (1),
+        .NUM_ROWS                   (ROWS),
+        .NUM_COLS                   (COLUMNS),
+        .PIPELINE_LINKS             (1),
 
-    .TDEST_WIDTH                (4),
-    .TDATA_WIDTH                (TDATAW),
-    .SERIALIZATION_FACTOR       (4),
-    .CLKCROSS_FACTOR            (1),
-    .SINGLE_CLOCK               (1),
-    .SERDES_IN_BUFFER_DEPTH     (4),
-    .SERDES_OUT_BUFFER_DEPTH    (4),
-    .SERDES_EXTRA_SYNC_STAGES   (0),
+        .TDEST_WIDTH                (4),
+        .TDATA_WIDTH                (TDATAW),
+        .SERIALIZATION_FACTOR       (4),
+        .CLKCROSS_FACTOR            (1),
+        .SINGLE_CLOCK               (1),
+        .SERDES_IN_BUFFER_DEPTH     (4),
+        .SERDES_OUT_BUFFER_DEPTH    (4),
+        .SERDES_EXTRA_SYNC_STAGES   (0),
 
-    .FLIT_BUFFER_DEPTH          (4),
-    .ROUTING_TABLE_PREFIX       ("../routing_tables/mesh_2x2/"),
-    .ROUTER_PIPELINE_OUTPUT     (1),
-    .DISABLE_SELFLOOP           (0),
-    .ROUTER_FORCE_MLAB          (0)
+        .FLIT_BUFFER_DEPTH          (4),
+        .ROUTING_TABLE_PREFIX       ("../routing_tables/mesh_2x2/"),
+        .ROUTER_PIPELINE_OUTPUT     (1),
+        .DISABLE_SELFLOOP           (0),
+        .ROUTER_FORCE_MLAB          (0)
     ) axis_mesh_inst (
-    .clk_noc         (clk_noc),
-    .clk_usr         (clk),
-    .rst_n           (rst_n),
+        .clk_noc         (clk_noc),
+        .clk_usr         (clk),
+        .rst_n           (rst_n),
 
-    .axis_in_tvalid  (axis_in_tvalid),
-    .axis_in_tready  (axis_in_tready),
-    .axis_in_tdata   (axis_in_tdata),
-    .axis_in_tlast   (axis_in_tlast),
-    // .axis_in_tid  (axis_in_tid),
-    .axis_in_tdest   (axis_in_tdest),
+        .axis_in_tvalid  (axis_in_tvalid),
+        .axis_in_tready  (axis_in_tready),
+        .axis_in_tdata   (axis_in_tdata),
+        .axis_in_tlast   (axis_in_tlast),
+        // .axis_in_tid  (axis_in_tid),
+        .axis_in_tdest   (axis_in_tdest),
 
-    .axis_out_tvalid (axis_out_tvalid),
-    .axis_out_tready (axis_out_tready),
-    .axis_out_tdata  (axis_out_tdata),
-    .axis_out_tlast  (axis_out_tlast),
-    // .axis_out_tid (axis_out_tid),
-    .axis_out_tdest  (axis_out_tdest)
+        .axis_out_tvalid (axis_out_tvalid),
+        .axis_out_tready (axis_out_tready),
+        .axis_out_tdata  (axis_out_tdata),
+        .axis_out_tlast  (axis_out_tlast),
+        // .axis_out_tid (axis_out_tid),
+        .axis_out_tdest  (axis_out_tdest)
     );
 
 endmodule: axis_mesh_tb
