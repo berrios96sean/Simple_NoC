@@ -36,6 +36,7 @@ module adder #(
     } state_t;
 
     state_t state, next_state;
+
     logic [TDATAW-1:0] buffer;
     logic [TDATAW-1:0] sum;
 
@@ -47,7 +48,7 @@ module adder #(
 
         end else begin
 
-            state <= next_state;
+            state  <= next_state;
 
         end
 
@@ -55,46 +56,52 @@ module adder #(
 
     always_comb begin
 
-        next_state = state;
+        next_state    = state;
         AXIS_S_TREADY = 0;
         AXIS_M_TVALID = 0;
-        AXIS_M_TDATA = 0;
-        AXIS_M_TLAST = 0;
-        AXIS_M_TID = 0;
-        AXIS_M_TDEST = 0;
+        AXIS_M_TDATA  = 0;
+        AXIS_M_TLAST  = 0;
+        AXIS_M_TID    = 0;
+        AXIS_M_TDEST  = 0;
 
         case (state)
             IDLE: begin
 
-                AXIS_S_TREADY = 1;
+                AXIS_S_TREADY  = 1;
 
                 if (AXIS_S_TVALID) begin
-                    buffer = AXIS_S_TDATA;
+
+                    buffer     = AXIS_S_TDATA;
                     next_state = WAIT_SECOND;
+
                 end
 
             end
 
             WAIT_SECOND: begin
 
-                AXIS_S_TREADY = 1;
+                AXIS_S_TREADY  = 1;
 
                 if (AXIS_S_TVALID) begin
-                    sum = buffer + AXIS_S_TDATA;
+
+                    sum        = buffer + AXIS_S_TDATA;
                     next_state = SEND_RESULT;
+
                 end
 
             end
 
             SEND_RESULT: begin
 
-                AXIS_M_TVALID = 1;
-                AXIS_M_TDATA = sum;
-                AXIS_M_TLAST = 1;
-                AXIS_M_TDEST = 32'h00000011;
+                AXIS_M_TVALID  = 1;
+                AXIS_M_TDATA   = sum;
+                AXIS_M_TLAST   = 1;
+                AXIS_M_TDEST   = 4'b0011;
 
                 if (AXIS_M_TREADY) begin
+
                     next_state = IDLE;
+
                 end
 
             end
