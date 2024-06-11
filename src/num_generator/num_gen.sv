@@ -3,7 +3,8 @@ module num_gen #(
     parameter TDESTW       =  4,
     parameter TIDW         =  2,
     parameter LFSR_DW      =  7,
-    parameter LFSR_DEFAULT =  8'h00
+    parameter LFSR_DEFAULT =  8'h00,
+    parameter NUM_PACKETS  =  1
 )(
     input   wire    CLK,
     input   wire    RST_N,
@@ -33,6 +34,8 @@ module num_gen #(
 
     const  var ZERO_PAD = 24'h000000;
 
+    logic [8:0] packet_counter;
+
     logic [LFSR_DW:0] g_data;
     logic [LFSR_DW:0] o_data;
     logic [1:0] g_dest;
@@ -44,11 +47,12 @@ module num_gen #(
 
     always @ (posedge CLK or negedge RST_N) begin
         if (~RST_N) begin
-            AXIS_S_TREADY <=  0;
-            AXIS_M_TVALID <=  0;
-            AXIS_M_TLAST  <=  0;
-            o_data        <=  0;
-            o_dest        <=  0;
+            AXIS_S_TREADY  <=  0;
+            AXIS_M_TVALID  <=  0;
+            AXIS_M_TLAST   <=  0;
+            o_data         <=  0;
+            o_dest         <=  0;
+            packet_counter <= 0;
         end else begin
 
             // -------------------------------------------------------
@@ -66,11 +70,14 @@ module num_gen #(
 
             if (START == 1) begin
 
-                o_data <= g_data;
-                o_dest <= 2'b01;
+                o_data         <= g_data;
+                o_dest         <= 2'b01;
 
-                AXIS_M_TVALID <= 1'b1;
-                AXIS_M_TLAST  <= 1'b1;
+                AXIS_M_TVALID  <= 1'b1;
+                packet_counter <= packet_counter + 1;
+                if (packet_counter == NUM_PACKETS - 1) begin
+                AXIS_M_TLAST   <= 1'b1;
+                end
 
             end else begin
 

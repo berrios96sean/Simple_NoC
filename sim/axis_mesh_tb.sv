@@ -142,7 +142,8 @@ module axis_mesh_tb();
         .TDESTW         (TDESTW),
         .TIDW           (TIDW),
         .LFSR_DW        (LFSR_DW),
-        .LFSR_DEFAULT   (LFSR_DEFAULT)
+        .LFSR_DEFAULT   (LFSR_DEFAULT),
+        .NUM_PACKETS    (NUM_PACKETS)
     ) num_gen1_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
@@ -179,7 +180,8 @@ module axis_mesh_tb();
         .TDESTW         (TDESTW),
         .TIDW           (TIDW),
         .LFSR_DW        (LFSR_DW),
-        .LFSR_DEFAULT   (8'h10)
+        .LFSR_DEFAULT   (8'h10),
+        .NUM_PACKETS    (NUM_PACKETS)
     ) num_gen2_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
