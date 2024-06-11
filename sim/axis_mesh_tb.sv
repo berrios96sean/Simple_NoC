@@ -80,13 +80,14 @@ module axis_mesh_tb();
 
     initial begin
 
-        axis_out_tready [0][1] = 1'b1;
+
 
         rst_n  = 1'b0;
 
         #(50ns);
 
         rst_n  = 1'b1;
+        axis_out_tready [0][1] = 1'b1;
 
         #(125ns);
 
