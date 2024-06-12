@@ -70,6 +70,11 @@ module axis_mesh_tb();
             #(10ns);
 
             start  = 1'b0;
+            start2  = 1'b1;
+
+            #(10ns);
+
+            start2  = 1'b0;
 
             wait (done == 1);
 
@@ -175,7 +180,7 @@ module axis_mesh_tb();
         .CLK           (clk),
         .RST_N         (rst_n),
 
-        .START         (start),
+        .START         (start2),
 
         // -------------------------------------------------------
         // AXI-Stream Slave Interface
