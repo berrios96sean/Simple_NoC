@@ -4,7 +4,7 @@
 module axis_mesh_tb();
 
     logic clk, clk_noc, rst_n;
-    integer i, j;
+    integer i, j, file;
 
     const var NUM_PACKET_INJ = 5;
 
@@ -53,7 +53,14 @@ module axis_mesh_tb();
 
     initial begin
 
+        file = $fopen("sim_status.txt", "w");
 
+        if (file == 0) begin
+
+            $display("Error: Could not open output file.");
+            $finish;
+
+        end
 
         rst_n  = 1'b0;
 
@@ -83,6 +90,7 @@ module axis_mesh_tb();
         end
 
         #(200ns);
+        $fwrite("sim_status.txt", "Simulation finished");
     	$finish;
     end
 

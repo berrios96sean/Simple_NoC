@@ -36,6 +36,7 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 set output_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/output.out
 set input_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/input1.in
 set input2_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/input2.in
+set sim_status_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/sim_status.txt
 
 if {[file exists $output_file_path]} {
     # Delete the existing file
@@ -52,6 +53,11 @@ if {[file exists $input2_file_path]} {
     file delete -force $input2_file_path
 }
 
+if {[file exists $sim_status_file_path]} {
+    # Delete the existing file
+    file delete -force $sim_status_file_path
+}
+
 
 # Create a new output file
 set file_id [open $output_file_path w]
@@ -63,6 +69,10 @@ close $file_id2
 
 # Create a new input file
 set file_id3 [open $input2_file_path w]
+close $file_id3
+
+# Create a new status file
+set file_id3 [open $sim_status_file_path w]
 close $file_id3
 
 vlog +acc $QSYS_SIMDIR/axis_mesh_tb.sv $QSYS_SIMDIR/../src/noc/*sv $QSYS_SIMDIR/../src/num_generator/*sv $QSYS_SIMDIR/../src/adder/*sv $QSYS_SIMDIR/../src/output/*sv
@@ -82,6 +92,28 @@ do wave.do
 # Run the simulation.
 run -a
 #
+if {[file exists "sim_status.txt"]} {
+    set status_file [open "sim_status.txt" r]
+    set status [read $status_file]
+    close $status_file
+
+    if {[string equal $status "Simulation finished"]} {
+
+        set python_path "/usr/bin/python3" ;
+        set script_path "verify_sums.py"
+        set result [exec $python_path $script_path]
+        puts $result
+
+    } else {
+
+        puts "Simulation did not finish successfully."
+
+    }
+} else {
+
+    puts "Simulation status file not found."
+
+}
 # Report success to the shell.
 # exit -code 0
 #
