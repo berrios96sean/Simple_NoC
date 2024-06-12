@@ -31,6 +31,19 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 # the top level. (These are all the files required for simulation other
 # than the files compiled by the Quartus-generated IP simulation script)
 #
+
+# Set up test bench files
+set file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/output.out
+
+if {[file exists $file_path]} {
+    # Delete the existing file
+    file delete -force $file_path
+}
+
+# Create a new output file
+set file_id [open $file_path w]
+close $file_id
+
 vlog +acc $QSYS_SIMDIR/axis_mesh_tb.sv $QSYS_SIMDIR/../src/noc/*sv $QSYS_SIMDIR/../src/num_generator/*sv $QSYS_SIMDIR/../src/adder/*sv $QSYS_SIMDIR/../src/output/*sv
 #
 # Set the top-level simulation or testbench module/entity name, which is
