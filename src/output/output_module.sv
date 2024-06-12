@@ -77,7 +77,7 @@ module output_module #(
 
                 $fwrite(file, "Sum: %h\n", AXIS_S_TDATA[8:0]);
 
-                if (AXIS_S_TLAST) begin
+                if (AXIS_S_TVALID) begin
 
                     DONE <= 1'b1;
 
