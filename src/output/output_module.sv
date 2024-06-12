@@ -36,10 +36,7 @@ module output_module #(
 
     initial begin
 
-        // Print the current working directory
-        $system("pwd");
-
-        file = $fopen("../../sim/output.out", "w");
+        file = $fopen("output.out", "w");
 
         if (file == 0) begin
 
