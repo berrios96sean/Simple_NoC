@@ -58,7 +58,6 @@ module axis_mesh_tb();
         #(50ns);
 
         rst_n  = 1'b1;
-        axis_out_tready [1][1] = 1'b1;
 
         #(125ns);
 
@@ -195,11 +194,11 @@ module axis_mesh_tb();
     // Output Module
     // -------------------------------------------------------
 
-    num_gen #(
+    output_module #(
         .TDATAW        (TDATAW),
         .TDESTW        (TDESTW),
         .TIDW          (TIDW)
-    ) num_gen2_inst (
+    ) output_module_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
 
