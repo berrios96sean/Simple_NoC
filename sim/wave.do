@@ -31,8 +31,10 @@ add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TID
 add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TLAST
 add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TREADY
 add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TVALID
+add wave -noupdate /axis_mesh_tb/done
+add wave -noupdate /axis_mesh_tb/start
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {821899 ps} 0}
+WaveRestoreCursors {{Cursor 1} {695000 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 337
 configure wave -valuecolwidth 100
@@ -48,4 +50,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {465812 ps} {904188 ps}
+WaveRestoreZoom {383543 ps} {821919 ps}
