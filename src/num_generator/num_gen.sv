@@ -41,6 +41,19 @@ module num_gen #(
     logic [1:0] g_dest;
     logic [1:0] o_dest;
 
+    initial begin
+
+        file = $fopen("input.in", "w");
+
+        if (file == 0) begin
+
+            $display("Error: Could not open output file.");
+            $finish;
+
+        end
+
+    end
+
     assign AXIS_M_TDATA = {ZERO_PAD,o_data};
     assign AXIS_M_TDEST = {2'b00,o_dest};
     assign AXIS_M_TID   = 0;
@@ -72,6 +85,8 @@ module num_gen #(
 
                 o_data         <= g_data;
                 o_dest         <= 2'b01;
+
+                $fwrite(file, "Input: %h\n", g_data);
 
                 AXIS_M_TVALID  <= 1'b1;
                 packet_counter <= packet_counter + 1;
