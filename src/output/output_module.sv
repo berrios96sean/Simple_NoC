@@ -81,11 +81,13 @@ module output_module #(
 
                     DONE <= 1'b1;
 
-                end else begin
-
-                    DONE <= 0;
-
                 end
+
+            end else begin
+
+                DONE <= 0;
+
+            end
 
             end
 
