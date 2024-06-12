@@ -73,6 +73,8 @@ module axis_mesh_tb();
 
             wait (done == 1);
 
+            #(20ns);
+
         end
 
         #(200ns);
