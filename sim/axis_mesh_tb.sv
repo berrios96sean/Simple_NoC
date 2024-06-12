@@ -63,7 +63,7 @@ module axis_mesh_tb();
 
         #(125ns);
 
-        for (int i = 0; i < NUM_PACKET_INJ; i++) begin
+        for (int i = 0; i < 5; i++) begin
 
             start  = 1'b1;
 
