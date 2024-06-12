@@ -1,4 +1,4 @@
-module adder #(
+module output_module #(
     parameter TDATAW       = 32,
     parameter TDESTW       =  4,
     parameter TIDW         =  2
