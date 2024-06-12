@@ -90,7 +90,7 @@ module axis_mesh_tb();
         end
 
         #(200ns);
-        $fwrite("sim_status.txt", "Simulation finished");
+        $fwrite(file, "Simulation finished");
     	$finish;
     end
 
