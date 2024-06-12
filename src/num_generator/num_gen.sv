@@ -46,7 +46,7 @@ module num_gen #(
 
     initial begin
 
-        file = $fopen("input.in", "w");
+        file = $fopen(FILE_NAME, "w");
 
         if (file == 0) begin
 
