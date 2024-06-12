@@ -1,10 +1,11 @@
 module num_gen #(
-    parameter TDATAW       = 32,
-    parameter TDESTW       =  4,
-    parameter TIDW         =  2,
-    parameter LFSR_DW      =  7,
-    parameter LFSR_DEFAULT =  8'h00,
-    parameter NUM_PACKETS  =  1
+    parameter        TDATAW       = 32,
+    parameter        TDESTW       =  4,
+    parameter        TIDW         =  2,
+    parameter        LFSR_DW      =  7,
+    parameter        LFSR_DEFAULT =  8'h00,
+    parameter        NUM_PACKETS  =  1,
+    parameter string FILE_NAME    = "input.in"
 )(
     input   wire    CLK,
     input   wire    RST_N,

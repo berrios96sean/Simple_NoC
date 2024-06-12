@@ -104,7 +104,8 @@ module axis_mesh_tb();
         .TIDW          (TIDW),
         .LFSR_DW       (LFSR_DW),
         .LFSR_DEFAULT  (LFSR_DEFAULT),
-        .NUM_PACKETS   (NUM_PACKETS)
+        .NUM_PACKETS   (NUM_PACKETS),
+        .FILE_NAME     ("input1.in")
     ) num_gen1_inst (
         .CLK           (clk),
         .RST_N         (rst_n),
@@ -175,7 +176,8 @@ module axis_mesh_tb();
         .TIDW          (TIDW),
         .LFSR_DW       (LFSR_DW),
         .LFSR_DEFAULT  (8'h10),
-        .NUM_PACKETS   (NUM_PACKETS)
+        .NUM_PACKETS   (NUM_PACKETS),
+        .FILE_NAME     ("input2.in")
     ) num_gen2_inst (
         .CLK           (clk),
         .RST_N         (rst_n),

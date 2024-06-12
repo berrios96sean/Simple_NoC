@@ -34,7 +34,8 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 
 # Set up test bench files
 set output_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/output.out
-set input_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/input.in
+set input_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/input1.in
+set input2_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/input2.in
 
 if {[file exists $output_file_path]} {
     # Delete the existing file
@@ -46,6 +47,12 @@ if {[file exists $input_file_path]} {
     file delete -force $input_file_path
 }
 
+if {[file exists $input2_file_path]} {
+    # Delete the existing file
+    file delete -force $input2_file_path
+}
+
+
 # Create a new output file
 set file_id [open $output_file_path w]
 close $file_id
@@ -53,6 +60,10 @@ close $file_id
 # Create a new input file
 set file_id2 [open $input_file_path w]
 close $file_id2
+
+# Create a new input file
+set file_id3 [open $input2_file_path w]
+close $file_id3
 
 vlog +acc $QSYS_SIMDIR/axis_mesh_tb.sv $QSYS_SIMDIR/../src/noc/*sv $QSYS_SIMDIR/../src/num_generator/*sv $QSYS_SIMDIR/../src/adder/*sv $QSYS_SIMDIR/../src/output/*sv
 #
