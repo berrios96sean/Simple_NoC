@@ -89,8 +89,6 @@ module output_module #(
 
             end
 
-            end
-
         end
 
     end
