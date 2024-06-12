@@ -42,11 +42,12 @@ module axis_mesh_tb();
     logic [ 3:0] axis_out_tdest   [ROWS][COLUMNS];
 
     // -------------------------------------------------------
-    // Number Generator Connections
+    // Misc Signals
     // -------------------------------------------------------
 
     logic        start;
     logic        start2;
+    logic        done;
 
     initial begin
 
@@ -66,13 +67,10 @@ module axis_mesh_tb();
         #(10ns);
 
         start  = 1'b0;
-        start2 = 1'b1;
 
-        #(10ns);
+        wait (done == 1);
 
-        start2 = 1'b0;
-
-        #(640ns);
+        #(200ns);
     	$finish;
     end
 
@@ -191,6 +189,41 @@ module axis_mesh_tb();
         .AXIS_M_TLAST  (axis_in_tlast   [1][0]),
         // .AXIS_M_TID (axis_in_tid     [1][0]),
         .AXIS_M_TDEST  (axis_in_tdest   [1][0])
+    );
+
+    // -------------------------------------------------------
+    // Output Module
+    // -------------------------------------------------------
+
+    num_gen #(
+        .TDATAW        (TDATAW),
+        .TDESTW        (TDESTW),
+        .TIDW          (TIDW)
+    ) num_gen2_inst (
+        .CLK           (clk),
+        .RST_N         (rst_n),
+
+        .DONE          (done),
+
+        // -------------------------------------------------------
+        // AXI-Stream Slave Interface
+        // -------------------------------------------------------
+        .AXIS_S_TVALID (axis_out_tvalid [1][1]),
+        .AXIS_S_TREADY (axis_out_tready [1][1]),
+        .AXIS_S_TDATA  (axis_out_tdata  [1][1]),
+        .AXIS_S_TLAST  (axis_out_tlast  [1][1]),
+        // .AXIS_S_TID (axis_out_tid    [1][1]),
+        .AXIS_S_TDEST  (axis_out_tdest  [1][1]),
+
+        // -------------------------------------------------------
+        // AXI-Stream Master Interface
+        // -------------------------------------------------------
+        .AXIS_M_TVALID (axis_in_tvalid  [1][1]),
+        .AXIS_M_TREADY (axis_in_tready  [1][1]),
+        .AXIS_M_TDATA  (axis_in_tdata   [1][1]),
+        .AXIS_M_TLAST  (axis_in_tlast   [1][1]),
+        // .AXIS_M_TID (axis_in_tid     [1][1]),
+        .AXIS_M_TDEST  (axis_in_tdest   [1][1])
     );
 
     // -------------------------------------------------------
