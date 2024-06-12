@@ -34,6 +34,8 @@ module num_gen #(
 
     const  var ZERO_PAD = 24'h000000;
 
+    integer file;
+
     logic [8:0] packet_counter;
 
     logic [LFSR_DW:0] g_data;
