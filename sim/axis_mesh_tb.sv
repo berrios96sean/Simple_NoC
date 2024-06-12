@@ -6,6 +6,8 @@ module axis_mesh_tb();
     logic clk, clk_noc, rst_n;
     integer i, j;
 
+    const var NUM_PACKET_INJ = 5;
+
     // -------------------------------------------------------
     // 100MHz Clock
     // -------------------------------------------------------
@@ -61,13 +63,17 @@ module axis_mesh_tb();
 
         #(125ns);
 
-        start  = 1'b1;
+        for (int i = 0; i < NUM_PACKET_INJ; i++) begin
 
-        #(10ns);
+            start  = 1'b1;
 
-        start  = 1'b0;
+            #(10ns);
 
-        wait (done == 1);
+            start  = 1'b0;
+
+            wait (done == 1);
+
+        end
 
         #(200ns);
     	$finish;
