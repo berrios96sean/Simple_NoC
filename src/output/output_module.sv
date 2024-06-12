@@ -75,7 +75,7 @@ module output_module #(
                 buffer   <= AXIS_S_TDATA;
                 dest     <= AXIS_S_TDEST;
 
-                $fwrite(file, "Data: %h, Dest: %h, ID: %h\n", AXIS_S_TDATA, AXIS_S_TDEST, AXIS_S_TID);
+                $fwrite(file, "Sum: %h\n", AXIS_S_TDATA[8:0]);
 
                 if (AXIS_S_TLAST) begin
 
