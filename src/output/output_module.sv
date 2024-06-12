@@ -6,7 +6,7 @@ module adder #(
     input   wire    CLK,
     input   wire    RST_N,
 
-    output  wire    DONE,
+    output  logic    DONE,
 
     // -------------------------------------------------------
     // AXI-Stream Slave Interface
