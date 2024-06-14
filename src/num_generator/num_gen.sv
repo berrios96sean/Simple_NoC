@@ -36,13 +36,10 @@ module num_gen #(
 
     const  var ZERO_PAD = 24'h000000;
 
-    integer file;
-
     logic [8:0] packet_counter;
 
     logic [LFSR_DW:0] g_data;
     logic [LFSR_DW:0] o_data;
-    logic [1:0] g_dest;
     logic [1:0] o_dest;
 
     assign AXIS_M_TDATA = {ZERO_PAD,o_data};
@@ -81,8 +78,11 @@ module num_gen #(
 
                 AXIS_M_TVALID  <= 1'b1;
                 packet_counter <= packet_counter + 1;
+
                 if (packet_counter == NUM_PACKETS - 1) begin
-                AXIS_M_TLAST   <= 1'b1;
+
+                    AXIS_M_TLAST   <= 1'b1;
+
                 end
 
             end else begin
@@ -105,17 +105,6 @@ module num_gen #(
         .CLK          (CLK),
         .RST_N        (RST_N),
         .O_DATA       (g_data)
-
-    );
-
-    lfsr #(
-        .LFSR_DW      (1),
-        .LFSR_DEFAULT (2'b00)
-    ) lsfr_inst_dest (
-
-        .CLK          (CLK),
-        .RST_N        (RST_N),
-        .O_DATA       (g_dest)
 
     );
 
