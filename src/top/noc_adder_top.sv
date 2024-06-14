@@ -157,7 +157,7 @@ module noc_adder_top (
         .RST_N         (RST_N),
 
         .DONE          (DONE),
-        .DATA_O        (DATA_O3)
+        .DATA_O        (DATA_O3),
 
         // -------------------------------------------------------
         // AXI-Stream Slave Interface
