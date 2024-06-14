@@ -2,35 +2,35 @@ onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /axis_mesh_tb/clk
 add wave -noupdate /axis_mesh_tb/rst_n
-add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/axis_in_tvalid[0]} -expand {/axis_mesh_tb/axis_in_tvalid[1]} -expand} /axis_mesh_tb/axis_in_tvalid
-add wave -noupdate /axis_mesh_tb/axis_in_tready
-add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/axis_in_tdata[0]} -expand {/axis_mesh_tb/axis_in_tdata[1]} -expand} /axis_mesh_tb/axis_in_tdata
-add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/axis_in_tlast[0]} -expand {/axis_mesh_tb/axis_in_tlast[1]} -expand} /axis_mesh_tb/axis_in_tlast
-add wave -noupdate /axis_mesh_tb/axis_in_tdest
-add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/axis_out_tvalid[0]} -expand {/axis_mesh_tb/axis_out_tvalid[1]} -expand} /axis_mesh_tb/axis_out_tvalid
-add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/axis_out_tready[0]} -expand {/axis_mesh_tb/axis_out_tready[1]} -expand} /axis_mesh_tb/axis_out_tready
-add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/axis_out_tdata[0]} -expand {/axis_mesh_tb/axis_out_tdata[1]} -expand} /axis_mesh_tb/axis_out_tdata
-add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/axis_out_tlast[0]} -expand {/axis_mesh_tb/axis_out_tlast[1]} -expand} /axis_mesh_tb/axis_out_tlast
-add wave -noupdate /axis_mesh_tb/axis_out_tdest
+add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/top/axis_in_tvalid[0]} -expand {/axis_mesh_tb/top/axis_in_tvalid[1]} -expand} /axis_mesh_tb/top/axis_in_tvalid
+add wave -noupdate /axis_mesh_tb/top/axis_in_tready
+add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/top/axis_in_tdata[0]} -expand {/axis_mesh_tb/top/axis_in_tdata[1]} -expand} /axis_mesh_tb/top/axis_in_tdata
+add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/top/axis_in_tlast[0]} -expand {/axis_mesh_tb/top/axis_in_tlast[1]} -expand} /axis_mesh_tb/top/axis_in_tlast
+add wave -noupdate /axis_mesh_tb/top/axis_in_tdest
+add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/top/axis_out_tvalid[0]} -expand {/axis_mesh_tb/top/axis_out_tvalid[1]} -expand} /axis_mesh_tb/top/axis_out_tvalid
+add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/top/axis_out_tready[0]} -expand {/axis_mesh_tb/top/axis_out_tready[1]} -expand} /axis_mesh_tb/top/axis_out_tready
+add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/top/axis_out_tdata[0]} -expand {/axis_mesh_tb/top/axis_out_tdata[1]} -expand} /axis_mesh_tb/top/axis_out_tdata
+add wave -noupdate -expand -subitemconfig {{/axis_mesh_tb/top/axis_out_tlast[0]} -expand {/axis_mesh_tb/top/axis_out_tlast[1]} -expand} /axis_mesh_tb/top/axis_out_tlast
+add wave -noupdate /axis_mesh_tb/top/axis_out_tdest
 add wave -noupdate -divider {Adder Module}
 add wave -noupdate -divider {State Machine}
-add wave -noupdate /axis_mesh_tb/adder_inst/state
-add wave -noupdate /axis_mesh_tb/adder_inst/next_state
-add wave -noupdate /axis_mesh_tb/adder_inst/buffer
-add wave -noupdate /axis_mesh_tb/adder_inst/sum
+add wave -noupdate /axis_mesh_tb/top/adder_inst/state
+add wave -noupdate /axis_mesh_tb/top/adder_inst/next_state
+add wave -noupdate /axis_mesh_tb/top/adder_inst/buffer
+add wave -noupdate /axis_mesh_tb/top/adder_inst/sum
 add wave -noupdate -divider {AXI-Stream Interface}
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_M_TDATA
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_M_TDEST
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_M_TID
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_M_TLAST
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_M_TREADY
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_M_TVALID
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TDATA
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TDEST
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TID
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TLAST
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TREADY
-add wave -noupdate /axis_mesh_tb/adder_inst/AXIS_S_TVALID
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_M_TDATA
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_M_TDEST
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_M_TID
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_M_TLAST
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_M_TREADY
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_M_TVALID
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_S_TDATA
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_S_TDEST
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_S_TID
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_S_TLAST
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_S_TREADY
+add wave -noupdate /axis_mesh_tb/top/adder_inst/AXIS_S_TVALID
 add wave -noupdate /axis_mesh_tb/done
 add wave -noupdate /axis_mesh_tb/start
 TreeUpdate [SetDefaultTree]
