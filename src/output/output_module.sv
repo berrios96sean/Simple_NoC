@@ -3,10 +3,11 @@ module output_module #(
     parameter TDESTW       =  4,
     parameter TIDW         =  2
 )(
-    input   wire    CLK,
-    input   wire    RST_N,
+    input   wire                  CLK,
+    input   wire                  RST_N,
 
-    output  logic    DONE,
+    output  logic                 DONE,
+    output  logic   [TDATAW-1:0]  DATA_O,
 
     // -------------------------------------------------------
     // AXI-Stream Slave Interface
@@ -31,22 +32,6 @@ module output_module #(
 
     logic [TDATAW-1:0] buffer;
     logic [TDESTW-1:0] dest;
-
-    integer file;
-
-    initial begin
-
-        file = $fopen("output.out", "w");
-
-        if (file == 0) begin
-
-            $display("Error: Could not open output file.");
-            $finish;
-
-        end
-
-    end
-
 
     always @ (posedge CLK or negedge RST_N) begin
 
@@ -75,7 +60,7 @@ module output_module #(
                 buffer   <= AXIS_S_TDATA;
                 dest     <= AXIS_S_TDEST;
 
-                $fwrite(file, "Sum: %h\n", AXIS_S_TDATA[8:0]);
+                DATA_O   <= AXIS_S_TDATA;
 
                 if (AXIS_S_TVALID) begin
 

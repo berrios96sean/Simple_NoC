@@ -4,7 +4,7 @@
 module axis_mesh_tb();
 
     logic clk, clk_noc, rst_n;
-    integer i, j, file, input1_file, input2_file;
+    integer i, j, file, input1_file, input2_file, output_file;
 
     integer NUM_PACKET_INJ = 10;
 
@@ -37,6 +37,7 @@ module axis_mesh_tb();
     logic              done;
     logic [TDATAW-1:0] data_o1;
     logic [TDATAW-1:0] data_o2;
+    logic [TDATAW-1:0] data_o3;
 
     initial begin
 
@@ -63,6 +64,15 @@ module axis_mesh_tb();
         if (input2_file == 0) begin
 
             $display("Error: Could not open input2 file.");
+            $finish;
+
+        end
+
+        output_file = $fopen("output.out", "w");
+
+        if (output_file == 0) begin
+
+            $display("Error: Could not open output file.");
             $finish;
 
         end
@@ -98,7 +108,11 @@ module axis_mesh_tb();
 
             wait (done == 1);
 
-            #(20ns);
+            #(5ns);
+
+            $fwrite(output_file, "Sum: %h\n", data_o3[8:0]);
+
+            #(10ns);
 
         end
 
@@ -116,7 +130,8 @@ module axis_mesh_tb();
         .START2   (start2),
         .DONE     (done),
         .DATA_O1  (data_o1),
-        .DATA_O2  (data_o2)
+        .DATA_O2  (data_o2),
+        .DATA_O3  (data_o3)
 
     );
 
