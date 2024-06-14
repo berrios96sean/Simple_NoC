@@ -4,7 +4,7 @@
 module axis_mesh_tb();
 
     logic clk, clk_noc, rst_n;
-    integer i, j, file;
+    integer i, j, file, input1_file, input2_file;
 
     integer NUM_PACKET_INJ = 10;
 
