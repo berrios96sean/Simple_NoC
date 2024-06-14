@@ -198,7 +198,7 @@ module noc_adder_top (
         .SERDES_EXTRA_SYNC_STAGES   (0),
 
         .FLIT_BUFFER_DEPTH          (4),
-        .ROUTING_TABLE_PREFIX       ("../routing_tables/mesh_2x2/"),
+        .ROUTING_TABLE_PREFIX       (ROUTING_TABLES_DIR),
         .ROUTER_PIPELINE_OUTPUT     (1),
         .DISABLE_SELFLOOP           (0),
         .ROUTER_FORCE_MLAB          (0)
