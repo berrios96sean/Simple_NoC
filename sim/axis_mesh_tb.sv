@@ -6,7 +6,7 @@ module axis_mesh_tb();
     logic clk, clk_noc, rst_n;
     integer i, j, file;
 
-    const var NUM_PACKET_INJ = 5;
+    const var NUM_PACKET_INJ = 10;
 
     // -------------------------------------------------------
     // 100MHz Clock
