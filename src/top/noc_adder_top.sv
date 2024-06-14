@@ -9,7 +9,7 @@ module noc_adder_top (
     input  wire              START2,
     output wire              DONE,
     output wire [TDATAW-1:0] DATA_O1,
-    output wire [TDATAW-1:0] DATA_O2,
+    output wire [TDATAW-1:0] DATA_O2
 
 );
 

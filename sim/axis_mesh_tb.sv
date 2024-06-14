@@ -35,7 +35,8 @@ module axis_mesh_tb();
     logic              start;
     logic              start2;
     logic              done;
-    logic [TDATAW-1:0] data_o;
+    logic [TDATAW-1:0] data_o1;
+    logic [TDATAW-1:0] data_o2;
 
     initial begin
 
@@ -77,13 +78,13 @@ module axis_mesh_tb();
         for (int i = 0; i < NUM_PACKET_INJ; i++) begin
 
             start  = 1'b1;
-            $fwrite(input1_file, "Input: %h\n", data_o);
+            $fwrite(input1_file, "Input: %h\n", data_o1);
 
             #(10ns);
 
             start  = 1'b0;
             start2  = 1'b1;
-            $fwrite(input2_file, "Input: %h\n", data_o);
+            $fwrite(input2_file, "Input: %h\n", data_o2);
 
             #(10ns);
 
@@ -108,7 +109,8 @@ module axis_mesh_tb();
         .START    (start),
         .START2   (start2),
         .DONE     (done),
-        .DATA_O   (data_o)
+        .DATA_O1  (data_o1),
+        .DATA_O2  (data_o2)
 
     );
 
