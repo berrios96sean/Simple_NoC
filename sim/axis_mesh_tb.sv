@@ -32,9 +32,10 @@ module axis_mesh_tb();
     // Misc Signals
     // -------------------------------------------------------
 
-    logic        start;
-    logic        start2;
-    logic        done;
+    logic              start;
+    logic              start2;
+    logic              done;
+    logic [TDATAW-1:0] data_o;
 
     initial begin
 
@@ -43,6 +44,24 @@ module axis_mesh_tb();
         if (file == 0) begin
 
             $display("Error: Could not open output file.");
+            $finish;
+
+        end
+
+        input1_file = $fopen("input1.in", "w");
+
+        if (input1_file == 0) begin
+
+            $display("Error: Could not open input1 file.");
+            $finish;
+
+        end
+
+        input2_file = $fopen("input2.in", "w");
+
+        if (input2_file == 0) begin
+
+            $display("Error: Could not open input2 file.");
             $finish;
 
         end
@@ -58,11 +77,13 @@ module axis_mesh_tb();
         for (int i = 0; i < NUM_PACKET_INJ; i++) begin
 
             start  = 1'b1;
+            $fwrite(input1_file, "Input: %h\n", data_o);
 
             #(10ns);
 
             start  = 1'b0;
             start2  = 1'b1;
+            $fwrite(input2_file, "Input: %h\n", data_o);
 
             #(10ns);
 
@@ -86,7 +107,8 @@ module axis_mesh_tb();
         .RST_N    (rst_n),
         .START    (start),
         .START2   (start2),
-        .DONE     (done)
+        .DONE     (done),
+        .DATA_O   (data_o)
 
     );
 

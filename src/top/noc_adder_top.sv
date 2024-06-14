@@ -2,12 +2,14 @@
 
 module noc_adder_top (
 
-    input  wire CLK,
-    input  wire CLK_NOC,
-    input  wire RST_N,
-    input  wire START,
-    input  wire START2,
-    output wire DONE
+    input  wire              CLK,
+    input  wire              CLK_NOC,
+    input  wire              RST_N,
+    input  wire              START,
+    input  wire              START2,
+    output wire              DONE,
+    output wire [TDATAW-1:0] DATA_O1,
+    output wire [TDATAW-1:0] DATA_O2,
 
 );
 
@@ -47,6 +49,7 @@ module noc_adder_top (
         .RST_N         (RST_N),
 
         .START         (START),
+        .DATA_O        (DATA_O1),
 
         // -------------------------------------------------------
         // AXI-Stream Slave Interface
@@ -119,6 +122,7 @@ module noc_adder_top (
         .RST_N         (RST_N),
 
         .START         (START2),
+        .DATA_O        (DATA_O2),
 
         // -------------------------------------------------------
         // AXI-Stream Slave Interface

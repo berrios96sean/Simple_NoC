@@ -4,8 +4,7 @@ module num_gen #(
     parameter        TIDW         =  2,
     parameter        LFSR_DW      =  7,
     parameter        LFSR_DEFAULT =  8'h00,
-    parameter        NUM_PACKETS  =  1,
-    parameter string FILE_NAME    = "input.in"
+    parameter        NUM_PACKETS  =  1
 )(
     input   wire                  CLK,
     input   wire                  RST_N,
@@ -46,19 +45,6 @@ module num_gen #(
     logic [1:0] g_dest;
     logic [1:0] o_dest;
 
-    initial begin
-
-        file = $fopen(FILE_NAME, "w");
-
-        if (file == 0) begin
-
-            $display("Error: Could not open output file.");
-            $finish;
-
-        end
-
-    end
-
     assign AXIS_M_TDATA = {ZERO_PAD,o_data};
     assign AXIS_M_TDEST = {2'b00,o_dest};
     assign AXIS_M_TID   = 0;
@@ -92,7 +78,6 @@ module num_gen #(
                 o_dest         <= 2'b01;
 
                 DATA_O         <= {ZERO_PAD, g_data};
-                $fwrite(file, "Input: %h\n", g_data);
 
                 AXIS_M_TVALID  <= 1'b1;
                 packet_counter <= packet_counter + 1;
