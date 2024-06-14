@@ -78,15 +78,21 @@ module axis_mesh_tb();
         for (int i = 0; i < NUM_PACKET_INJ; i++) begin
 
             start  = 1'b1;
+
+            #(5ns);
+
             $fwrite(input1_file, "Input: %h\n", data_o1);
 
-            #(10ns);
+            #(5ns);
 
             start  = 1'b0;
             start2  = 1'b1;
+
+            #(5ns);
+
             $fwrite(input2_file, "Input: %h\n", data_o2);
 
-            #(10ns);
+            #(5ns);
 
             start2  = 1'b0;
 
