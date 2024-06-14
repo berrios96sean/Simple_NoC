@@ -200,9 +200,9 @@ module noc_adder_top (
         .DISABLE_SELFLOOP           (0),
         .ROUTER_FORCE_MLAB          (0)
     ) axis_mesh_inst (
-        .CLK_noc         (CLK_noc),
-        .CLK_usr         (CLK),
-        .RST_N           (RST_N),
+        .clk_noc         (CLK_NOC),
+        .clk_usr         (CLK),
+        .rst_n           (RST_N),
 
         .axis_in_tvalid  (axis_in_tvalid),
         .axis_in_tready  (axis_in_tready),
