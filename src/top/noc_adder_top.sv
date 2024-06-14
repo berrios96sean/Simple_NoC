@@ -42,8 +42,7 @@ module noc_adder_top (
         .TIDW          (TIDW),
         .LFSR_DW       (LFSR_DW),
         .LFSR_DEFAULT  (LFSR_DEFAULT),
-        .NUM_PACKETS   (NUM_PACKETS),
-        .FILE_NAME     ("input1.in")
+        .NUM_PACKETS   (NUM_PACKETS)
     ) num_gen1_inst (
         .CLK           (CLK),
         .RST_N         (RST_N),
@@ -115,8 +114,7 @@ module noc_adder_top (
         .TIDW          (TIDW),
         .LFSR_DW       (LFSR_DW),
         .LFSR_DEFAULT  (8'h10),
-        .NUM_PACKETS   (NUM_PACKETS),
-        .FILE_NAME     ("input2.in")
+        .NUM_PACKETS   (NUM_PACKETS)
     ) num_gen2_inst (
         .CLK           (CLK),
         .RST_N         (RST_N),
