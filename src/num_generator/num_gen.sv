@@ -7,10 +7,12 @@ module num_gen #(
     parameter        NUM_PACKETS  =  1,
     parameter string FILE_NAME    = "input.in"
 )(
-    input   wire    CLK,
-    input   wire    RST_N,
+    input   wire                  CLK,
+    input   wire                  RST_N,
 
-    input   wire    START,
+    input   wire                  START,
+
+    output  logic   [TDATAW-1:0]  DATA_O,
 
     // -------------------------------------------------------
     // AXI-Stream Slave Interface
@@ -89,6 +91,7 @@ module num_gen #(
                 o_data         <= g_data;
                 o_dest         <= 2'b01;
 
+                DATA_O         <= {ZERO_PAD, g_data};
                 $fwrite(file, "Input: %h\n", g_data);
 
                 AXIS_M_TVALID  <= 1'b1;
@@ -100,6 +103,7 @@ module num_gen #(
             end else begin
 
                 packet_counter <= 0;
+                DATA_O         <= 0;
                 AXIS_M_TVALID  <= 1'b0;
                 AXIS_M_TLAST   <= 1'b0;
 
