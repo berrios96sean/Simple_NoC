@@ -7,7 +7,7 @@ module output_module #(
     input   wire                  RST_N,
 
     output  logic                 DONE,
-    output  logic   [TDATAW-1:0]  DATA_O,
+    output  logic   [TDATAW-1:0]  ODATA_O,
 
     // -------------------------------------------------------
     // AXI-Stream Slave Interface
@@ -60,7 +60,7 @@ module output_module #(
                 buffer   <= AXIS_S_TDATA;
                 dest     <= AXIS_S_TDEST;
 
-                DATA_O   <= AXIS_S_TDATA;
+                ODATA_O   <= AXIS_S_TDATA;
 
                 if (AXIS_S_TVALID) begin
 

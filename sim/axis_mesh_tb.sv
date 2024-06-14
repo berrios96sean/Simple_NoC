@@ -92,19 +92,11 @@ module axis_mesh_tb();
             #(5ns);
 
             $fwrite(input1_file, "Input: %h\n", data_o1);
-
-            #(5ns);
-
-            start  = 1'b0;
-            start2  = 1'b1;
-
-            #(5ns);
-
             $fwrite(input2_file, "Input: %h\n", data_o2);
 
             #(5ns);
 
-            start2  = 1'b0;
+            start  = 1'b0;
 
             wait (done == 1);
 
@@ -112,7 +104,7 @@ module axis_mesh_tb();
 
             $fwrite(output_file, "Sum: %h\n", data_o3[8:0]);
 
-            #(10ns);
+            #(15ns);
 
         end
 
@@ -127,11 +119,10 @@ module axis_mesh_tb();
         .CLK_NOC  (clk_noc),
         .RST_N    (rst_n),
         .START    (start),
-        .START2   (start2),
         .DONE     (done),
-        .DATA_O1  (data_o1),
-        .DATA_O2  (data_o2),
-        .DATA_O3  (data_o3)
+        .IDATA_O1 (data_o1),
+        .IDATA_O2 (data_o2),
+        .ODATA_O  (data_o3)
 
     );
 

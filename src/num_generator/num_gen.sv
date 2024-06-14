@@ -11,7 +11,7 @@ module num_gen #(
 
     input   wire                  START,
 
-    output  logic   [TDATAW-1:0]  DATA_O,
+    output  logic   [TDATAW-1:0]  IDATA_O,
 
     // -------------------------------------------------------
     // AXI-Stream Slave Interface
@@ -74,7 +74,7 @@ module num_gen #(
                 o_data         <= g_data;
                 o_dest         <= 2'b01;
 
-                DATA_O         <= {ZERO_PAD, g_data};
+                IDATA_O        <= {ZERO_PAD, g_data};
 
                 AXIS_M_TVALID  <= 1'b1;
                 packet_counter <= packet_counter + 1;
@@ -88,7 +88,7 @@ module num_gen #(
             end else begin
 
                 packet_counter <= 0;
-                DATA_O         <= 0;
+                IDATA_O        <= 0;
                 AXIS_M_TVALID  <= 1'b0;
                 AXIS_M_TLAST   <= 1'b0;
 
