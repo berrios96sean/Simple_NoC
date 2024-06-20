@@ -32,5 +32,6 @@ set_global_assignment -name SYSTEMVERILOG_FILE hdl/router.sv
 set_global_assignment -name SYSTEMVERILOG_FILE hdl/lfsr.sv
 set_global_assignment -name SYSTEMVERILOG_FILE hdl/num_gen.sv
 set_global_assignment -name SYSTEMVERILOG_FILE hdl/output_module.sv
+set_global_assignment -name SYSTEMVERILOG_FILE hdl/parameters.sv
 
 set_global_assignment -name TOP_LEVEL_ENTITY hdl/noc_adder_tob.sv
