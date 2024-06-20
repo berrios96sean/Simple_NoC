@@ -18,5 +18,23 @@ set_global_assignment -name VERILOG_INPUT_VERSION SYSTEMVERILOG_2012
 set_global_assignment -name PWRMGT_VOLTAGE_OUTPUT_FORMAT "LINEAR FORMAT"
 set_global_assignment -name PWRMGT_LINEAR_FORMAT_N "-12"
 
+# Smart VID Settings 
+set_global_assignment -name PWRMGT_SLAVE_DEVICE0_ADDRESS 47
+set_global_assignment -name PWRMGT_SLAVE_DEVICE1_ADDRESS 00
+set_global_assignment -name PWRMGT_SLAVE_DEVICE2_ADDRESS 00
+set_global_assignment -name ACTIVE_SERIAL_CLOCK AS_FREQ_100MHZ
+set_global_assignment -name USE_PWRMGT_SCL SDM_IO14
+set_global_assignment -name USE_PWRMGT_SDA SDM_IO11
+set_global_assignment -name USE_CONF_DONE SDM_IO16
 
+# -3V Dev Kit (DK-DEV-AGF014E3ES)
+set_global_assignment -name PWRMGT_SLAVE_DEVICE_TYPE OTHER
+set_global_assignment -name PWRMGT_VOLTAGE_OUTPUT_FORMAT "AUTO DISCOVERY"
+set_global_assignment -name PWRMGT_LINEAR_FORMAT_N 0
+
+# # -2V Dev Kit (DK-DEV-AGF014E2ES)
+# set_global_assignment -name PWRMGT_SLAVE_DEVICE_TYPE ED8401
+# set_global_assignment -name PWRMGT_VOLTAGE_OUTPUT_FORMAT "LINEAR FORMAT"
+# set_global_assignment -name PWRMGT_LINEAR_FORMAT_N "-13"
+# set_global_assignment -name PWRMGT_PAGE_COMMAND_ENABLE OFF
 
