@@ -12,6 +12,7 @@ cd noc_adder
 source ../create_design.tcl
 source ../import_hdl.tcl
 source ../import_constraints.tcl
+source ../io_constraints.tcl
 
 
 
