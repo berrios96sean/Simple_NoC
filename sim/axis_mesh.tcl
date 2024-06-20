@@ -75,7 +75,12 @@ close $file_id3
 set file_id3 [open $sim_status_file_path w]
 close $file_id3
 
-vlog +acc $QSYS_SIMDIR/axis_mesh_tb.sv $QSYS_SIMDIR/../src/noc/*sv $QSYS_SIMDIR/../src/num_generator/*sv $QSYS_SIMDIR/../src/adder/*sv $QSYS_SIMDIR/../src/output/*sv $QSYS_SIMDIR/../src/top/*sv
+vlog +acc $QSYS_SIMDIR/axis_mesh_tb.sv \
+    $QSYS_SIMDIR/../src/noc/*sv \
+    $QSYS_SIMDIR/../src/num_generator/*sv \
+    $QSYS_SIMDIR/../src/adder/*sv \
+    $QSYS_SIMDIR/../src/output/*sv \
+    $QSYS_SIMDIR/../src/top/*sv
 #
 # Set the top-level simulation or testbench module/entity name, which is
 # used by the elab command to elaborate the top level.
