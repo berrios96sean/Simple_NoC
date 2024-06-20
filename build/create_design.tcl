@@ -28,13 +28,13 @@ set_global_assignment -name USE_PWRMGT_SDA SDM_IO11
 set_global_assignment -name USE_CONF_DONE SDM_IO16
 
 # -3V Dev Kit (DK-DEV-AGF014E3ES)
-set_global_assignment -name PWRMGT_SLAVE_DEVICE_TYPE OTHER
-set_global_assignment -name PWRMGT_VOLTAGE_OUTPUT_FORMAT "AUTO DISCOVERY"
-set_global_assignment -name PWRMGT_LINEAR_FORMAT_N 0
+# set_global_assignment -name PWRMGT_SLAVE_DEVICE_TYPE OTHER
+# set_global_assignment -name PWRMGT_VOLTAGE_OUTPUT_FORMAT "AUTO DISCOVERY"
+# set_global_assignment -name PWRMGT_LINEAR_FORMAT_N 0
 
 # # -2V Dev Kit (DK-DEV-AGF014E2ES)
-# set_global_assignment -name PWRMGT_SLAVE_DEVICE_TYPE ED8401
-# set_global_assignment -name PWRMGT_VOLTAGE_OUTPUT_FORMAT "LINEAR FORMAT"
-# set_global_assignment -name PWRMGT_LINEAR_FORMAT_N "-13"
-# set_global_assignment -name PWRMGT_PAGE_COMMAND_ENABLE OFF
+set_global_assignment -name PWRMGT_SLAVE_DEVICE_TYPE ED8401
+set_global_assignment -name PWRMGT_VOLTAGE_OUTPUT_FORMAT "LINEAR FORMAT"
+set_global_assignment -name PWRMGT_LINEAR_FORMAT_N "-13"
+set_global_assignment -name PWRMGT_PAGE_COMMAND_ENABLE OFF
 
