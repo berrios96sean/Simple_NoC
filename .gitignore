@@ -9,3 +9,7 @@ sim/vsim.wlf
 *.in
 *.out
 *.txt
+build/noc_adder/
+*.rec*
+*.log
+*.save
