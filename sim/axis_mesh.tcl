@@ -9,7 +9,9 @@
 # generated the IP script, relative to the directory from which you launch
 # the simulator.
 #
-set QSYS_SIMDIR /mnt/vault0/sfberrio/repos/Simple_NoC/sim
+#set QSYS_SIMDIR /mnt/vault0/sfberrio/repos/Simple_NoC/sim
+set QSYS_SIMDIR [pwd]
+#
 #
 # Source the generated IP simulation script.
 # Script may fail if modelsim.ini file is not in read only mode
@@ -33,10 +35,10 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 #
 
 # Set up test bench files
-set output_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/output.out
-set input_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/input1.in
-set input2_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/input2.in
-set sim_status_file_path /mnt/vault0/sfberrio/repos/Simple_NoC/sim/sim_status.txt
+set output_file_path $QSYS_SIMDIR/output.out
+set input_file_path $QSYS_SIMDIR/input1.in
+set input2_file_path $QSYS_SIMDIR/input2.in
+set sim_status_file_path $QSYS_SIMDIR/sim_status.txt
 
 if {[file exists $output_file_path]} {
     # Delete the existing file

@@ -9,4 +9,7 @@ exec mkdir -p noc_adder
 # Change to the project directory
 cd noc_adder
 
-source create_design.tcl
+source ../create_design.tcl
+
+
+
