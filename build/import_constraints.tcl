@@ -6,7 +6,7 @@ file copy -force ../../src/noc/reset_synchronizer.sdc                 constraint
 file copy -force ../../src/top/noc_adder.sdc                          constraints/noc_adder.sdc
 
 
-set_global_assignment -name SDC_FILE  constraints/dcfifo_agilex7.sdc
-set_global_assignment -name SDC_FILE  constraints/dcfifo_mixed_width_agilex7.sdc
+# set_global_assignment -name SDC_FILE  constraints/dcfifo_agilex7.sdc
+# set_global_assignment -name SDC_FILE  constraints/dcfifo_mixed_width_agilex7.sdc
 set_global_assignment -name SDC_FILE  constraints/reset_synchronizer.sdc
 set_global_assignment -name SDC_FILE  constraints/noc_adder.sdc
