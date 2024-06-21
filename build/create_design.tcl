@@ -1,7 +1,7 @@
 # Create a new Quartus project
 project_new noc_adder -overwrite
 
-set_global_assignment -name TOP_LEVEL_ENTITY noc_adder
+set_global_assignment -name TOP_LEVEL_ENTITY noc_adder_top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 23.4.0
 set_global_assignment -name LAST_QUARTUS_VERSION "23.4.0 Pro Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
