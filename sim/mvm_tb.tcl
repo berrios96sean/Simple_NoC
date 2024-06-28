@@ -47,7 +47,7 @@ set TOP_LEVEL_NAME mvm_tb
 # Call command to elaborate your design and testbench.
 elab_debug
 #
-# do wave.do
+do mvm_wave.do
 # Run the simulation.
 run -a
 #
