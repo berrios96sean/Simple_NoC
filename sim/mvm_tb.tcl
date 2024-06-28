@@ -16,7 +16,7 @@ set QSYS_SIMDIR [pwd]
 # Source the generated IP simulation script.
 # Script may fail if modelsim.ini file is not in read only mode
 # adjust by using chmod 444 <dir>/modelsim.ini
-# source $QSYS_SIMDIR/mentor/msim_setup.tcl
+source $QSYS_SIMDIR/mentor/msim_setup.tcl
 #
 # Set any compilation options you require (this is unusual).
 # set USER_DEFINED_COMPILE_OPTIONS <compilation options>

@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module tb_rtl_mvm;
+module mvm_tb;
 
   parameter DATAW = 512;
   parameter BYTEW = 8;
