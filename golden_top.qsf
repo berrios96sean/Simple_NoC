@@ -354,6 +354,7 @@ set_location_assignment PIN_CK31 -to ddr4_dimm_ch2_reset_n
 set_location_assignment PIN_CL46 -to ddr4_ch2_save_n
 set_location_assignment PIN_CN46 -to ddr4_ch2_event_n
 
+
 #EMIF #3
 set_location_assignment PIN_DC8 -to clk_ddr4_ch3_p
 #set_location_assignment PIN_DA8 -to clk_ddr4_ch3_n
