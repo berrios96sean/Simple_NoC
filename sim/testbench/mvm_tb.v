@@ -193,7 +193,8 @@ module mvm_tb;
       $display("Output tuser: %h", axis_tx_tuser);
     end
 
-    $stop;
+    $display("DONE");
+    $finish;
   end
 
   // -----------------------------------------------------------------------------
