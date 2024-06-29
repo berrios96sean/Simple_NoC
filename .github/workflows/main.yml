@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  simulation:
+  mvm-simulation:
     runs-on: ubuntu-latest
 
     steps:
