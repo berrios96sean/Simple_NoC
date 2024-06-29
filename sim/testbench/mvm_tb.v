@@ -115,7 +115,9 @@ module mvm_tb;
     @(posedge clk);
     axis_rx_tvalid = 1;
     axis_rx_tdata = {32'h00000001, { (INSTW-32){1'b0} }};
-    axis_rx_tuser = 75'b0;
+    axis_rx_tuser[8:0  ] =  9'b0;
+    axis_rx_tuser[10:9 ] =  2'b0;
+    axis_rx_tuser[74:11] = 64'b0;
     axis_rx_tlast = 1;
 
     @(posedge clk);
@@ -129,7 +131,9 @@ module mvm_tb;
     @(posedge clk);
     axis_rx_tvalid = 1;
     axis_rx_tdata = { (DATAW/8){8'h01} };
-    axis_rx_tuser = 75'b10;
+    axis_rx_tuser[8:0  ] =   9'b0;
+    axis_rx_tuser[10:9 ] =  2'b10;
+    axis_rx_tuser[74:11] =  64'b0;
     axis_rx_tlast = 1;
 
     @(posedge clk);
@@ -143,7 +147,9 @@ module mvm_tb;
     @(posedge clk);
     axis_rx_tvalid = 1;
     axis_rx_tdata = { (DATAW/8){8'h02} };
-    axis_rx_tuser = 75'b01;
+    axis_rx_tuser[8:0  ] =   9'b0;
+    axis_rx_tuser[10:9 ] =  2'b01;
+    axis_rx_tuser[74:11] =  64'b0;
     axis_rx_tlast = 1;
 
     @(posedge clk);
