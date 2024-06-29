@@ -108,16 +108,17 @@ module mvm_tb;
     // Using Dummy Data for now for all vectors, will adjust for different 
     // testcases later 
     // -----------------------------------------------------------------------------
-    
+
     // -----------------------------------------------------------------------------
-    // Test case 1: Load instruction
+    // Test case: Write Register File 1
     // -----------------------------------------------------------------------------
     @(posedge clk);
     axis_rx_tvalid = 1;
-    axis_rx_tdata = {32'h00000001, { (INSTW-32){1'b0} }};
-    axis_rx_tuser[8:0  ] =  9'b0;
-    axis_rx_tuser[10:9 ] =  2'b0;
-    axis_rx_tuser[74:11] = 64'b0;
+    axis_rx_tdata = { (DATAW/8){8'h01} };
+    axis_rx_tuser[8:0  ] =   9'h1;
+    axis_rx_tuser[10:9 ] =  2'b11;
+    axis_rx_tuser[11   ] =   1'b1;
+    axis_rx_tuser[74:12] =  63'b0;
     axis_rx_tlast = 1;
 
     @(posedge clk);
@@ -126,11 +127,11 @@ module mvm_tb;
     axis_rx_tlast = 0;
 
     // -----------------------------------------------------------------------------
-    // Test case 2: Load input vector
+    // Test case: Load input vector
     // -----------------------------------------------------------------------------
     @(posedge clk);
     axis_rx_tvalid = 1;
-    axis_rx_tdata = { (DATAW/8){8'h01} };
+    axis_rx_tdata = { (DATAW/8){8'h10} };
     axis_rx_tuser[8:0  ] =   9'b0;
     axis_rx_tuser[10:9 ] =  2'b10;
     axis_rx_tuser[74:11] =  64'b0;
@@ -142,7 +143,7 @@ module mvm_tb;
     axis_rx_tlast = 0;
 
     // -----------------------------------------------------------------------------
-    // Test case 3: Load reduction vector
+    // Test case: Load reduction vector
     // -----------------------------------------------------------------------------
     @(posedge clk);
     axis_rx_tvalid = 1;
@@ -158,7 +159,31 @@ module mvm_tb;
     axis_rx_tlast = 0;
 
     // -----------------------------------------------------------------------------
-    // Test case 4: Observe output
+    // Test case: Load instruction
+    // -----------------------------------------------------------------------------
+    @(posedge clk);
+    axis_rx_tvalid = 1;
+    axis_rx_tdata[    0] = 1'b0; // RDC
+    axis_rx_tdata[    1] = 1'b0; // ACM EN
+    axis_rx_tdata[    2] = 1'b1; // RLS
+    axis_rx_tdata[    3] = 1'b1; // LST
+    axis_rx_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
+    axis_rx_tdata[21:13] = 9'h1; // RF_ADDR
+    axis_rx_tdata[30:22] = 9'b0; // RLS_DEST
+    axis_rx_tdata[   31] = 1'b1; // RLS_OP
+
+    axis_rx_tuser[8:0  ] =  9'b0;
+    axis_rx_tuser[10:9 ] =  2'b0;
+    axis_rx_tuser[74:11] = 64'b0;
+    axis_rx_tlast = 1;
+
+    @(posedge clk);
+    axis_rx_tvalid = 0;
+    axis_rx_tdata = 0;
+    axis_rx_tlast = 0;
+
+    // -----------------------------------------------------------------------------
+    // Test case: Observe output
     // -----------------------------------------------------------------------------
     @(posedge clk);
     #100; 
