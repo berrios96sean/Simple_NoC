@@ -186,7 +186,7 @@ module mvm_tb;
     // Test case: Observe output
     // -----------------------------------------------------------------------------
     @(posedge clk);
-    #100; 
+    #300; 
 
     if (axis_tx_tvalid) begin
       $display("Output data: %h", axis_tx_tdata);
