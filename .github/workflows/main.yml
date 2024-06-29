@@ -1,0 +1,42 @@
+name: Icarus Verilog CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  simulation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Icarus Verilog
+      run: sudo apt-get update && sudo apt-get install -y iverilog
+
+    - name: Compile Verilog design
+      run: |
+        iverilog -o design_sim src/mvm/*v sim/testbench/mvm_tb.v
+
+    - name: Run simulation
+      run: |
+        vvp design_sim > simulation.log
+
+    - name: Check simulation results
+      run: |
+        if grep -q "DONE" simulation.log; then
+          echo "Simulation passed"
+        else
+          echo "Simulation failed"
+          exit 1
+        fi
+
+    - name: Save simulation logs
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: simulation-logs
+        path: simulation.log
