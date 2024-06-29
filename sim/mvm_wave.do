@@ -36,6 +36,15 @@ add wave -noupdate {/mvm_tb/uut/generate_datapath[0]/datapath_inst/accum_inst/i_
 add wave -noupdate {/mvm_tb/uut/generate_datapath[0]/datapath_inst/accum_inst/o_valid}
 add wave -noupdate {/mvm_tb/uut/generate_datapath[0]/datapath_inst/reduce_inst/i_valid}
 add wave -noupdate {/mvm_tb/uut/generate_datapath[0]/datapath_inst/reduce_inst/o_valid}
+add wave -noupdate /mvm_tb/uut/axis_rx_tready
+add wave -noupdate /mvm_tb/uut/axis_tx_tvalid
+add wave -noupdate /mvm_tb/uut/axis_tx_tdata
+add wave -noupdate /mvm_tb/uut/axis_tx_tstrb
+add wave -noupdate /mvm_tb/uut/axis_tx_tkeep
+add wave -noupdate /mvm_tb/uut/axis_tx_tid
+add wave -noupdate /mvm_tb/uut/axis_tx_tdest
+add wave -noupdate /mvm_tb/uut/axis_tx_tuser
+add wave -noupdate /mvm_tb/uut/axis_tx_tlast
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {167543 ps} 0}
 quietly wave cursor active 1
@@ -53,4 +62,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {204750 ps}
+WaveRestoreZoom {65168 ps} {269918 ps}
