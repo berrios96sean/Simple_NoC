@@ -117,8 +117,7 @@ module mvm_tb;
     axis_rx_tdata = { (DATAW/8){8'h01} };
     axis_rx_tuser[8:0  ] =   9'h1;
     axis_rx_tuser[10:9 ] =  2'b11;
-    axis_rx_tuser[11   ] =   1'b1;
-    axis_rx_tuser[74:12] =  63'b0;
+    axis_rx_tuser[74:11] =  64'h1111111111111111;
     axis_rx_tlast = 1;
 
     @(posedge clk);
