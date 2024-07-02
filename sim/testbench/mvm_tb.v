@@ -142,14 +142,14 @@ module mvm_tb;
 
     end
 
-    // output_file = $fopen("output.out", "w");
+    output_file = $fopen("./test_files/mvm_test/output.out", "w");
 
-    // if (output_file == 0) begin
+    if (output_file == 0) begin
 
-    //     $display("Error: Could not open output file.");
-    //     $finish;
+        $display("Error: Could not open output file.");
+        $finish;
 
-    // end
+    end
 
     clk = 0;
     rst = 1;
@@ -262,13 +262,14 @@ module mvm_tb;
     // Test case: Observe output
     // -----------------------------------------------------------------------------
     @(posedge clk);
-    #300; 
+    // #300; 
 
+    wait (axis_tx_tvalid == 1);
     if (axis_tx_tvalid) begin
-      $display("Output data: %h", axis_tx_tdata);
-      $display("Output tuser: %h", axis_tx_tuser);
+      $fwrite(output_file, "Output Data: %h\n", axis_tx_tdata);
     end
 
+    #100;
     $display("DONE");
     $finish;
   end
