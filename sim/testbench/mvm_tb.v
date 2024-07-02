@@ -117,7 +117,7 @@ module mvm_tb;
     axis_rx_tdata = { (DATAW/8){8'h01} };
     axis_rx_tuser[8:0  ] =   9'h1;
     axis_rx_tuser[10:9 ] =  2'b11;
-    axis_rx_tuser[74:11] =  64'h1111111111111111;
+    axis_rx_tuser[74:11] = 64'hFFFFFFFFFFFFFFFF;
     axis_rx_tlast = 1;
 
     @(posedge clk);
@@ -163,7 +163,7 @@ module mvm_tb;
     @(posedge clk);
     axis_rx_tvalid = 1;
     axis_rx_tdata[    0] = 1'b0; // RDC
-    axis_rx_tdata[    1] = 1'b0; // ACM EN
+    axis_rx_tdata[    1] = 1'b1; // ACM EN
     axis_rx_tdata[    2] = 1'b1; // RLS
     axis_rx_tdata[    3] = 1'b1; // LST
     axis_rx_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
