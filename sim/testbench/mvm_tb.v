@@ -126,8 +126,6 @@ module mvm_tb;
     rf_weights_file = $fopen("./test_files/mvm_test/rf_weights.in", "r");
 
     if (rf_weights_file == 0) begin
-        $display("Current Working Directory:");
-        $system("pwd");
         $display("Error: Could not open output file.");
         $finish;
 

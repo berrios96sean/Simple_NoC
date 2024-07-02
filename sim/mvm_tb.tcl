@@ -28,6 +28,19 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 #
 # Call command to compile the Quartus-generated IP simulation files.
 # com
+
+# Set up test bench files
+set output_file_path $QSYS_SIMDIR/test_files/mvm_test/output.out
+
+if {[file exists $output_file_path]} {
+    # Delete the existing file
+    file delete -force $output_file_path
+}
+
+# Create a new output file
+set file_id [open $output_file_path w]
+close $file_id
+
 #
 # Add commands to compile all design files and testbench files, including
 # the top level. (These are all the files required for simulation other
