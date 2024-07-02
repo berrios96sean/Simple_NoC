@@ -2,6 +2,11 @@
 
 module mvm_tb;
 
+  integer rf_weights_file, input_vec_file, output_file; 
+  reg [8*128:1] line;  // Assuming each line can be up to 128 characters
+  reg [511:0] data_word;
+  integer r;
+
   parameter DATAW = 512;
   parameter BYTEW = 8;
   parameter IDW = 32;
@@ -89,7 +94,64 @@ module mvm_tb;
     .axis_tx_tready(axis_tx_tready)
   );
 
+  // -----------------------------------------------------------------------------
+  // Function to Read a data word from I/O
+  // -----------------------------------------------------------------------------
+  task read_and_parse(input integer file_handle, output reg [511:0] data_out, output reg valid_out);
+      
+    reg [8*128:1] local_line;  // Local line buffer for the task
+    integer local_r;
+
+    begin
+        valid_out = 0;
+        // Read a line from the file
+        local_r = $fgets(local_line, file_handle);
+        if (local_r != 0) begin
+            // Parse the line into a 512-bit data word
+            local_r = $sscanf(local_line, "%h", data_out);
+            if (local_r == 1) begin
+                valid_out = 1;
+            end
+        end
+    end
+
+  endtask
+
   initial begin
+
+    // -----------------------------------------------------------------------------
+    // Setup stimulus files for w/r
+    // -----------------------------------------------------------------------------
+
+    rf_weights_file = $fopen("./test_files/mvm_test/rf_weights.in", "r");
+
+    if (rf_weights_file == 0) begin
+        $display("Current Working Directory:");
+        $system("pwd");
+        $display("Error: Could not open output file.");
+        $finish;
+
+    end
+
+    // Uncomment later to avoid sim errors
+    // input_vec_file = $fopen("input_vec.in", "r");
+
+    // if (input_vec_file == 0) begin
+
+    //     $display("Error: Could not open output file.");
+    //     $finish;
+
+    // end
+
+    // output_file = $fopen("output.out", "w");
+
+    // if (output_file == 0) begin
+
+    //     $display("Error: Could not open output file.");
+    //     $finish;
+
+    // end
+
     clk = 0;
     rst = 1;
     axis_rx_tvalid = 0;
@@ -113,8 +175,16 @@ module mvm_tb;
     // Test case: Write Register File 1
     // -----------------------------------------------------------------------------
     @(posedge clk);
-    axis_rx_tvalid = 1;
-    axis_rx_tdata = { (DATAW/8){8'h01} };
+    read_and_parse(rf_weights_file, data_word, axis_rx_tvalid);
+
+    if (axis_rx_tvalid) begin
+
+      axis_rx_tdata <= data_word;
+
+    end
+
+    // axis_rx_tvalid = 1;
+    // axis_rx_tdata = { (DATAW/8){8'h01} };
     axis_rx_tuser[8:0  ] =   9'h1;
     axis_rx_tuser[10:9 ] =  2'b11;
     axis_rx_tuser[74:11] = 64'hFFFFFFFFFFFFFFFF;
