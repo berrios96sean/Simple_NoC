@@ -3,7 +3,7 @@
 module mvm_tb;
 
   integer rf_weights_file, input_vec_file, output_file; 
-  reg [8*128:1] line;  // Assuming each line can be up to 128 characters
+  reg [8*128:1] line;
   reg [511:0] data_word;
   integer r;
 
@@ -133,15 +133,14 @@ module mvm_tb;
 
     end
 
-    // Uncomment later to avoid sim errors
-    // input_vec_file = $fopen("input_vec.in", "r");
+    input_vec_file = $fopen("./test_files/mvm_test/input_vec.in", "r");
 
-    // if (input_vec_file == 0) begin
+    if (input_vec_file == 0) begin
 
-    //     $display("Error: Could not open output file.");
-    //     $finish;
+        $display("Error: Could not open output file.");
+        $finish;
 
-    // end
+    end
 
     // output_file = $fopen("output.out", "w");
 
@@ -199,8 +198,16 @@ module mvm_tb;
     // Test case: Load input vector
     // -----------------------------------------------------------------------------
     @(posedge clk);
-    axis_rx_tvalid = 1;
-    axis_rx_tdata = { (DATAW/8){8'h01} };
+    read_and_parse(input_vec_file, data_word, axis_rx_tvalid);
+
+    if (axis_rx_tvalid) begin
+
+      axis_rx_tdata <= data_word;
+
+    end
+
+    // axis_rx_tvalid = 1;
+    // axis_rx_tdata = { (DATAW/8){8'h01} };
     axis_rx_tuser[8:0  ] =   9'b0;
     axis_rx_tuser[10:9 ] =  2'b10;
     axis_rx_tuser[74:11] =  64'b0;
