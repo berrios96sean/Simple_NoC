@@ -126,7 +126,7 @@ module mvm_tb;
     rf_weights_file = $fopen("./test_files/mvm_test/rf_weights.in", "r");
 
     if (rf_weights_file == 0) begin
-        $display("Error: Could not open output file.");
+        $display("Error: Could not open weights file.");
         $finish;
 
     end
@@ -135,7 +135,7 @@ module mvm_tb;
 
     if (input_vec_file == 0) begin
 
-        $display("Error: Could not open output file.");
+        $display("Error: Could not open input file.");
         $finish;
 
     end
