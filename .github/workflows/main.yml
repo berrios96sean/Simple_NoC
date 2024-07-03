@@ -19,6 +19,7 @@ jobs:
 
     - name: Compile Verilog design
       run: |
+        pwd
         iverilog -o design_sim src/mvm/*v sim/testbench/mvm_tb.v
 
     - name: Run simulation
