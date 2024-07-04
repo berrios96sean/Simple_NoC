@@ -4,6 +4,7 @@ module mvm_tb;
 
   integer rf_weights_file, input_vec_file, output_file; 
   reg [8*128:1] line;
+  reg [6:0] line_count = 0;
   reg [511:0] data_word;
   integer r;
 
@@ -160,6 +161,7 @@ module mvm_tb;
     axis_rx_tuser = 0;
     axis_rx_tlast = 0;
     axis_tx_tready = 1;
+    line_count = 11;
 
     #10 rst = 0;
     
@@ -172,20 +174,32 @@ module mvm_tb;
     // Test case: Write Register File 1
     // -----------------------------------------------------------------------------
     @(posedge clk);
-    read_and_parse(rf_weights_file, data_word, axis_rx_tvalid);
 
-    if (axis_rx_tvalid) begin
+    // -----------------------------------------------------------------------------
+    // Loop through the input file for 64 lines to write data to each register file 
+    // from input file
+    // -----------------------------------------------------------------------------
+    while (!$feof(rf_weights_file) && line_count < 76) begin
 
-      axis_rx_tdata <= data_word;
+        read_and_parse(rf_weights_file, data_word, axis_rx_tvalid);
+        
+        if (axis_rx_tvalid) begin
 
+            axis_rx_tdata <= data_word;
+            axis_rx_tuser[8:0  ] =   9'h1;
+            axis_rx_tuser[10:9 ] =  2'b11;
+
+            if (line_count > 11) begin 
+              axis_rx_tuser[line_count-1] = 0; 
+            end
+            
+            axis_rx_tuser[line_count] = 1;
+            axis_rx_tlast = 1;
+            line_count = line_count + 1;
+
+        end
+        @(posedge clk);
     end
-
-    // axis_rx_tvalid = 1;
-    // axis_rx_tdata = { (DATAW/8){8'h01} };
-    axis_rx_tuser[8:0  ] =   9'h1;
-    axis_rx_tuser[10:9 ] =  2'b11;
-    axis_rx_tuser[74:11] = 64'hFFFFFFFFFFFFFFFF;
-    axis_rx_tlast = 1;
 
     @(posedge clk);
     axis_rx_tvalid = 0;
