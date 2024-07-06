@@ -109,7 +109,7 @@ module mvm_tb;
         local_r = $fgets(local_line, file_handle);
         if (local_r != 0) begin
             // Parse the line into a 512-bit data word
-            local_r = $sscanf(local_line, "%h", data_out);
+            local_r = $sscanf(local_line, "%d", data_out);
             if (local_r == 1) begin
                 valid_out = 1;
             end
