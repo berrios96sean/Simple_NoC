@@ -32,9 +32,9 @@ def matrix_vector_multiplication(input_vector, weights_matrix):
 
 def main():
     # File paths
-    input_vector_file = 'input_vec.in'
-    weights_matrix_file = 'rf_weights.in'
-    output_vector_file = 'gold_output_vector.out'
+    input_vector_file = 'test_files/mvm_test/input_vec.in'
+    weights_matrix_file = 'test_files/mvm_test/rf_weights.in'
+    output_vector_file = 'test_files/mvm_test/gold_output_vector.out'
 
     # Read input data
     input_vector = read_input_vector(input_vector_file)

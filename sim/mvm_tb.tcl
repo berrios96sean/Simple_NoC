@@ -31,6 +31,7 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 
 # Set up test bench files
 set output_file_path $QSYS_SIMDIR/test_files/mvm_test/output.out
+set output_file "test_files/mvm_test/results.txt"
 
 if {[file exists $output_file_path]} {
     # Delete the existing file
@@ -40,6 +41,10 @@ if {[file exists $output_file_path]} {
 # Create a new output file
 set file_id [open $output_file_path w]
 close $file_id
+
+# Create Stimulus and golden output files
+exec python3 test_files/mvm_test/create_stimulus.py
+exec python3 test_files/mvm_test/golden_out.py
 
 #
 # Add commands to compile all design files and testbench files, including
@@ -63,6 +68,19 @@ elab_debug
 do mvm_wave.do
 # Run the simulation.
 run -a
+
+# Check results for Pass or Fail report 
+exec python3 test_files/mvm_test/compare_output.py
+
+
+# Read the results from results.txt
+set result_file [open $output_file r]
+set result [read $result_file]
+close $result_file
+
+# Print the result to the QuestaSim console
+puts "Comparison result: $result"
+
 #
 # Report success to the shell.
 # exit -code 0
