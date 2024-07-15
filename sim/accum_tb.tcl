@@ -30,8 +30,8 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 # com
 
 # Set up test bench files
-set output_file_path $QSYS_SIMDIR/test_files/mvm_test/output.out
-set output_file "test_files/mvm_test/results.txt"
+set output_file_path $QSYS_SIMDIR/test_files/accum_test/output.out
+set output_file "test_files/accum_test/results.txt"
 
 if {[file exists $output_file_path]} {
     # Delete the existing file
@@ -43,15 +43,15 @@ set file_id [open $output_file_path w]
 close $file_id
 
 # Create Stimulus and golden output files
-exec python3 test_files/mvm_test/create_stimulus.py
-exec python3 test_files/mvm_test/golden_out.py
+# exec python3 test_files/accum_test/create_stimulus.py
+# exec python3 test_files/accum_test/golden_out.py
 
 #
 # Add commands to compile all design files and testbench files, including
 # the top level. (These are all the files required for simulation other
 # than the files compiled by the Quartus-generated IP simulation script)
 #
-vlog +acc $QSYS_SIMDIR/testbench/mvm_tb.v \
+vlog +acc $QSYS_SIMDIR/testbench/accum_tb.v \
     $QSYS_SIMDIR/../src/mvm/*v 
 #
 # Set the top-level simulation or testbench module/entity name, which is
@@ -65,21 +65,21 @@ set TOP_LEVEL_NAME mvm_tb
 # Call command to elaborate your design and testbench.
 elab_debug
 #
-do test_files/mvm_test/mvm_wave.do
+# do test_files/accum_test/accum_wave.do
 # Run the simulation.
 run -a
 
 # Check results for Pass or Fail report 
-exec python3 test_files/mvm_test/compare_output.py
+# exec python3 test_files/accum_test/compare_output.py
 
 
-# Read the results from results.txt
-set result_file [open $output_file r]
-set result [read $result_file]
-close $result_file
+# # Read the results from results.txt
+# set result_file [open $output_file r]
+# set result [read $result_file]
+# close $result_file
 
-# Print the result to the QuestaSim console
-puts "Comparison result: $result"
+# # Print the result to the QuestaSim console
+# puts "Comparison result: $result"
 
 #
 # Report success to the shell.

@@ -35,10 +35,10 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 #
 
 # Set up test bench files
-set output_file_path $QSYS_SIMDIR/output.out
-set input_file_path $QSYS_SIMDIR/input1.in
-set input2_file_path $QSYS_SIMDIR/input2.in
-set sim_status_file_path $QSYS_SIMDIR/sim_status.txt
+set output_file_path $QSYS_SIMDIR/test_files/axis_mesh/output.out
+set input_file_path $QSYS_SIMDIR/test_files/axis_mesh/input1.in
+set input2_file_path $QSYS_SIMDIR/test_files/axis_mesh/input2.in
+set sim_status_file_path $QSYS_SIMDIR/test_files/axis_mesh/sim_status.txt
 
 if {[file exists $output_file_path]} {
     # Delete the existing file
@@ -77,7 +77,7 @@ close $file_id3
 set file_id3 [open $sim_status_file_path w]
 close $file_id3
 
-vlog +acc $QSYS_SIMDIR/axis_mesh_tb.sv \
+vlog +acc $QSYS_SIMDIR/testbench/axis_mesh_tb.sv \
     $QSYS_SIMDIR/../src/noc/*sv \
     $QSYS_SIMDIR/../src/num_generator/*sv \
     $QSYS_SIMDIR/../src/adder/*sv \
@@ -95,19 +95,19 @@ set TOP_LEVEL_NAME axis_mesh_tb
 # Call command to elaborate your design and testbench.
 elab_debug
 #
-do wave.do
+do test_files/axis_mesh/wave.do
 # Run the simulation.
 run -a
 #
-if {[file exists "sim_status.txt"]} {
-    set status_file [open "sim_status.txt" r]
+if {[file exists "test_files/axis_mesh/sim_status.txt"]} {
+    set status_file [open "test_files/axis_mesh/sim_status.txt" r]
     set status [read $status_file]
     close $status_file
 
     if {[string equal $status "Simulation finished"]} {
 
         set python_path "/usr/bin/python3" ;
-        set script_path "verify_sums.py"
+        set script_path "test_files/axis_mesh/verify_sums.py"
         set result [exec $python_path $script_path]
         puts $result
 
