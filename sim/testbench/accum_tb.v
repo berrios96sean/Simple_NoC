@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
-module mvm_tb;
+module accum_tb;
 
-  integer rf_weights_file, input_vec_file, output_file; 
+  integer rf_weights_file, input_vec_file1,input_vec_file2, output_file; 
   reg [8*128:1] line;
   reg [6:0] line_count = 0;
   reg [511:0] data_word;
@@ -124,7 +124,7 @@ module mvm_tb;
     // Setup stimulus files for w/r
     // -----------------------------------------------------------------------------
 
-    rf_weights_file = $fopen("./test_files/mvm_test/rf_weights.in", "r");
+    rf_weights_file = $fopen("./test_files/accum_test/rf_weights.in", "r");
 
     if (rf_weights_file == 0) begin
         $display("Error: Could not open weights file.");
@@ -132,16 +132,25 @@ module mvm_tb;
 
     end
 
-    input_vec_file = $fopen("./test_files/mvm_test/input_vec.in", "r");
+    input_vec_file1 = $fopen("./test_files/accum_test/input_vec1.in", "r");
 
-    if (input_vec_file == 0) begin
+    if (input_vec_file1 == 0) begin
 
         $display("Error: Could not open input file.");
         $finish;
 
     end
 
-    output_file = $fopen("./test_files/mvm_test/output.out", "w");
+    input_vec_file2 = $fopen("./test_files/accum_test/input_vec2.in", "r");
+
+    if (input_vec_file2 == 0) begin
+
+        $display("Error: Could not open input file.");
+        $finish;
+
+    end
+
+    output_file = $fopen("./test_files/accum_test/output.out", "w");
 
     if (output_file == 0) begin
 
@@ -207,10 +216,10 @@ module mvm_tb;
     axis_rx_tlast = 0;
 
     // -----------------------------------------------------------------------------
-    // Test case: Load input vector
+    // Test case: Load First input vector
     // -----------------------------------------------------------------------------
     @(posedge clk);
-    read_and_parse(input_vec_file, data_word, axis_rx_tvalid);
+    read_and_parse(input_vec_file1, data_word, axis_rx_tvalid);
 
     if (axis_rx_tvalid) begin
 
@@ -247,7 +256,57 @@ module mvm_tb;
     axis_rx_tlast = 0;
 
     // -----------------------------------------------------------------------------
-    // Test case: Load instruction
+    // Test case: Load instruction 1
+    // Calculuate and then accumulate results for next calculation
+    // -----------------------------------------------------------------------------
+    @(posedge clk);
+    axis_rx_tvalid = 1;
+    axis_rx_tdata[    0] = 1'b0; // RDC
+    axis_rx_tdata[    1] = 1'b1; // ACM EN
+    axis_rx_tdata[    2] = 1'b0; // RLS
+    axis_rx_tdata[    3] = 1'b0; // LST
+    axis_rx_tdata[ 12:4] = 9'h0; // ACCUM_ADDR
+    axis_rx_tdata[21:13] = 9'h1; // RF_ADDR
+    axis_rx_tdata[30:22] = 9'h0; // RLS_DEST
+    axis_rx_tdata[   31] = 1'b1; // RLS_OP
+
+    axis_rx_tuser[8:0  ] =  9'b0;
+    axis_rx_tuser[10:9 ] =  2'b0;
+    axis_rx_tuser[74:11] = 64'b0;
+    axis_rx_tlast = 1;
+
+    @(posedge clk);
+    axis_rx_tvalid = 0;
+    axis_rx_tdata = 0;
+    axis_rx_tlast = 0;
+
+    // -----------------------------------------------------------------------------
+    // Test case: Load Second input vector
+    // -----------------------------------------------------------------------------
+    @(posedge clk);
+    read_and_parse(input_vec_file2, data_word, axis_rx_tvalid);
+
+    if (axis_rx_tvalid) begin
+
+      axis_rx_tdata <= data_word;
+
+    end
+
+    // axis_rx_tvalid = 1;
+    // axis_rx_tdata = { (DATAW/8){8'h01} };
+    axis_rx_tuser[8:0  ] =   9'b0;
+    axis_rx_tuser[10:9 ] =  2'b10;
+    axis_rx_tuser[74:11] =  64'b0;
+    axis_rx_tlast = 1;
+
+    @(posedge clk);
+    axis_rx_tvalid = 0;
+    axis_rx_tdata = 0;
+    axis_rx_tlast = 0;
+
+    // -----------------------------------------------------------------------------
+    // Test case: Load instruction 2
+    // Calculuate and then accumulate results for next calculation
     // -----------------------------------------------------------------------------
     @(posedge clk);
     axis_rx_tvalid = 1;
@@ -255,9 +314,9 @@ module mvm_tb;
     axis_rx_tdata[    1] = 1'b1; // ACM EN
     axis_rx_tdata[    2] = 1'b1; // RLS
     axis_rx_tdata[    3] = 1'b1; // LST
-    axis_rx_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
+    axis_rx_tdata[ 12:4] = 9'h0; // ACCUM_ADDR
     axis_rx_tdata[21:13] = 9'h1; // RF_ADDR
-    axis_rx_tdata[30:22] = 9'b0; // RLS_DEST
+    axis_rx_tdata[30:22] = 9'h0; // RLS_DEST
     axis_rx_tdata[   31] = 1'b1; // RLS_OP
 
     axis_rx_tuser[8:0  ] =  9'b0;
