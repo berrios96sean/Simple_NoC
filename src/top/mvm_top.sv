@@ -2,19 +2,42 @@
 
 module mvm_top (
 
-    input  wire              CLK,
-    input  wire              CLK_NOC,
-    input  wire              RST_N,
-    input  wire              START,
-    output wire              DONE,
-    output wire [TDATAW-1:0] IDATA_O1,
-    output wire [TDATAW-1:0] IDATA_O2,
-    output wire [TDATAW-1:0] ODATA_O
+    input   wire                  CLK,
+    input   wire                  CLK_NOC,
+    input   wire                  RST_N,
+
+    // -------------------------------------------------------
+    // AXI-Stream Slave Interface
+    // -------------------------------------------------------
+    input   wire                  AXIS_S_TVALID,
+    output  logic                 AXIS_S_TREADY,
+    input   wire    [TDATAW-1:0]  AXIS_S_TDATA,
+    input   wire                  AXIS_S_TLAST,
+    input   wire    [  TIDW-1:0]  AXIS_S_TID,
+    input   wire    [ USERW-1:0]  AXIS_S_TUSER,
+    input   wire    [TDESTW-1:0]  AXIS_S_TDEST,
+
+    // -------------------------------------------------------
+    // AXI-Stream Master Interface
+    // -------------------------------------------------------
+    output  logic                 AXIS_M_TVALID,
+    input   wire                  AXIS_M_TREADY,
+    output  logic   [TDATAW-1:0]  AXIS_M_TDATA,
+    output  logic                 AXIS_M_TLAST,
+    output  logic   [  TIDW-1:0]  AXIS_M_TID,
+    output  logic   [ USERW-1:0]  AXIS_M_TUSER,
+    output  logic   [TDESTW-1:0]  AXIS_M_TDEST
 
 );
 
     // -------------------------------------------------------
     // NoC Connections
+    // -------------------------------------------------------
+    //
+    // NOTE: These names in/out are named for the directions 
+    // in which they enter the noc. Not the MVMs they are 
+    // connected to
+    //
     // -------------------------------------------------------
     logic              axis_in_tvalid   [ROWS][COLUMNS];
     logic              axis_in_tready   [ROWS][COLUMNS];
@@ -57,15 +80,15 @@ module mvm_top (
         .clk(CLK),                                      // input
         .rst(~RST_N),                                   // input
 
-        .axis_rx_tvalid  (axis_out_tvalid [0][0]),       // input
-        .axis_rx_tdata   (axis_out_tdata  [0][0]),       // input
-        // .axis_rx_tstrb(axis_out_tstrb  [0][0]),       // input
-        // .axis_rx_tkeep(axis_out_tkeep  [0][0]),       // input
-        // .axis_rx_tid  (axis_out_tid    [0][0]),       // input
-        .axis_rx_tdest   (axis_out_tdest  [0][0]),       // input
-        // .axis_rx_tuser(axis_out_tuser  [0][0]),       // input
-        .axis_rx_tlast   (axis_out_tlast  [0][0]),       // input
-        .axis_rx_tready  (axis_out_tready [0][0]),       // output
+        .axis_rx_tvalid  (axis_s_tvalid),               // input
+        .axis_rx_tdata   (axis_s_tdata ),               // input
+        // .axis_rx_tstrb(axis_s_tstrb ),               // input
+        // .axis_rx_tkeep(axis_s_tkeep ),               // input
+        // .axis_rx_tid  (axis_s_tid   ),               // input
+        .axis_rx_tdest   (axis_s_tdest ),               // input
+        .axis_rx_tuser   (axis_s_tuser ),               // input
+        .axis_rx_tlast   (axis_s_tlast ),               // input
+        .axis_rx_tready  (axis_s_tready),               // output
 
         .axis_tx_tvalid  (axis_in_tvalid  [0][0]),       // output
         .axis_tx_tdata   (axis_in_tdata   [0][0]),       // output
@@ -205,15 +228,15 @@ module mvm_top (
         .axis_rx_tlast   (axis_out_tlast  [1][1]),       // input
         .axis_rx_tready  (axis_out_tready [1][1]),       // output
 
-        .axis_tx_tvalid  (axis_in_tvalid  [1][1]),       // output
-        .axis_tx_tdata   (axis_in_tdata   [1][1]),       // output
-        // .axis_tx_tstrb(axis_in_tstrb   [1][1]),       // output
-        // .axis_tx_tkeep(axis_in_tkeep   [1][1]),       // output
-        // .axis_tx_tid  (axis_in_tid     [1][1]),       // output
-        .axis_tx_tdest   (axis_in_tdest   [1][1]),       // output
-        // .axis_tx_tuser(axis_in_tuser   [1][1]),       // output
-        .axis_tx_tlast   (axis_in_tlast   [1][1]),       // output
-        .axis_tx_tready  (axis_in_tready  [1][1])        // input
+        .axis_tx_tvalid  (axis_m_tvalid),                // output
+        .axis_tx_tdata   (axis_m_tdata ),                // output
+        // .axis_tx_tstrb(axis_m_tstrb ),                // output
+        // .axis_tx_tkeep(axis_m_tkeep ),                // output
+        // .axis_tx_tid  (axis_m_tid   ),                // output
+        .axis_tx_tdest   (axis_m_tdest ),                // output
+        .axis_tx_tuser   (axis_m_tuser ),                // output
+        .axis_tx_tlast   (axis_m_tlast ),                // output
+        .axis_tx_tready  (axis_m_tready)                 // input
     );
 
     // -------------------------------------------------------
