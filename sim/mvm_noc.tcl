@@ -50,7 +50,7 @@ set TOP_LEVEL_NAME mvm_noc_tb
 # Call command to elaborate your design and testbench.
 elab_debug
 #
-# do test_files/axis_mesh/wave.do
+do test_files/mvm_noc/wave.do
 # Run the simulation.
 run -a
 #
