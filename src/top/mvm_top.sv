@@ -1,6 +1,6 @@
 `include "parameters.sv"
 
-module noc_adder_top (
+module mvm_top (
 
     input  wire              CLK,
     input  wire              CLK_NOC,
@@ -16,17 +16,17 @@ module noc_adder_top (
     // -------------------------------------------------------
     // NoC Connections
     // -------------------------------------------------------
-    logic        axis_in_tvalid   [ROWS][COLUMNS];
-    logic        axis_in_tready   [ROWS][COLUMNS];
-    logic [31:0] axis_in_tdata    [ROWS][COLUMNS];
-    logic        axis_in_tlast    [ROWS][COLUMNS];
-    logic [ 3:0] axis_in_tdest    [ROWS][COLUMNS];
+    logic              axis_in_tvalid   [ROWS][COLUMNS];
+    logic              axis_in_tready   [ROWS][COLUMNS];
+    logic [TDATAW-1:0] axis_in_tdata    [ROWS][COLUMNS];
+    logic              axis_in_tlast    [ROWS][COLUMNS];
+    logic [TDESTW-1:0] axis_in_tdest    [ROWS][COLUMNS];
 
-    logic        axis_out_tvalid  [ROWS][COLUMNS];
-    logic        axis_out_tready  [ROWS][COLUMNS];
-    logic [31:0] axis_out_tdata   [ROWS][COLUMNS];
-    logic        axis_out_tlast   [ROWS][COLUMNS];
-    logic [ 3:0] axis_out_tdest   [ROWS][COLUMNS];
+    logic              axis_out_tvalid  [ROWS][COLUMNS];
+    logic              axis_out_tready  [ROWS][COLUMNS];
+    logic [TDATAW-1:0] axis_out_tdata   [ROWS][COLUMNS];
+    logic              axis_out_tlast   [ROWS][COLUMNS];
+    logic [TDESTW-1:0] axis_out_tdest   [ROWS][COLUMNS];
 
     // -------------------------------------------------------
     // Module Instantions
@@ -225,7 +225,7 @@ module noc_adder_top (
         .NUM_COLS                   (COLUMNS),
         .PIPELINE_LINKS             (1),
 
-        .TDEST_WIDTH                (4),
+        .TDEST_WIDTH                (TDESTW),
         .TDATA_WIDTH                (TDATAW),
         .SERIALIZATION_FACTOR       (4),
         .CLKCROSS_FACTOR            (1),
