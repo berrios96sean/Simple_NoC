@@ -11,22 +11,22 @@ module mvm_top (
     // -------------------------------------------------------
     input   wire                  AXIS_S_TVALID,
     output  logic                 AXIS_S_TREADY,
-    input   wire    [TDATAW-1:0]  AXIS_S_TDATA,
+    input   wire    [ DATAW-1:0]  AXIS_S_TDATA,
     input   wire                  AXIS_S_TLAST,
-    input   wire    [  TIDW-1:0]  AXIS_S_TID,
+    input   wire    [   IDW-1:0]  AXIS_S_TID,
     input   wire    [ USERW-1:0]  AXIS_S_TUSER,
-    input   wire    [TDESTW-1:0]  AXIS_S_TDEST,
+    input   wire    [ DESTW-1:0]  AXIS_S_TDEST,
 
     // -------------------------------------------------------
     // AXI-Stream Master Interface
     // -------------------------------------------------------
     output  logic                 AXIS_M_TVALID,
     input   wire                  AXIS_M_TREADY,
-    output  logic   [TDATAW-1:0]  AXIS_M_TDATA,
+    output  logic   [ DATAW-1:0]  AXIS_M_TDATA,
     output  logic                 AXIS_M_TLAST,
-    output  logic   [  TIDW-1:0]  AXIS_M_TID,
+    output  logic   [   IDW-1:0]  AXIS_M_TID,
     output  logic   [ USERW-1:0]  AXIS_M_TUSER,
-    output  logic   [TDESTW-1:0]  AXIS_M_TDEST
+    output  logic   [ DESTW-1:0]  AXIS_M_TDEST
 
 );
 
@@ -41,26 +41,41 @@ module mvm_top (
     // -------------------------------------------------------
     logic              axis_in_tvalid   [ROWS][COLUMNS];
     logic              axis_in_tready   [ROWS][COLUMNS];
-    logic [TDATAW-1:0] axis_in_tdata    [ROWS][COLUMNS];
+    logic [ DATAW-1:0] axis_in_tdata    [ROWS][COLUMNS];
     logic              axis_in_tlast    [ROWS][COLUMNS];
-    logic [TDESTW-1:0] axis_in_tdest    [ROWS][COLUMNS];
+    logic [ USERW-1:0] axis_in_tuser    [ROWS][COLUMNS];
+    logic [ DESTW-1:0] axis_in_tdest    [ROWS][COLUMNS];
 
-    logic              axis_out_tvalid  [ROWS][COLUMNS];
-    logic              axis_out_tready  [ROWS][COLUMNS];
-    logic [TDATAW-1:0] axis_out_tdata   [ROWS][COLUMNS];
-    logic              axis_out_tlast   [ROWS][COLUMNS];
-    logic [TDESTW-1:0] axis_out_tdest   [ROWS][COLUMNS];
+    wire               axis_out_tvalid  [ROWS][COLUMNS];
+    wire               axis_out_tready  [ROWS][COLUMNS];
+    wire  [ DATAW-1:0] axis_out_tdata   [ROWS][COLUMNS];
+    wire               axis_out_tlast   [ROWS][COLUMNS];
+    wire  [ USERW-1:0] axis_out_tuser   [ROWS][COLUMNS];
+    wire  [ DESTW-1:0] axis_out_tdest   [ROWS][COLUMNS];
+
+    // TO-DO: Replace MVM 1 with a PE that can take in the AXIS signals 
+    // and then output them so that the data is routed to the correct NODE
+    // in the NOC
+    assign axis_out_tvalid   [0][0] = AXIS_S_TVALID;
+    assign axis_out_tdata    [0][0] = AXIS_S_TDATA ;
+    // assign axis_out_tstrb [0][0] = AXIS_S_TSTRB ;
+    // assign axis_out_tkeep [0][0] = AXIS_S_TKEEP ;
+    // assign axis_out_tid      [0][0] = AXIS_S_TID;
+    assign axis_out_tdest    [0][0] = AXIS_S_TDEST ;
+    assign axis_out_tuser    [0][0] = AXIS_S_TUSER ;
+    assign axis_out_tlast    [0][0] = AXIS_S_TLAST ;
+    assign axis_out_tready   [0][0] = AXIS_S_TREADY;
 
     // -------------------------------------------------------
     // Module Instantions
     // -------------------------------------------------------
 
     rtl_mvm #(
-        .DATAW          (512),                          // Bitwidth of axi-s tdata
+        .DATAW          (DATAW),                        // Bitwidth of axi-s tdata
         .BYTEW          (8),   		                    // Bitwidth of axi-s tkeep, tstrb
-        .IDW            (32),                           // Bitwidth of axi-s tid
-        .DESTW          (12),		                    // Bitwidth of axi-s tdest
-        .USERW          (75),                           // Bitwidth of axi-s tuser
+        .IDW            (IDW),                          // Bitwidth of axi-s tid
+        .DESTW          (DESTW),		                // Bitwidth of axi-s tdest
+        .USERW          (USERW),                        // Bitwidth of axi-s tuser
         .IPRECISION     (8),                            // Input precision in bits
         .OPRECISION     (32),                           // Output precision in bits
         .LANES          (DATAW / IPRECISION),           // Number of dot-product INT8 lanes
@@ -80,15 +95,15 @@ module mvm_top (
         .clk(CLK),                                      // input
         .rst(~RST_N),                                   // input
 
-        .axis_rx_tvalid  (axis_s_tvalid),               // input
-        .axis_rx_tdata   (axis_s_tdata ),               // input
-        // .axis_rx_tstrb(axis_s_tstrb ),               // input
-        // .axis_rx_tkeep(axis_s_tkeep ),               // input
-        // .axis_rx_tid  (axis_s_tid   ),               // input
-        .axis_rx_tdest   (axis_s_tdest ),               // input
-        .axis_rx_tuser   (axis_s_tuser ),               // input
-        .axis_rx_tlast   (axis_s_tlast ),               // input
-        .axis_rx_tready  (axis_s_tready),               // output
+        .axis_rx_tvalid  (axis_out_tvalid  [0][0]),     // input
+        .axis_rx_tdata   (axis_out_tdata   [0][0]),     // input
+        // .axis_rx_tstrb(axis_out_tstrb   [0][0]),     // input
+        // .axis_rx_tkeep(axis_out_tkeep   [0][0]),     // input
+        // .axis_rx_tid  (axis_out_tid     [0][0]),     // input
+        .axis_rx_tdest   (axis_out_tdest   [0][0]),     // input
+        .axis_rx_tuser   (axis_out_tuser   [0][0]),     // input
+        .axis_rx_tlast   (axis_out_tlast   [0][0]),     // input
+        .axis_rx_tready  (axis_out_tready  [0][0]),     // output
 
         .axis_tx_tvalid  (axis_in_tvalid  [0][0]),       // output
         .axis_tx_tdata   (axis_in_tdata   [0][0]),       // output
@@ -228,15 +243,15 @@ module mvm_top (
         .axis_rx_tlast   (axis_out_tlast  [1][1]),       // input
         .axis_rx_tready  (axis_out_tready [1][1]),       // output
 
-        .axis_tx_tvalid  (axis_m_tvalid),                // output
-        .axis_tx_tdata   (axis_m_tdata ),                // output
-        // .axis_tx_tstrb(axis_m_tstrb ),                // output
-        // .axis_tx_tkeep(axis_m_tkeep ),                // output
-        // .axis_tx_tid  (axis_m_tid   ),                // output
-        .axis_tx_tdest   (axis_m_tdest ),                // output
-        .axis_tx_tuser   (axis_m_tuser ),                // output
-        .axis_tx_tlast   (axis_m_tlast ),                // output
-        .axis_tx_tready  (axis_m_tready)                 // input
+        .axis_tx_tvalid  (AXIS_M_TVALID),                // output
+        .axis_tx_tdata   (AXIS_M_TDATA ),                // output
+        // .axis_tx_tstrb(AXIS_M_TSTRB ),                // output
+        // .axis_tx_tkeep(AXIS_M_TKEEP ),                // output
+        // .axis_tx_tid  (AXIS_M_TID   ),                // output
+        .axis_tx_tdest   (AXIS_M_TDEST ),                // output
+        .axis_tx_tuser   (AXIS_M_TUSER ),                // output
+        .axis_tx_tlast   (AXIS_M_TLAST ),                // output
+        .axis_tx_tready  (AXIS_M_TREADY)                 // input
     );
 
     // -------------------------------------------------------
