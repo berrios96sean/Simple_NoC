@@ -109,7 +109,7 @@ module mvm_noc_tb();
         $display("Starting Simulation");
 
         // -----------------------------------------------------------------------------
-        // Test case: Write Register File NOC 0 
+        // Test case: Write Register File NOC 1 
         // -----------------------------------------------------------------------------
         @(posedge clk);
 
@@ -126,7 +126,7 @@ module mvm_noc_tb();
                 axis_s_tdata <= data_word;
                 axis_s_tuser[8:0  ] =   9'h1;
                 axis_s_tuser[10:9 ] =  2'b11;
-                axis_s_tdest = 12'h000;
+                axis_s_tdest = 12'h002;
 
                 if (line_count > 11) begin 
                 axis_s_tuser[line_count-1] = 0; 
