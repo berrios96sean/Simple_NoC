@@ -46,25 +46,25 @@ module mvm_top (
     logic [ USERW-1:0] axis_in_tuser    [ROWS][COLUMNS];
     logic [ DESTW-1:0] axis_in_tdest    [ROWS][COLUMNS];
 
-    wire               axis_out_tvalid  [ROWS][COLUMNS];
-    wire               axis_out_tready  [ROWS][COLUMNS];
-    wire  [ DATAW-1:0] axis_out_tdata   [ROWS][COLUMNS];
-    wire               axis_out_tlast   [ROWS][COLUMNS];
-    wire  [ USERW-1:0] axis_out_tuser   [ROWS][COLUMNS];
-    wire  [ DESTW-1:0] axis_out_tdest   [ROWS][COLUMNS];
+    logic              axis_out_tvalid  [ROWS][COLUMNS];
+    logic              axis_out_tready  [ROWS][COLUMNS];
+    logic [ DATAW-1:0] axis_out_tdata   [ROWS][COLUMNS];
+    logic              axis_out_tlast   [ROWS][COLUMNS];
+    logic [ USERW-1:0] axis_out_tuser   [ROWS][COLUMNS];
+    logic [ DESTW-1:0] axis_out_tdest   [ROWS][COLUMNS];
 
     // TO-DO: Replace MVM 1 with a PE that can take in the AXIS signals 
     // and then output them so that the data is routed to the correct NODE
     // in the NOC
-    assign axis_out_tvalid   [0][0] = AXIS_S_TVALID;
-    assign axis_out_tdata    [0][0] = AXIS_S_TDATA ;
+    // assign axis_out_tvalid   [0][0] = AXIS_S_TVALID;
+    // assign axis_out_tdata    [0][0] = AXIS_S_TDATA ;
     // assign axis_out_tstrb [0][0] = AXIS_S_TSTRB ;
     // assign axis_out_tkeep [0][0] = AXIS_S_TKEEP ;
     // assign axis_out_tid   [0][0] = AXIS_S_TID   ;
-    assign axis_out_tdest    [0][0] = AXIS_S_TDEST ;
-    assign axis_out_tuser    [0][0] = AXIS_S_TUSER ;
-    assign axis_out_tlast    [0][0] = AXIS_S_TLAST ;
-    assign axis_out_tready   [0][0] = AXIS_S_TREADY;
+    // assign axis_out_tdest    [0][0] = AXIS_S_TDEST ;
+    // assign axis_out_tuser    [0][0] = AXIS_S_TUSER ;
+    // assign axis_out_tlast    [0][0] = AXIS_S_TLAST ;
+    // assign axis_out_tready   [0][0] = AXIS_S_TREADY;
 
     // -------------------------------------------------------
     // Module Instantions
@@ -243,6 +243,7 @@ module mvm_top (
 
         .TDEST_WIDTH                (TDESTW),
         .TDATA_WIDTH                (TDATAW),
+        .TUSER_WIDTH                (USERW),
         .SERIALIZATION_FACTOR       (16),
         .CLKCROSS_FACTOR            (1),
         .SINGLE_CLOCK               (1),
@@ -264,6 +265,7 @@ module mvm_top (
         .axis_in_tready  (axis_in_tready),
         .axis_in_tdata   (axis_in_tdata),
         .axis_in_tlast   (axis_in_tlast),
+        .axis_in_tuser   (axis_in_tuser),
         // .axis_in_tid  (axis_in_tid),
         .axis_in_tdest   (axis_in_tdest),
 
@@ -271,6 +273,7 @@ module mvm_top (
         .axis_out_tready (axis_out_tready),
         .axis_out_tdata  (axis_out_tdata),
         .axis_out_tlast  (axis_out_tlast),
+        .axis_out_tuser  (axis_out_tuser),
         // .axis_out_tid (axis_out_tid),
         .axis_out_tdest  (axis_out_tdest)
     );

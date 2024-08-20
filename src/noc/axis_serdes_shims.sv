@@ -11,6 +11,7 @@
 module axis_serializer_shim_in #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter SERIALIZATION_FACTOR = 1,
     parameter CLKCROSS_FACTOR = 1,
     parameter bit SINGLE_CLOCK = 0,
@@ -29,11 +30,13 @@ module axis_serializer_shim_in #(
     output  logic                                           axis_tready,
     input   wire    [TDATA_WIDTH - 1 : 0]                   axis_tdata,
     input   wire                                            axis_tlast,
+    input   wire    [TUSER_WIDTH - 1 : 0]                   axis_tuser,
     input   wire    [TDEST_WIDTH - 1 : 0]                   axis_tdest,
 
     output  logic   [TDATA_WIDTH / SERIALIZATION_FACTOR
                                  / CLKCROSS_FACTOR - 1 : 0] data_out,
     output  logic   [TDEST_WIDTH - 1 : 0]                   dest_out,
+    output  logic   [TUSER_WIDTH - 1 : 0]                   user_out,
     output  logic                                           is_tail_out,
     output  logic                                           send_out,
     input   wire                                            credit_in
@@ -44,6 +47,7 @@ module axis_serializer_shim_in #(
     logic                           axis_int_tready;
     logic [TDATA_INT_WIDTH - 1 : 0] axis_int_tdata;
     logic                           axis_int_tlast;
+    logic [TUSER_WIDTH - 1 : 0]     axis_int_tuser;
     logic [TDEST_WIDTH - 1 : 0]     axis_int_tdest;
 
     generate begin: serializer_gen
@@ -52,11 +56,13 @@ module axis_serializer_shim_in #(
             assign axis_tready = axis_int_tready;
             assign axis_int_tdata = axis_tdata;
             assign axis_int_tlast = axis_tlast;
+            assign axis_int_tuser = axis_tuser;
             assign axis_int_tdest = axis_tdest;
         end else begin
             axis_serializer #(
                 .TDEST_WIDTH            (TDEST_WIDTH),
                 .TDATA_WIDTH            (TDATA_WIDTH),
+                .TUSER_WIDTH            (TUSER_WIDTH),
                 .SERIALIZATION_FACTOR   (SERIALIZATION_FACTOR))
             serializer_inst (
                 .clk                (clk_usr),
@@ -66,12 +72,14 @@ module axis_serializer_shim_in #(
                 .axis_in_tready     (axis_tready),
                 .axis_in_tdata      (axis_tdata),
                 .axis_in_tlast      (axis_tlast),
+                .axis_in_tuser      (axis_tuser),
                 .axis_in_tdest      (axis_tdest),
 
                 .axis_out_tvalid    (axis_int_tvalid),
                 .axis_out_tready    (axis_int_tready),
                 .axis_out_tdata     (axis_int_tdata),
                 .axis_out_tlast     (axis_int_tlast),
+                .axis_out_tuser     (axis_int_tuser),
                 .axis_out_tdest     (axis_int_tdest)
             );
         end
@@ -83,6 +91,7 @@ module axis_serializer_shim_in #(
             axis_shim_in #(
                 .TDEST_WIDTH        (TDEST_WIDTH),
                 .TDATA_WIDTH        (TDATA_INT_WIDTH),
+                .TUSER_WIDTH        (TUSER_WIDTH),
                 .BUFFER_DEPTH       (BUFFER_DEPTH * SERIALIZATION_FACTOR),
                 .FLIT_BUFFER_DEPTH  (FLIT_BUFFER_DEPTH),
                 .FORCE_MLAB         (FORCE_MLAB))
@@ -94,10 +103,12 @@ module axis_serializer_shim_in #(
                 .axis_tready    (axis_int_tready),
                 .axis_tdata     (axis_int_tdata),
                 .axis_tlast     (axis_int_tlast),
+                .axis_tuser     (axis_int_tuser),
                 .axis_tdest     (axis_int_tdest),
 
                 .data_out       (data_out),
                 .dest_out       (dest_out),
+                .user_out       (user_out),
                 .is_tail_out    (is_tail_out),
                 .send_out       (send_out),
                 .credit_in      (credit_in)
@@ -106,6 +117,7 @@ module axis_serializer_shim_in #(
             axis_clkcross_shim_in #(
                 .TDEST_WIDTH            (TDEST_WIDTH),
                 .TDATA_WIDTH            (TDATA_INT_WIDTH),
+                .TUSER_WIDTH            (TUSER_WIDTH),
                 .SERIALIZATION_FACTOR   (CLKCROSS_FACTOR),
                 .BUFFER_DEPTH           (BUFFER_DEPTH * SERIALIZATION_FACTOR),
                 .FLIT_BUFFER_DEPTH      (FLIT_BUFFER_DEPTH),
@@ -122,10 +134,12 @@ module axis_serializer_shim_in #(
                 .axis_tready    (axis_int_tready),
                 .axis_tdata     (axis_int_tdata),
                 .axis_tlast     (axis_int_tlast),
+                .axis_tuser     (axis_int_tuser),
                 .axis_tdest     (axis_int_tdest),
 
                 .data_out       (data_out),
                 .dest_out       (dest_out),
+                .user_out       (user_out),
                 .is_tail_out    (is_tail_out),
                 .send_out       (send_out),
                 .credit_in      (credit_in)
@@ -139,6 +153,7 @@ endmodule: axis_serializer_shim_in
 module axis_deserializer_shim_out #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter SERIALIZATION_FACTOR = 1,
     parameter CLKCROSS_FACTOR = 1,
     parameter bit SINGLE_CLOCK = 0,
@@ -157,11 +172,13 @@ module axis_deserializer_shim_out #(
     input   wire                                                    axis_tready,
     output  logic   [TDATA_WIDTH - 1 : 0]                           axis_tdata,
     output  logic                                                   axis_tlast,
+    output  logic   [TUSER_WIDTH - 1 : 0]                           axis_tuser,
     output  logic   [TDEST_WIDTH - 1 : 0]                           axis_tdest,
 
     input   wire    [TDATA_WIDTH / SERIALIZATION_FACTOR
                                  / CLKCROSS_FACTOR - 1 : 0]         data_in,
     input   wire    [TDEST_WIDTH - 1 : 0]                           dest_in,
+    input   wire    [TUSER_WIDTH - 1 : 0]                           user_in,
     input   wire                                                    is_tail_in,
     input   wire                                                    send_in,
     output  logic                                                   credit_out
@@ -172,6 +189,7 @@ module axis_deserializer_shim_out #(
     logic                           axis_int_tready;
     logic [TDATA_INT_WIDTH - 1 : 0] axis_int_tdata;
     logic                           axis_int_tlast;
+    logic [TUSER_WIDTH - 1 : 0]     axis_int_tuser;
     logic [TDEST_WIDTH - 1 : 0]     axis_int_tdest;
 
     generate begin: deserializer_gen
@@ -180,11 +198,13 @@ module axis_deserializer_shim_out #(
             assign axis_int_tready = axis_tready;
             assign axis_tdata = axis_int_tdata;
             assign axis_tlast = axis_int_tlast;
+            assign axis_tuser = axis_int_tuser;
             assign axis_tdest = axis_int_tdest;
         end else begin
             axis_deserializer #(
                 .TDEST_WIDTH            (TDEST_WIDTH),
                 .TDATA_WIDTH            (TDATA_WIDTH),
+                .TUSER_WIDTH            (TUSER_WIDTH),
                 .SERIALIZATION_FACTOR   (SERIALIZATION_FACTOR))
             deserializer_inst (
                 .clk                (clk_usr),
@@ -194,12 +214,14 @@ module axis_deserializer_shim_out #(
                 .axis_in_tready     (axis_int_tready),
                 .axis_in_tdata      (axis_int_tdata),
                 .axis_in_tlast      (axis_int_tlast),
+                .axis_in_tuser      (axis_int_tuser),
                 .axis_in_tdest      (axis_int_tdest),
 
                 .axis_out_tvalid    (axis_tvalid),
                 .axis_out_tready    (axis_tready),
                 .axis_out_tdata     (axis_tdata),
                 .axis_out_tlast     (axis_tlast),
+                .axis_out_tuser     (axis_tuser),
                 .axis_out_tdest     (axis_tdest)
             );
         end
@@ -211,6 +233,7 @@ module axis_deserializer_shim_out #(
             axis_shim_out #(
                 .TDEST_WIDTH        (TDEST_WIDTH),
                 .TDATA_WIDTH        (TDATA_INT_WIDTH),
+                .TUSER_WIDTH        (TUSER_WIDTH),
                 .BUFFER_DEPTH       (BUFFER_DEPTH * SERIALIZATION_FACTOR),
                 .FLIT_BUFFER_DEPTH  (FLIT_BUFFER_DEPTH),
                 .FORCE_MLAB         (FORCE_MLAB))
@@ -222,10 +245,12 @@ module axis_deserializer_shim_out #(
                 .axis_tready    (axis_int_tready),
                 .axis_tdata     (axis_int_tdata),
                 .axis_tlast     (axis_int_tlast),
+                .axis_tuser     (axis_int_tuser),
                 .axis_tdest     (axis_int_tdest),
 
                 .data_in        (data_in),
                 .dest_in        (dest_in),
+                .user_in        (user_in),
                 .is_tail_in     (is_tail_in),
                 .send_in        (send_in),
                 .credit_out     (credit_out)
@@ -234,6 +259,7 @@ module axis_deserializer_shim_out #(
             axis_clkcross_shim_out #(
                 .TDEST_WIDTH            (TDEST_WIDTH),
                 .TDATA_WIDTH            (TDATA_INT_WIDTH),
+                .TUSER_WIDTH            (TUSER_WIDTH),
                 .SERIALIZATION_FACTOR   (CLKCROSS_FACTOR),
                 .BUFFER_DEPTH           (BUFFER_DEPTH * SERIALIZATION_FACTOR),
                 .FLIT_BUFFER_DEPTH      (FLIT_BUFFER_DEPTH),
@@ -250,10 +276,12 @@ module axis_deserializer_shim_out #(
                 .axis_tready    (axis_int_tready),
                 .axis_tdata     (axis_int_tdata),
                 .axis_tlast     (axis_int_tlast),
+                .axis_tuser     (axis_int_tuser),
                 .axis_tdest     (axis_int_tdest),
 
                 .data_in        (data_in),
                 .dest_in        (dest_in),
+                .user_in        (user_in),
                 .is_tail_in     (is_tail_in),
                 .send_in        (send_in),
                 .credit_out     (credit_out)
@@ -266,6 +294,7 @@ endmodule: axis_deserializer_shim_out
 module axis_clkcross_shim_in #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter SERIALIZATION_FACTOR = 4,
     parameter BUFFER_DEPTH = 4,
     parameter FLIT_BUFFER_DEPTH = 4,
@@ -282,10 +311,12 @@ module axis_clkcross_shim_in #(
     output  logic                                                   axis_tready,
     input   wire    [TDATA_WIDTH - 1 : 0]                           axis_tdata,
     input   wire                                                    axis_tlast,
+    input   wire    [TUSER_WIDTH - 1 : 0]                           axis_tuser,
     input   wire    [TDEST_WIDTH - 1 : 0]                           axis_tdest,
 
     output  logic   [TDATA_WIDTH / SERIALIZATION_FACTOR - 1 : 0]    data_out,
     output  logic   [TDEST_WIDTH - 1 : 0]                           dest_out,
+    output  logic   [TUSER_WIDTH - 1 : 0]                           user_out,
     output  logic                                                   is_tail_out,
     output  logic                                                   send_out,
     input   wire                                                    credit_in
@@ -407,6 +438,7 @@ endmodule: axis_clkcross_shim_in
 module axis_clkcross_shim_out #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter SERIALIZATION_FACTOR = 4,
     parameter BUFFER_DEPTH = 4,
     parameter FLIT_BUFFER_DEPTH = 4,
@@ -423,10 +455,12 @@ module axis_clkcross_shim_out #(
     input   wire                                                    axis_tready,
     output  logic   [TDATA_WIDTH - 1 : 0]                           axis_tdata,
     output  logic                                                   axis_tlast,
+    output  logic   [TUSER_WIDTH - 1 : 0]                           axis_tuser,
     output  logic   [TDEST_WIDTH - 1 : 0]                           axis_tdest,
 
     input   wire    [TDATA_WIDTH / SERIALIZATION_FACTOR - 1 : 0]    data_in,
     input   wire    [TDEST_WIDTH - 1 : 0]                           dest_in,
+    input   wire    [TUSER_WIDTH - 1 : 0]                           user_in,
     input   wire                                                    is_tail_in,
     input   wire                                                    send_in,
     output  logic                                                   credit_out
@@ -551,6 +585,7 @@ endmodule: axis_clkcross_shim_out
 module axis_shim_in #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter BUFFER_DEPTH = 4,
     parameter FLIT_BUFFER_DEPTH = 4,
     parameter bit FORCE_MLAB = 0
@@ -562,10 +597,12 @@ module axis_shim_in #(
     output  logic                           axis_tready,
     input   wire    [TDATA_WIDTH - 1 : 0]   axis_tdata,
     input   wire                            axis_tlast,
+    input   wire    [TUSER_WIDTH - 1 : 0]   axis_tuser,
     input   wire    [TDEST_WIDTH - 1 : 0]   axis_tdest,
 
     output  logic   [TDATA_WIDTH - 1 : 0]   data_out,
     output  logic   [TDEST_WIDTH - 1 : 0]   dest_out,
+    output  logic   [TUSER_WIDTH - 1 : 0]   user_out,
     output  logic                           is_tail_out,
     output  logic                           send_out,
     input   wire                            credit_in
@@ -584,6 +621,7 @@ module axis_shim_in #(
     generate begin: buffer_gen
         if (BUFFER_DEPTH == 0) begin
             assign data_out = axis_tdata;
+            assign user_out = axis_tuser;
             assign dest_out = axis_tdest;
             assign is_tail_out = axis_tlast;
             assign send_out = axis_tvalid & axis_tready;
@@ -601,18 +639,18 @@ module axis_shim_in #(
             end
 
             fifo_agilex7 #(
-                .WIDTH      (TDATA_WIDTH + TDEST_WIDTH + 1),
+                .WIDTH      (TDATA_WIDTH + TDEST_WIDTH + TUSER_WIDTH + 1),
                 .DEPTH      (BUFFER_DEPTH),
                 .FORCE_MLAB (FORCE_MLAB))
             buffer (
                 .clock  (clk),
-                .data   ({axis_tdata, axis_tdest, axis_tlast}),
+                .data   ({axis_tdata, axis_tdest, axis_tuser, axis_tlast}),
                 .rdreq  (buffer_rdreq),
                 .sclr   (~rst_n),
                 .wrreq  (axis_tvalid & axis_tready),
                 .empty  (buffer_empty),
                 .full   (buffer_full),
-                .q      ({data_out, dest_out, is_tail_out})
+                .q      ({data_out, dest_out, user_out, is_tail_out})
             );
         end
     end
@@ -623,6 +661,7 @@ endmodule: axis_shim_in
 module axis_shim_out #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter BUFFER_DEPTH = 4,
     parameter FLIT_BUFFER_DEPTH = 4,
     parameter bit FORCE_MLAB = 0
@@ -634,10 +673,12 @@ module axis_shim_out #(
     input   wire                            axis_tready,
     output  logic   [TDATA_WIDTH - 1 : 0]   axis_tdata,
     output  logic                           axis_tlast,
+    output  logic   [TUSER_WIDTH - 1 : 0]   axis_tuser,
     output  logic   [TDEST_WIDTH - 1 : 0]   axis_tdest,
 
     input   wire    [TDATA_WIDTH - 1 : 0]   data_in,
     input   wire    [TDEST_WIDTH - 1 : 0]   dest_in,
+    input   wire    [TUSER_WIDTH - 1 : 0]   user_in,
     input   wire                            is_tail_in,
     input   wire                            send_in,
     output  logic                           credit_out
@@ -663,19 +704,19 @@ module axis_shim_out #(
                         ((credit_count < (BUFFER_DEPTH - buffer_usedw)) || (axis_tready & axis_tvalid));
 
     fifo_agilex7 #(
-        .WIDTH      (TDATA_WIDTH + TDEST_WIDTH + 1),
+        .WIDTH      (TDATA_WIDTH + TDEST_WIDTH + TUSER_WIDTH + 1),
         .DEPTH      (BUFFER_DEPTH),
         .SHOWAHEAD  ("ON"),
         .FORCE_MLAB (FORCE_MLAB))
     buffer (
         .clock  (clk),
-        .data   ({data_in, dest_in, is_tail_in}),
+        .data   ({data_in, dest_in, user_in, is_tail_in}),
         .rdreq  (axis_tvalid & axis_tready),
         .sclr   (~rst_n),
         .wrreq  (send_in),
         .empty  (buffer_empty),
         .full   (buffer_full),
-        .q      ({axis_tdata, axis_tdest, axis_tlast})
+        .q      ({axis_tdata, axis_tdest, axis_tuser, axis_tlast})
     );
 
 endmodule: axis_shim_out
@@ -683,6 +724,7 @@ endmodule: axis_shim_out
 module axis_serializer #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter SERIALIZATION_FACTOR = 2
 ) (
     input   wire    clk,
@@ -692,23 +734,27 @@ module axis_serializer #(
     output  logic                                                   axis_in_tready,
     input   wire    [TDATA_WIDTH - 1 : 0]                           axis_in_tdata,
     input   wire                                                    axis_in_tlast,
+    input   wire    [TUSER_WIDTH - 1 : 0]                           axis_in_tuser,
     input   wire    [TDEST_WIDTH - 1 : 0]                           axis_in_tdest,
 
     output  logic                                                   axis_out_tvalid,
     input   wire                                                    axis_out_tready,
     output  logic   [TDATA_WIDTH / SERIALIZATION_FACTOR - 1 : 0]    axis_out_tdata,
     output  logic                                                   axis_out_tlast,
+    output  logic   [TUSER_WIDTH - 1 : 0]                           axis_out_tuser,
     output  logic   [TDEST_WIDTH - 1 : 0]                           axis_out_tdest
 );
     localparam TDATA_OUT_WIDTH = TDATA_WIDTH / SERIALIZATION_FACTOR;
 
     logic [TDATA_WIDTH - 1 : 0] tdata_buffer;
     logic [TDEST_WIDTH - 1 : 0] tdest_buffer;
+    logic [TUSER_WIDTH - 1 : 0] tuser_buffer;
     logic                       tlast_buffer;
 
     logic [$clog2(SERIALIZATION_FACTOR) - 1 : 0] ser_count;
 
     assign axis_out_tdest = tdest_buffer;
+    assign axis_out_tuser = tuser_buffer;
     assign axis_out_tlast = tlast_buffer & (ser_count == (SERIALIZATION_FACTOR - 1));
     assign axis_in_tready = !axis_out_tvalid || ((axis_out_tready && axis_out_tvalid) && (ser_count == (SERIALIZATION_FACTOR - 1)));
 
@@ -732,6 +778,7 @@ module axis_serializer #(
             tdata_buffer <= axis_in_tdata;
             tdest_buffer <= axis_in_tdest;
             tlast_buffer <= axis_in_tlast;
+            tuser_buffer <= axis_in_tuser;
         end
     end
 
@@ -751,6 +798,7 @@ endmodule: axis_serializer
 module axis_deserializer #(
     parameter TDEST_WIDTH = 3,
     parameter TDATA_WIDTH = 512,
+    parameter TUSER_WIDTH = 32,
     parameter SERIALIZATION_FACTOR = 2
 ) (
     input   wire    clk,
@@ -760,18 +808,21 @@ module axis_deserializer #(
     output  logic                                                   axis_in_tready,
     input   wire    [TDATA_WIDTH / SERIALIZATION_FACTOR - 1 : 0]    axis_in_tdata,
     input   wire                                                    axis_in_tlast,
+    input   wire    [TUSER_WIDTH - 1 : 0]                           axis_in_tuser,
     input   wire    [TDEST_WIDTH - 1 : 0]                           axis_in_tdest,
 
     output  logic                                                   axis_out_tvalid,
     input   wire                                                    axis_out_tready,
     output  logic   [TDATA_WIDTH - 1 : 0]                           axis_out_tdata,
     output  logic                                                   axis_out_tlast,
+    output  logic   [TUSER_WIDTH - 1 : 0]                           axis_out_tuser,
     output  logic   [TDEST_WIDTH - 1 : 0]                           axis_out_tdest
 );
     localparam TDATA_IN_WIDTH = TDATA_WIDTH / SERIALIZATION_FACTOR;
 
     logic [TDATA_WIDTH - 1 : 0] tdata_buffer;
     logic [TDEST_WIDTH - 1 : 0] tdest_buffer;
+    logic [TUSER_WIDTH - 1 : 0] tuser_buffer;
     logic                       tlast_buffer;
 
     logic [$clog2(SERIALIZATION_FACTOR) - 1 : 0] ser_count;
@@ -779,6 +830,7 @@ module axis_deserializer #(
     assign axis_out_tdata = tdata_buffer;
     assign axis_out_tdest = tdest_buffer;
     assign axis_out_tlast = tlast_buffer;
+    assign axis_out_tuser = tuser_buffer;
 
     assign axis_in_tready = !axis_out_tvalid || ((axis_out_tready && axis_out_tvalid) && (ser_count == (SERIALIZATION_FACTOR - 1)));
 
@@ -809,6 +861,7 @@ module axis_deserializer #(
             tdata_buffer[TDATA_IN_WIDTH * (ser_count + 1'b1) - 1 -: TDATA_IN_WIDTH] <= axis_in_tdata;
             if (ser_count == (SERIALIZATION_FACTOR - 1)) begin
                 tdest_buffer <= axis_in_tdest;
+                tuser_buffer <= axis_in_tuser;
                 // tlast_buffer <= axis_in_tlast;
             end
         end
