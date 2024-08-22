@@ -135,6 +135,7 @@
                 if (i != 0) begin
                     idx = idx + 1;
                        data_router_in   [ridx][idx] =    data_south_out [i - 1][j];
+                       user_router_in   [ridx][idx] =    data_south_out [i - 1][j];
                        dest_router_in   [ridx][idx] =    dest_south_out [i - 1][j];
                     is_tail_router_in   [ridx][idx] = is_tail_south_out [i - 1][j];
                        send_router_in   [ridx][idx] =    send_south_out [i - 1][j];
@@ -145,6 +146,7 @@
                 if (i != (NUM_ROWS - 1)) begin
                     idx = idx + 1;
                        data_router_in   [ridx][idx] =    data_north_out [i + 1][j];
+                       user_router_in   [ridx][idx] =    data_north_out [i + 1][j];
                        dest_router_in   [ridx][idx] =    dest_north_out [i + 1][j];
                     is_tail_router_in   [ridx][idx] = is_tail_north_out [i + 1][j];
                        send_router_in   [ridx][idx] =    send_north_out [i + 1][j];
@@ -155,6 +157,7 @@
                 if (j != (NUM_COLS - 1)) begin
                     idx = idx + 1;
                        data_router_in   [ridx][idx] =    data_west_out  [i][j + 1];
+                       user_router_in   [ridx][idx] =    data_west_out  [i][j + 1];
                        dest_router_in   [ridx][idx] =    dest_west_out  [i][j + 1];
                     is_tail_router_in   [ridx][idx] = is_tail_west_out  [i][j + 1];
                        send_router_in   [ridx][idx] =    send_west_out  [i][j + 1];
@@ -165,6 +168,7 @@
                 if (j != 0) begin
                     idx = idx + 1;
                        data_router_in   [ridx][idx] =    data_east_out  [i][j - 1];
+                       user_router_in   [ridx][idx] =    data_east_out  [i][j - 1];
                        dest_router_in   [ridx][idx] =    dest_east_out  [i][j - 1];
                     is_tail_router_in   [ridx][idx] = is_tail_east_out  [i][j - 1];
                        send_router_in   [ridx][idx] =    send_east_out  [i][j - 1];
@@ -187,6 +191,7 @@
                 // NoC IO Ports
                    data_out [i][j] =    data_router_out [ridx][idx];
                    dest_out [i][j] =    dest_router_out [ridx][idx];
+                   user_out [i][j] =    user_router_out [ridx][idx];
                 is_tail_out [i][j] = is_tail_router_out [ridx][idx];
                    send_out [i][j] =    send_router_out [ridx][idx];
                  credit_out [i][j] =  credit_router_out [ridx][idx];
@@ -196,6 +201,7 @@
                 if (i != 0) begin
                     idx = idx + 1;
                        data_north_in       [i][j] =    data_router_out [ridx][idx];
+                       user_north_in       [i][j] =    user_router_out [ridx][idx];
                        dest_north_in       [i][j] =    dest_router_out [ridx][idx];
                     is_tail_north_in       [i][j] = is_tail_router_out [ridx][idx];
                        send_north_in       [i][j] =    send_router_out [ridx][idx];
@@ -206,6 +212,7 @@
                 if (i != (NUM_ROWS - 1)) begin
                     idx = idx + 1;
                        data_south_in       [i][j] =    data_router_out [ridx][idx];
+                       user_south_in       [i][j] =    user_router_out [ridx][idx];
                        dest_south_in       [i][j] =    dest_router_out [ridx][idx];
                     is_tail_south_in       [i][j] = is_tail_router_out [ridx][idx];
                        send_south_in       [i][j] =    send_router_out [ridx][idx];
@@ -216,6 +223,7 @@
                 if (j != (NUM_COLS - 1)) begin
                     idx = idx + 1;
                        data_east_in        [i][j] =    data_router_out [ridx][idx];
+                       user_east_in        [i][j] =    user_router_out [ridx][idx];
                        dest_east_in        [i][j] =    dest_router_out [ridx][idx];
                     is_tail_east_in        [i][j] = is_tail_router_out [ridx][idx];
                        send_east_in        [i][j] =    send_router_out [ridx][idx];
@@ -226,6 +234,7 @@
                 if (j != 0) begin
                     idx = idx + 1;
                        data_west_in        [i][j] =    data_router_out [ridx][idx];
+                       user_west_in        [i][j] =    user_router_out [ridx][idx];
                        dest_west_in        [i][j] =    dest_router_out [ridx][idx];
                     is_tail_west_in        [i][j] = is_tail_router_out [ridx][idx];
                        send_west_in        [i][j] =    send_router_out [ridx][idx];

@@ -61,6 +61,11 @@ module router #(
     logic                       dest_buffer_empty   [NUM_INPUTS];
     logic                       dest_buffer_rdreq   [NUM_INPUTS];
 
+    // User buffer FIFO signals
+    logic [USER_WIDTH - 1 : 0]  user_buffer_out     [NUM_INPUTS];
+    logic                       user_buffer_empty   [NUM_INPUTS];
+    logic                       user_buffer_rdreq   [NUM_INPUTS];
+
     // Flit buffer FIFO signals
     logic [FLIT_WIDTH - 1 : 0]  flit_buffer_out     [NUM_INPUTS];
     logic                       tail_buffer_out     [NUM_INPUTS];
@@ -80,31 +85,35 @@ module router #(
     // Route Compute output pipeline signals
     // logic [FLIT_WIDTH - 1: 0]                       flit_rc_reg_flit[NUM_INPUTS];
     logic [DEST_WIDTH - 1: 0]                       flit_rc_reg_dest[NUM_INPUTS];
+    logic [USER_WIDTH - 1: 0]                       flit_rc_reg_user[NUM_INPUTS];
     logic                                           flit_rc_reg_is_tail[NUM_INPUTS];
     logic [$clog2(FLIT_BUFFER_DEPTH + 2) - 1: 0]    rc_reg_credit_proxy[NUM_INPUTS];
     logic                                           flit_rc_reg_valid[NUM_INPUTS];
     logic                                           rc_pipeline_enable[NUM_INPUTS];
 
     // Switch Allocation output pipeline signals (Unpacked for easier debugging)
-    logic [FLIT_WIDTH + DEST_WIDTH + 1 - 1: 0]      flit_sa_reg[NUM_INPUTS];
+    logic [FLIT_WIDTH + DEST_WIDTH + USER_WIDTH + 1 - 1: 0]      flit_sa_reg[NUM_INPUTS];
     // logic [FLIT_WIDTH - 1: 0]                       flit_sa_reg_flit[NUM_INPUTS];
     logic [DEST_WIDTH - 1: 0]                       flit_sa_reg_dest[NUM_INPUTS];
+    logic [USER_WIDTH - 1: 0]                       flit_sa_reg_user[NUM_INPUTS];
     logic                                           flit_sa_reg_is_tail[NUM_INPUTS];
     logic                                           flit_sa_reg_valid[NUM_INPUTS];
     logic                                           sa_pipeline_enable[NUM_INPUTS];
 
 
     // Crossbar signals (Unpacked for easier debugging)
-    logic [FLIT_WIDTH + DEST_WIDTH + 1 - 1: 0]  data_out_packed[NUM_OUTPUTS];
+    logic [FLIT_WIDTH + DEST_WIDTH + USER_WIDTH + 1 - 1: 0]  data_out_packed[NUM_OUTPUTS];
     logic [FLIT_WIDTH - 1: 0]                   data_out_flit[NUM_OUTPUTS];
     logic [DEST_WIDTH - 1: 0]                   data_out_dest[NUM_OUTPUTS];
+    logic [USER_WIDTH - 1: 0]                   data_out_user[NUM_OUTPUTS];
     logic                                       data_out_is_tail[NUM_OUTPUTS];
     logic                                       flit_out_valid[NUM_OUTPUTS];
 
     // Output pipeline signals (Unpacked for easier debugging)
-    logic [FLIT_WIDTH + DEST_WIDTH + 1 - 1: 0]  data_out_reg[NUM_OUTPUTS];
+    logic [FLIT_WIDTH + DEST_WIDTH + USER_WIDTH + 1 - 1: 0]  data_out_reg[NUM_OUTPUTS];
     logic [FLIT_WIDTH - 1: 0]                   data_out_reg_flit[NUM_OUTPUTS];
     logic [DEST_WIDTH - 1: 0]                   data_out_reg_dest[NUM_OUTPUTS];
+    logic [USER_WIDTH - 1: 0]                   data_out_reg_user[NUM_OUTPUTS];
     logic                                       data_out_reg_is_tail[NUM_OUTPUTS];
     logic                                       data_out_reg_valid[NUM_OUTPUTS];
 
@@ -143,6 +152,7 @@ module router #(
 
             // Read dest buffer when a new packet begins
             assign dest_buffer_rdreq[i] = tail_buffer_rdreq[i] & ~(transiting_packet[i] & ~tail_buffer_out[i]);
+            assign user_buffer_rdreq[i] = tail_buffer_rdreq[i] & ~(transiting_packet[i] & ~tail_buffer_out[i]);
 
             // Index into the routing table using the destination
             assign route_table_select[i] = dest_buffer_out[i][$clog2(NOC_NUM_ENDPOINTS) - 1 : 0];
@@ -153,9 +163,9 @@ module router #(
 
         for (i = 0; i < NUM_OUTPUTS; i++) begin: for_outputs
             // Unpack the crossbar output
-            assign {data_out[i], dest_out[i], is_tail_out[i]} = (PIPELINE_OUTPUT == 0) ?
-                {data_out_flit[i], data_out_dest[i], data_out_is_tail[i]} :
-                {data_out_reg_flit[i], data_out_reg_dest[i], data_out_reg_is_tail[i]};
+            assign {data_out[i], dest_out[i], user_out[i], is_tail_out[i]} = (PIPELINE_OUTPUT == 0) ?
+                {data_out_flit[i], data_out_dest[i], data_out_user[i], data_out_is_tail[i]} :
+                {data_out_reg_flit[i], data_out_reg_dest[i], data_out_reg_user[i], data_out_reg_is_tail[i]};
         end
     end
     endgenerate
@@ -272,6 +282,7 @@ module router #(
             if (~data_out_reg_valid[i] | send_out[i]) begin
                 data_out_reg_flit[i] <= data_out_flit[i];
                 data_out_reg_dest[i] <= data_out_dest[i];
+                data_out_reg_user[i] <= data_out_user[i];
                 data_out_reg_is_tail[i] <= data_out_is_tail[i];
             end
         end
@@ -385,6 +396,28 @@ module router #(
     end
     endgenerate
 
+    // User FIFO
+    generate begin: user_buffer_gen
+        genvar i;
+        for (i = 0; i < NUM_INPUTS; i++) begin: for_inputs
+            fifo_agilex7 #(
+                .WIDTH      (USER_WIDTH),
+                .DEPTH      (FLIT_BUFFER_DEPTH),
+                .FORCE_MLAB (FORCE_MLAB))
+            dest_buffer (
+                .clock  (clk),
+                .data   (user_in[i]),
+                .rdreq  (user_buffer_rdreq[i]),
+                .sclr   (~rst_n),
+                .wrreq  (send_in[i] & ~receiving_packet[i]),
+                .empty  (user_buffer_empty[i]),
+                .full   (),                             // Handled with credits
+                .q      (user_buffer_out[i])
+            );
+        end
+    end
+    endgenerate
+
     // Output Arbiters
     generate begin: arbiter_gen
         genvar i;
@@ -410,6 +443,7 @@ module router #(
             rc_pipeline #(
                 .DATA_WIDTH         (FLIT_WIDTH),
                 .DEST_WIDTH         (DEST_WIDTH),
+                .USER_WIDTH         (USER_WIDTH),
                 .NUM_OUTPUTS        (NUM_OUTPUTS),
                 .FLIT_BUFFER_DEPTH  (FLIT_BUFFER_DEPTH),
                 .ENABLE             (PIPELINE_ROUTE_COMPUTE))
@@ -419,6 +453,7 @@ module router #(
 
                 // .data_in            (flit_buffer_out[i]),
                 .dest_in            (dest_buffer_out[i]),
+                .user_in            (user_buffer_out[i]),
                 .is_tail_in         (tail_buffer_out[i]),
                 .route_in           (route_table[route_table_select[i]]),
                 .credit_count_in    (credit_counter_plus),
@@ -427,6 +462,7 @@ module router #(
 
                 // .data_out           (flit_rc_reg_flit[i]),
                 .dest_out           (flit_rc_reg_dest[i]),
+                .user_out           (flit_rc_reg_user[i]),
                 .is_tail_out        (flit_rc_reg_is_tail[i]),
                 .credit_count_out   (rc_reg_credit_proxy[i]),
                 .valid_out          (flit_rc_reg_valid[i]),
@@ -457,6 +493,7 @@ module router #(
             sa_pipeline #(
                 .DATA_WIDTH         (FLIT_WIDTH),
                 .DEST_WIDTH         (DEST_WIDTH),
+                .USER_WIDTH         (USER_WIDTH),
                 .NUM_OUTPUTS        (NUM_OUTPUTS),
                 .FLIT_BUFFER_DEPTH  (FLIT_BUFFER_DEPTH),
                 .ENABLE             (PIPELINE_ARBITER))
@@ -468,6 +505,7 @@ module router #(
 
                 // .data_in            (flit_rc_reg_flit[i]),
                 .dest_in            (flit_rc_reg_dest[i]),
+                .user_in            (flit_rc_reg_user[i]),
                 .is_tail_in         (flit_rc_reg_is_tail[i]),
                 .grant_in           (grant_pipeline_in[i]),
                 .route_in           (route_table_out[i]),
@@ -475,6 +513,7 @@ module router #(
 
                 // .data_out           (flit_sa_reg_flit[i]),
                 .dest_out           (flit_sa_reg_dest[i]),
+                .user_out           (flit_sa_reg_user[i]),
                 .is_tail_out        (flit_sa_reg_is_tail[i]),
                 .grant_out          (grant_pipeline_out[i]),
                 .route_out          (route_sa_reg[i]),
@@ -489,16 +528,16 @@ module router #(
     always_comb begin
         for (int i = 0; i < NUM_INPUTS; i++) begin
             // Directly connect the data FIFO into the crossbar
-            flit_sa_reg[i] = {flit_buffer_out[i], flit_sa_reg_dest[i], flit_sa_reg_is_tail[i]};
+            flit_sa_reg[i] = {flit_buffer_out[i], flit_sa_reg_dest[i], flit_sa_reg_user[i], flit_sa_reg_is_tail[i]};
         end
 
         for (int i = 0; i < NUM_OUTPUTS; i++) begin
-            {data_out_flit[i], data_out_dest[i], data_out_is_tail[i]} = data_out_packed[i];
+            {data_out_flit[i], data_out_dest[i], data_out_user[i], data_out_is_tail[i]} = data_out_packed[i];
         end
     end
 
     crossbar_onehot #(
-        .DATA_WIDTH         (FLIT_WIDTH + DEST_WIDTH + 1),
+        .DATA_WIDTH         (FLIT_WIDTH + DEST_WIDTH + USER_WIDTH + 1),
         .NUM_INPUTS         (NUM_INPUTS),
         .NUM_OUTPUTS        (NUM_OUTPUTS))
     crossbar_inst (
@@ -726,6 +765,7 @@ endmodule: crossbar_onehot
 module rc_pipeline #(
     parameter DATA_WIDTH = 32,
     parameter DEST_WIDTH = 4,
+    parameter USER_WIDTH = 32,
     parameter NUM_OUTPUTS = 2,
     parameter FLIT_BUFFER_DEPTH = 2,
     parameter bit ENABLE = 1
@@ -735,6 +775,7 @@ module rc_pipeline #(
 
     // input   wire    [DATA_WIDTH - 1 : 0]                    data_in,
     input   wire    [DEST_WIDTH - 1 : 0]                    dest_in,
+    input   wire    [USER_WIDTH - 1 : 0]                    user_in,
     input   wire                                            is_tail_in,
     input   wire    [$clog2(NUM_OUTPUTS) - 1 : 0]           route_in,
     input   wire    [$clog2(FLIT_BUFFER_DEPTH + 2) - 1 : 0] credit_count_in [NUM_OUTPUTS],
@@ -743,6 +784,7 @@ module rc_pipeline #(
 
     // output  logic   [DATA_WIDTH - 1 : 0]                    data_out,
     output  logic   [DEST_WIDTH - 1 : 0]                    dest_out,
+    output  logic   [USER_WIDTH - 1 : 0]                    user_out,
     output  logic                                           is_tail_out,
     output  logic   [$clog2(NUM_OUTPUTS) - 1 : 0]           route_out,
     output  logic   [$clog2(FLIT_BUFFER_DEPTH + 2) - 1: 0]  credit_count_out,
@@ -763,6 +805,7 @@ module rc_pipeline #(
                 if (~valid_out | enable_in) begin
                     // data_out <= data_in;
                     dest_out <= dest_in;
+                    user_out <= user_in;
                     is_tail_out <= is_tail_in;
                     route_out <= route_in;
                     credit_count_out <= credit_count_in[route_in];
@@ -774,6 +817,7 @@ module rc_pipeline #(
         end else if (ENABLE == 0) begin
             // assign data_out = data_in;
             assign dest_out = dest_in;
+            assign user_out = user_in;
             assign is_tail_out = is_tail_in;
             assign route_out = route_in;
             assign valid_out = valid_in;
@@ -790,6 +834,7 @@ endmodule: rc_pipeline
 module sa_pipeline #(
     parameter DATA_WIDTH = 32,
     parameter DEST_WIDTH = 4,
+    parameter USER_WIDTH = 32,
     parameter NUM_OUTPUTS = 2,
     parameter FLIT_BUFFER_DEPTH = 2,
     parameter bit ENABLE = 1
@@ -801,6 +846,7 @@ module sa_pipeline #(
 
     // input   wire    [DATA_WIDTH - 1 : 0]                    data_in,
     input   wire    [DEST_WIDTH - 1 : 0]                    dest_in,
+    input   wire    [USER_WIDTH - 1 : 0]                    user_in,
     input   wire                                            is_tail_in,
     input   wire    [NUM_OUTPUTS - 1 : 0]                   grant_in,
     input   wire    [$clog2(NUM_OUTPUTS) - 1 : 0]           route_in,
@@ -808,6 +854,7 @@ module sa_pipeline #(
 
     // output  logic   [DATA_WIDTH - 1 : 0]                    data_out,
     output  logic   [DEST_WIDTH - 1 : 0]                    dest_out,
+    output  logic   [USER_WIDTH - 1 : 0]                    user_out,
     output  logic                                           is_tail_out,
     output  logic   [NUM_OUTPUTS - 1 : 0]                   grant_out,
     output  logic   [$clog2(NUM_OUTPUTS) - 1 : 0]           route_out,
@@ -830,6 +877,7 @@ module sa_pipeline #(
                 if (enable_in) begin
                     // data_out <= data_in;
                     dest_out <= dest_in;
+                    user_out <= user_in;
                     is_tail_out <= is_tail_in;
                     grant_reg <= grant_in;
                     route_out <= route_in;
@@ -839,6 +887,7 @@ module sa_pipeline #(
         end else if (ENABLE == 0) begin
             // assign data_out = data_in;
             assign dest_out = dest_in;
+            assign user_out = user_in;
             assign is_tail_out = is_tail_in;
             assign grant_out = grant_in;
             assign route_out = route_in;

@@ -29,7 +29,3 @@ sim/test_files/accum_test/output.out
 sim/test_files/mvm_test/input_vec.in
 sim/test_files/mvm_test/rf_weights.in
 sim/testbench/accum_tb.v
-sim/accum_tb.tcl
-sim/test_files/mvm_test/input_vec.in
-sim/test_files/mvm_test/rf_weights.in
-sim/testbench/accum_tb.v
