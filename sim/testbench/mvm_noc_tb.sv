@@ -112,6 +112,7 @@ module mvm_noc_tb();
         // Test case: Write Register File NOC 1 
         // -----------------------------------------------------------------------------
         @(posedge clk);
+        #(40ns);
 
         // -----------------------------------------------------------------------------
         // Loop through the input file for 64 lines to write data to each register file 

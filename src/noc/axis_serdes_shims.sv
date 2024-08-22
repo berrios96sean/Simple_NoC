@@ -756,7 +756,7 @@ module axis_serializer #(
     assign axis_out_tdest = tdest_buffer;
     assign axis_out_tuser = tuser_buffer;
     assign axis_out_tlast = tlast_buffer & (ser_count == (SERIALIZATION_FACTOR - 1));
-    assign axis_in_tready = !axis_out_tvalid || ((axis_out_tready && axis_out_tvalid) && (ser_count == (SERIALIZATION_FACTOR - 1)));
+    assign axis_in_tready = !axis_out_tvalid || ((axis_out_tready && axis_out_tvalid)); // && (ser_count == (SERIALIZATION_FACTOR - 1)));
 
     always_comb begin
         axis_out_tdata = tdata_buffer[TDATA_OUT_WIDTH * (ser_count + 1'b1) - 1 -: TDATA_OUT_WIDTH];
@@ -832,7 +832,7 @@ module axis_deserializer #(
     assign axis_out_tlast = tlast_buffer;
     assign axis_out_tuser = tuser_buffer;
 
-    assign axis_in_tready = !axis_out_tvalid || ((axis_out_tready && axis_out_tvalid) && (ser_count == (SERIALIZATION_FACTOR - 1)));
+    assign axis_in_tready = !axis_out_tvalid || ((axis_out_tready && axis_out_tvalid)); // && (ser_count == (SERIALIZATION_FACTOR - 1)));
 
     always_ff @(posedge clk) begin
         if (!rst_n) begin
