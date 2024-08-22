@@ -67,9 +67,9 @@ add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tlast
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_tx_tready
 add wave -noupdate -divider AXIS-Mesh-NOC
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_in_tdest
-add wave -noupdate -subitemconfig {{/mvm_noc_tb/top/axis_mesh_inst/axis_in_tdata[0]} -expand {/mvm_noc_tb/top/axis_mesh_inst/axis_in_tdata[1]} -expand} /mvm_noc_tb/top/axis_mesh_inst/axis_in_tdata
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_in_tdata
 add wave -noupdate -expand -subitemconfig {{/mvm_noc_tb/top/axis_mesh_inst/axis_in_tuser[0]} -expand} /mvm_noc_tb/top/axis_mesh_inst/axis_in_tuser
-add wave -noupdate -subitemconfig {{/mvm_noc_tb/top/axis_mesh_inst/axis_out_tdata[0]} -expand {/mvm_noc_tb/top/axis_mesh_inst/axis_out_tdata[1]} -expand} /mvm_noc_tb/top/axis_mesh_inst/axis_out_tdata
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_out_tdata
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_out_tdest
 add wave -noupdate -expand /mvm_noc_tb/top/axis_mesh_inst/axis_out_tuser
 add wave -noupdate -divider SHIM-GEN
@@ -93,8 +93,143 @@ add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/user_in
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/data_out
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/dest_out
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/user_out
+add wave -noupdate -divider MESH
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider Router-1
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider Router-2
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider Router-3
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider Router-4
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider PIPELINE-LINK-1
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider PIPELINE-LINK-2
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider PIPELINE-LINK-3
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
+add wave -noupdate -divider PIPELINE-LINK-4
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/clk
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/rst_n
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_in
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/credit_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/data_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/dest_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/user_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/is_tail_out
+add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/noc/send_out
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {3238057 ps} 0}
+WaveRestoreCursors {{Cursor 1} {2416996 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 307
 configure wave -valuecolwidth 100
@@ -110,4 +245,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {3722250 ps}
+WaveRestoreZoom {2003863 ps} {3626113 ps}

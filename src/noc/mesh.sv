@@ -13,6 +13,7 @@
     parameter NUM_COLS = 4,
     parameter DEST_WIDTH = 4,           // clog2(NUM_ROWS * NUM_COLS)
     parameter FLIT_WIDTH = 128,
+    parameter USER_WIDTH = 32,
     parameter FLIT_BUFFER_DEPTH = 4,
     parameter PIPELINE_LINKS = 0,
     parameter ROUTING_TABLE_PREFIX = "routing_tables/mesh_4x4/",
@@ -28,12 +29,14 @@
 
     input   wire    [FLIT_WIDTH - 1 : 0]    data_in     [NUM_ROWS][NUM_COLS],
     input   wire    [DEST_WIDTH - 1 : 0]    dest_in     [NUM_ROWS][NUM_COLS],
+    input   wire    [USER_WIDTH - 1 : 0]    user_in     [NUM_ROWS][NUM_COLS],
     input   wire                            is_tail_in  [NUM_ROWS][NUM_COLS],
     input   wire                            send_in     [NUM_ROWS][NUM_COLS],
     output  logic                           credit_out  [NUM_ROWS][NUM_COLS],
 
     output  logic   [FLIT_WIDTH - 1 : 0]    data_out    [NUM_ROWS][NUM_COLS],
     output  logic   [DEST_WIDTH - 1 : 0]    dest_out    [NUM_ROWS][NUM_COLS],
+    output  logic   [USER_WIDTH - 1 : 0]    user_out    [NUM_ROWS][NUM_COLS],
     output  logic                           is_tail_out [NUM_ROWS][NUM_COLS],
     output  logic                           send_out    [NUM_ROWS][NUM_COLS],
     input   wire                            credit_in   [NUM_ROWS][NUM_COLS]

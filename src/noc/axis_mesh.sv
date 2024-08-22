@@ -183,6 +183,7 @@ module axis_mesh #(
         .PIPELINE_LINKS                 (PIPELINE_LINKS),
         .DEST_WIDTH                     (DEST_WIDTH),
         .FLIT_WIDTH                     (FLIT_WIDTH),
+        .USER_WIDTH                     (TUSER_WIDTH),
         .FLIT_BUFFER_DEPTH              (FLIT_BUFFER_DEPTH),
         .OPTIMIZE_FOR_ROUTING           (OPTIMIZE_FOR_ROUTING),
         .DISABLE_SELFLOOP               (DISABLE_SELFLOOP),
@@ -197,12 +198,14 @@ module axis_mesh #(
 
         .data_in        (data_in),
         .dest_in        (dest_in),
+        .user_in        (user_in),
         .is_tail_in     (is_tail_in),
         .send_in        (send_in),
         .credit_out     (credit_out),
 
         .data_out       (data_out),
         .dest_out       (dest_out),
+        .user_out       (user_out),
         .is_tail_out    (is_tail_out),
         .send_out       (send_out),
         .credit_in      (credit_in)
