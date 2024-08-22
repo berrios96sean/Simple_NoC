@@ -15,18 +15,21 @@ module noc_pipeline_link #(
     parameter NUM_PIPELINE = 0,
 
     parameter FLIT_WIDTH = 128,
+    parameter USER_WIDTH = 32,
     parameter DEST_WIDTH = 8
 ) (
     input   wire                            clk         ,
 
     input   wire    [FLIT_WIDTH - 1 : 0]    data_in     ,
     input   wire    [DEST_WIDTH - 1 : 0]    dest_in     ,
+    input   wire    [USER_WIDTH - 1 : 0]    user_in     ,
     input   wire                            is_tail_in  ,
     input   wire                            send_in     ,
     output  logic                           credit_out  ,
 
     output  logic   [FLIT_WIDTH - 1 : 0]    data_out    ,
     output  logic   [DEST_WIDTH - 1 : 0]    dest_out    ,
+    output  logic   [USER_WIDTH - 1 : 0]    user_out    ,
     output  logic                           is_tail_out ,
     output  logic                           send_out    ,
     input   wire                            credit_in

@@ -17,6 +17,7 @@ module router #(
     parameter NUM_OUTPUTS = 5,
     parameter DEST_WIDTH = 3,
     parameter FLIT_WIDTH = 256,
+    parameter USER_WIDTH = 32,
     parameter FLIT_BUFFER_DEPTH = 2,
     parameter bit PIPELINE_ROUTE_COMPUTE = 0,
     parameter bit PIPELINE_ARBITER = 0,
@@ -28,12 +29,14 @@ module router #(
 
     input   wire    [FLIT_WIDTH - 1 : 0]    data_in     [NUM_INPUTS],
     input   wire    [DEST_WIDTH - 1 : 0]    dest_in     [NUM_INPUTS],
+    input   wire    [USER_WIDTH - 1 : 0]    user_in     [NUM_INPUTS],
     input   wire                            is_tail_in  [NUM_INPUTS],
     input   wire                            send_in     [NUM_INPUTS],
     output  logic                           credit_out  [NUM_INPUTS],
 
     output  logic   [FLIT_WIDTH - 1 : 0]    data_out    [NUM_OUTPUTS],
     output  logic   [DEST_WIDTH - 1 : 0]    dest_out    [NUM_OUTPUTS],
+    output  logic   [USER_WIDTH - 1 : 0]    user_out    [NUM_OUTPUTS],
     output  logic                           is_tail_out [NUM_OUTPUTS],
     output  logic                           send_out    [NUM_OUTPUTS],
     input   wire                            credit_in   [NUM_OUTPUTS],
