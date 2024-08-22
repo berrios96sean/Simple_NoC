@@ -189,7 +189,7 @@ module noc_adder_top (
         .PIPELINE_LINKS             (1),
 
         .TDEST_WIDTH                (4),
-        .TDATA_WIDTH                (TDATAW),
+        .TDATA_WIDTH                (32),
         .SERIALIZATION_FACTOR       (4),
         .CLKCROSS_FACTOR            (1),
         .SINGLE_CLOCK               (1),

@@ -19,7 +19,6 @@ module axis_mesh #(
     parameter TID_WIDTH = 2,
     parameter TDEST_WIDTH = 4,
     parameter TDATA_WIDTH = 512,
-    parameter TUSER_WIDTH = 32,
 
     parameter SERIALIZATION_FACTOR = 4,
     parameter CLKCROSS_FACTOR = 1,
@@ -47,15 +46,13 @@ module axis_mesh #(
     output  logic                           axis_in_tready  [NUM_ROWS][NUM_COLS],
     input   wire    [TDATA_WIDTH - 1 : 0]   axis_in_tdata   [NUM_ROWS][NUM_COLS],
     input   wire                            axis_in_tlast   [NUM_ROWS][NUM_COLS],
-    input   wire    [TUSER_WIDTH - 1 : 0]   axis_in_tuser   [NUM_ROWS][NUM_COLS],
-    input   wire    [  TID_WIDTH - 1 : 0]   axis_in_tid     [NUM_ROWS][NUM_COLS],
+    input   wire    [TID_WIDTH - 1 : 0]     axis_in_tid     [NUM_ROWS][NUM_COLS],
     input   wire    [TDEST_WIDTH - 1 : 0]   axis_in_tdest   [NUM_ROWS][NUM_COLS],
 
     output  logic                           axis_out_tvalid [NUM_ROWS][NUM_COLS],
     input   wire                            axis_out_tready [NUM_ROWS][NUM_COLS],
     output  logic   [TDATA_WIDTH - 1 : 0]   axis_out_tdata  [NUM_ROWS][NUM_COLS],
     output  logic                           axis_out_tlast  [NUM_ROWS][NUM_COLS],
-    output  logic   [TUSER_WIDTH - 1 : 0]   axis_out_tuser  [NUM_ROWS][NUM_COLS],
     output  logic   [TID_WIDTH - 1 : 0]     axis_out_tid    [NUM_ROWS][NUM_COLS],
     output  logic   [TDEST_WIDTH - 1 : 0]   axis_out_tdest  [NUM_ROWS][NUM_COLS]
 );
@@ -68,14 +65,12 @@ module axis_mesh #(
 
     logic   [FLIT_WIDTH - 1 : 0]    data_in     [NUM_ROWS][NUM_COLS];
     logic   [DEST_WIDTH  - 1 : 0]   dest_in     [NUM_ROWS][NUM_COLS];
-    logic   [TUSER_WIDTH - 1 : 0]   user_in     [NUM_ROWS][NUM_COLS];
     logic                           is_tail_in  [NUM_ROWS][NUM_COLS];
     logic                           send_in     [NUM_ROWS][NUM_COLS];
     logic                           credit_out  [NUM_ROWS][NUM_COLS];
 
     logic   [FLIT_WIDTH - 1 : 0]    data_out    [NUM_ROWS][NUM_COLS];
     logic   [DEST_WIDTH - 1 : 0]    dest_out    [NUM_ROWS][NUM_COLS];
-    logic   [TUSER_WIDTH - 1 : 0]   user_out    [NUM_ROWS][NUM_COLS];
     logic                           is_tail_out [NUM_ROWS][NUM_COLS];
     logic                           send_out    [NUM_ROWS][NUM_COLS];
     logic                           credit_in   [NUM_ROWS][NUM_COLS];
@@ -110,7 +105,6 @@ module axis_mesh #(
                 axis_serializer_shim_in #(
                     .TDEST_WIDTH            (DEST_WIDTH),
                     .TDATA_WIDTH            (TDATA_WIDTH),
-                    .TUSER_WIDTH            (TUSER_WIDTH),
                     .SERIALIZATION_FACTOR   (SERIALIZATION_FACTOR),
                     .CLKCROSS_FACTOR        (CLKCROSS_FACTOR),
                     .SINGLE_CLOCK           (SINGLE_CLOCK),
@@ -129,12 +123,10 @@ module axis_mesh #(
                     .axis_tready    (axis_in_tready[i][j]),
                     .axis_tdata     (axis_in_tdata[i][j]),
                     .axis_tlast     (axis_in_tlast[i][j]),
-                    .axis_tuser     (axis_in_tuser[i][j]),
                     .axis_tdest     ({axis_in_tid[i][j], axis_in_tdest[i][j]}),
 
                     .data_out       (data_in[i][j]),
                     .dest_out       (dest_in[i][j]),
-                    .user_out       (user_in[i][j]),
                     .is_tail_out    (is_tail_in[i][j]),
                     .send_out       (send_in[i][j]),
                     .credit_in      (credit_out[i][j])
@@ -143,7 +135,6 @@ module axis_mesh #(
                 axis_deserializer_shim_out #(
                     .TDEST_WIDTH            (DEST_WIDTH),
                     .TDATA_WIDTH            (TDATA_WIDTH),
-                    .TUSER_WIDTH            (TUSER_WIDTH),
                     .SERIALIZATION_FACTOR   (SERIALIZATION_FACTOR),
                     .CLKCROSS_FACTOR        (CLKCROSS_FACTOR),
                     .SINGLE_CLOCK           (SINGLE_CLOCK),
@@ -162,12 +153,10 @@ module axis_mesh #(
                     .axis_tready    (axis_out_tready[i][j]),
                     .axis_tdata     (axis_out_tdata[i][j]),
                     .axis_tlast     (axis_out_tlast[i][j]),
-                    .axis_tuser     (axis_out_tuser[i][j]),
                     .axis_tdest     ({axis_out_tid[i][j], axis_out_tdest[i][j]}),
 
                     .data_in        (data_out[i][j]),
                     .dest_in        (dest_out[i][j]),
-                    .user_in        (user_out[i][j]),
                     .is_tail_in     (is_tail_out[i][j]),
                     .send_in        (send_out[i][j]),
                     .credit_out     (credit_in[i][j])
@@ -183,7 +172,6 @@ module axis_mesh #(
         .PIPELINE_LINKS                 (PIPELINE_LINKS),
         .DEST_WIDTH                     (DEST_WIDTH),
         .FLIT_WIDTH                     (FLIT_WIDTH),
-        .USER_WIDTH                     (TUSER_WIDTH),
         .FLIT_BUFFER_DEPTH              (FLIT_BUFFER_DEPTH),
         .OPTIMIZE_FOR_ROUTING           (OPTIMIZE_FOR_ROUTING),
         .DISABLE_SELFLOOP               (DISABLE_SELFLOOP),
@@ -198,14 +186,12 @@ module axis_mesh #(
 
         .data_in        (data_in),
         .dest_in        (dest_in),
-        .user_in        (user_in),
         .is_tail_in     (is_tail_in),
         .send_in        (send_in),
         .credit_out     (credit_out),
 
         .data_out       (data_out),
         .dest_out       (dest_out),
-        .user_out       (user_out),
         .is_tail_out    (is_tail_out),
         .send_out       (send_out),
         .credit_in      (credit_in)

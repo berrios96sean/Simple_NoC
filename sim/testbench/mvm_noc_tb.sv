@@ -6,9 +6,9 @@ module mvm_noc_tb();
     logic clk, clk_noc, rst_n;
     integer i, j, file, input1_file, input2_file, output_file;
     integer rf_weights_file, input_vec_file; 
-    logic [8*128:1] line;
+    logic [8*32:1] line;
     logic [6:0] line_count = 0;
-    logic [511:0] data_word;
+    logic [31:0] data_word;
     integer r;
 
 
@@ -16,7 +16,7 @@ module mvm_noc_tb();
     logic rst;
 
     logic             axis_s_tvalid;
-    logic [DATAW-1:0] axis_s_tdata;
+    logic [TDATAW-1:0] axis_s_tdata;
     logic [  IDW-1:0] axis_s_tid;
     logic [DESTW-1:0] axis_s_tdest;
     logic [USERW-1:0] axis_s_tuser;
@@ -24,7 +24,7 @@ module mvm_noc_tb();
     wire              axis_s_tready;
     
     wire              axis_m_tvalid;
-    wire [DATAW-1:0]  axis_m_tdata;
+    wire [TDATAW-1:0]  axis_m_tdata;
     wire [  IDW-1:0]  axis_m_tid;
     wire [DESTW-1:0]  axis_m_tdest;
     wire [USERW-1:0]  axis_m_tuser;
@@ -36,9 +36,9 @@ module mvm_noc_tb();
     // -----------------------------------------------------------------------------
     // Function to Read a data word from I/O
     // -----------------------------------------------------------------------------
-    task read_and_parse(input integer file_handle, output reg [511:0] data_out, output reg valid_out);
+    task read_and_parse(input integer file_handle, output reg [31:0] data_out, output reg valid_out);
       
-        reg [8*128:1] local_line;  // Local line buffer for the task
+        reg [8*32:1] local_line;  // Local line buffer for the task
         integer local_r;
 
         begin
@@ -46,7 +46,7 @@ module mvm_noc_tb();
             // Read a line from the file
             local_r = $fgets(local_line, file_handle);
             if (local_r != 0) begin
-                // Parse the line into a 512-bit data word
+                // Parse the line into a N-bit data word
                 local_r = $sscanf(local_line, "%h", data_out);
                 if (local_r == 1) begin
                     valid_out = 1;
@@ -94,13 +94,13 @@ module mvm_noc_tb();
         rst_n = 1'b0;
 
         axis_s_tvalid = 0;
-        axis_s_tdata = 0;
+        axis_s_tdata = 107'b0;
         axis_s_tid = 0;
         axis_s_tdest = 0;
         axis_s_tuser = 0;
         axis_s_tlast = 0;
         axis_m_tready = 1;
-        line_count = 11;
+        line_count = 35;
 
         #(40ns);
 
@@ -118,22 +118,22 @@ module mvm_noc_tb();
         // Loop through the input file for 64 lines to write data to each register file 
         // from input file
         // -----------------------------------------------------------------------------
-        while (!$feof(rf_weights_file) && line_count < 76) begin
+        while (!$feof(rf_weights_file) && line_count < 105) begin
 
             read_and_parse(rf_weights_file, data_word, axis_s_tvalid);
             
             if (axis_s_tvalid) begin
 
-                axis_s_tdata <= data_word;
-                axis_s_tuser[8:0  ] =   9'h1;
-                axis_s_tuser[10:9 ] =  2'b11;
+                axis_s_tdata[31:0] <= data_word;
+                axis_s_tdata[40:32  ] =   9'h1;
+                axis_s_tdata[34:33 ] =  2'b11;
                 axis_s_tdest = 12'h002;
 
-                if (line_count > 11) begin 
-                axis_s_tuser[line_count-1] = 0; 
+                if (line_count > 35) begin 
+                axis_s_tdata[line_count-1] = 0; 
                 end
                 
-                axis_s_tuser[line_count] = 1;
+                axis_s_tdata[line_count] = 1;
                 axis_s_tlast = 1;
                 line_count = line_count + 1;
 
