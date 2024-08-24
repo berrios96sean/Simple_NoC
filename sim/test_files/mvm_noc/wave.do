@@ -7,6 +7,8 @@ add wave -noupdate /mvm_noc_tb/axis_s_tdata
 add wave -noupdate /mvm_noc_tb/axis_m_tdata
 add wave -noupdate /mvm_noc_tb/data_word
 add wave -noupdate /mvm_noc_tb/axis_s_tvalid
+add wave -noupdate /mvm_noc_tb/top/mesh_in_tdata
+add wave -noupdate /mvm_noc_tb/top/mesh_out_tdata
 add wave -noupdate -divider axis_passthrough
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/CLK
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/RST_N
@@ -35,6 +37,7 @@ add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tdest
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tid
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tkeep
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tlast
+add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tready
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tstrb
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tuser
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_2/axis_rx_tvalid
@@ -48,6 +51,7 @@ add wave -noupdate -divider MVM3-Inputs
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tvalid
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tdata
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tstrb
+add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tready
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tkeep
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tid
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tdest
@@ -65,6 +69,7 @@ add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tdata
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tstrb
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tkeep
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tid
+add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tready
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tdest
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tuser
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/axis_rx_tlast
@@ -229,7 +234,7 @@ add wave -noupdate {/mvm_noc_tb/top/axis_mesh_inst/shim_gen/for_rows[0]/for_cols
 add wave -noupdate {/mvm_noc_tb/top/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[0]/shim_in/axis_tvalid}
 add wave -noupdate {/mvm_noc_tb/top/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[0]/shim_in/axis_tvalid}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {85000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {920661 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 362
 configure wave -valuecolwidth 100
@@ -245,4 +250,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {62192 ps} {107808 ps}
+WaveRestoreZoom {0 ps} {960750 ps}

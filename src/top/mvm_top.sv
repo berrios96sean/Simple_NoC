@@ -41,20 +41,42 @@ module mvm_top (
     // -------------------------------------------------------
     logic              axis_in_tvalid   [ROWS][COLUMNS];
     logic              axis_in_tready   [ROWS][COLUMNS];
-    logic [TDATAW-1:0] axis_in_tdata    [ROWS][COLUMNS];
+    logic [ DATAW-1:0] axis_in_tdata    [ROWS][COLUMNS];
     logic              axis_in_tlast    [ROWS][COLUMNS];
     logic [ USERW-1:0] axis_in_tuser    [ROWS][COLUMNS];
     logic [ DESTW-1:0] axis_in_tdest    [ROWS][COLUMNS];
 
     logic              axis_out_tvalid  [ROWS][COLUMNS];
     logic              axis_out_tready  [ROWS][COLUMNS];
-    logic [TDATAW-1:0] axis_out_tdata   [ROWS][COLUMNS];
+    logic [ DATAW-1:0] axis_out_tdata   [ROWS][COLUMNS];
     logic              axis_out_tlast   [ROWS][COLUMNS];
     logic [ USERW-1:0] axis_out_tuser   [ROWS][COLUMNS];
     logic [ DESTW-1:0] axis_out_tdest   [ROWS][COLUMNS];
 
+    logic [TDATAW-1:0] mesh_in_tdata    [ROWS][COLUMNS];
+    logic [TDATAW-1:0] mesh_out_tdata   [ROWS][COLUMNS];
+    logic [ USERW-1:0] mesh_out_tuser   [ROWS][COLUMNS];
+
+    logic [ USERW-1:0] mvm2_out_tuser;
+    logic [ USERW-1:0] mvm3_out_tuser;
+    logic [ USERW-1:0] mvm4_out_tuser;
+
     wire dummy;
     assign dummy = 75'b000000000000000000000000000000000000000000000000000000000000000000000000000;
+
+    assign mesh_in_tdata  [0][0] = {axis_in_tuser [0][0],axis_in_tdata  [0][0]};
+
+    assign mesh_in_tdata  [0][1] = {axis_in_tuser [0][1],axis_in_tdata  [0][1]};
+    assign axis_out_tdata [0][1] = mesh_out_tdata [0][1][DATAW-1:0];
+    assign axis_out_tuser [0][1] = mesh_out_tdata [0][1][TDATAW-1:DATAW];
+
+    assign mesh_in_tdata  [1][0] = {axis_in_tuser [1][0],axis_in_tdata  [1][0]};
+    assign axis_out_tdata [1][0] = mesh_out_tdata [1][0][DATAW-1:0];
+    assign axis_out_tuser [1][0] = mesh_out_tdata [1][0][TDATAW-1:DATAW];
+
+    assign mesh_in_tdata  [1][1] = {axis_in_tuser [1][1],axis_in_tdata  [1][1]};
+    assign axis_out_tdata [1][1] = mesh_out_tdata [1][1][DATAW-1:0];
+    assign axis_out_tuser [1][1] = mesh_out_tdata [1][1][TDATAW-1:DATAW];
 
     // TO-DO: Replace MVM 1 with a PE that can take in the AXIS signals 
     // and then output them so that the data is routed to the correct NODE
@@ -74,7 +96,7 @@ module mvm_top (
     // -------------------------------------------------------
 
     axis_passthrough #(
-        .DATAW          (TDATAW),                        // Bitwidth of axi-s tdata
+        .DATAW          (DATAW),                        // Bitwidth of axi-s tdata
         .IDW            (IDW),                          // Bitwidth of axi-s tid
         .USERW          (USERW),                        // Bitwidth of axi-s tuser
         .DESTW          (DESTW)
@@ -86,19 +108,19 @@ module mvm_top (
         .AXIS_S_TREADY  (AXIS_S_TREADY),               // output
         .AXIS_S_TDATA   (AXIS_S_TDATA ),               // input
         .AXIS_S_TLAST   (AXIS_S_TLAST ),               // input
-        // .AXIS_S_TUSER   (AXIS_S_TUSER ),               // input
+        .AXIS_S_TUSER   (AXIS_S_TUSER ),               // input
         .AXIS_S_TDEST   (AXIS_S_TDEST ),               // input
 
         .AXIS_M_TVALID  (axis_in_tvalid  [0][0]),      // output
         .AXIS_M_TREADY  (axis_in_tready  [0][0]),      // input
         .AXIS_M_TDATA   (axis_in_tdata   [0][0]),      // output
         .AXIS_M_TLAST   (axis_in_tlast   [0][0]),      // output
-        // .AXIS_M_TUSER   (axis_in_tuser   [0][0]),      // output
+        .AXIS_M_TUSER   (axis_in_tuser   [0][0]),      // output
         .AXIS_M_TDEST   (axis_in_tdest   [0][0])       // output
     );
 
         rtl_mvm #(
-        .DATAW          (TDATAW),                          // Bitwidth of axi-s tdata
+        .DATAW          (DATAW),                          // Bitwidth of axi-s tdata
         .BYTEW          (BYTEW),   		                    // Bitwidth of axi-s tkeep, tstrb
         .IDW            (IDW),                           // Bitwidth of axi-s tid
         .DESTW          (DESTW),		                    // Bitwidth of axi-s tdest
@@ -123,28 +145,28 @@ module mvm_top (
         .rst(~RST_N),                                   // input
 
         .axis_rx_tvalid  (axis_out_tvalid [0][1]),       // input
-        .axis_rx_tdata   (axis_out_tdata  [0][1][31:0]),       // input
+        .axis_rx_tdata   (axis_out_tdata  [0][1][DATAW-1:0]),       // input
         // .axis_rx_tstrb(axis_out_tstrb  [0][1]),       // input
         // .axis_rx_tkeep(axis_out_tkeep  [0][1]),       // input
         // .axis_rx_tid  (axis_out_tid    [0][1]),       // input
         .axis_rx_tdest   (axis_out_tdest  [0][1]),       // input
-        // .axis_rx_tuser   (axis_out_tuser  [0][1]),       // input
+        .axis_rx_tuser   (axis_out_tuser  [0][1]),       // input
         .axis_rx_tlast   (axis_out_tlast  [0][1]),       // input
         .axis_rx_tready  (axis_out_tready [0][1]),       // output
 
         .axis_tx_tvalid  (axis_in_tvalid  [0][1]),       // output
-        .axis_tx_tdata   (axis_in_tdata   [0][1][31:0]),       // output
+        .axis_tx_tdata   (axis_in_tdata   [0][1][DATAW-1:0]),       // output
         // .axis_tx_tstrb(axis_in_tstrb   [0][1]),       // output
         // .axis_tx_tkeep(axis_in_tkeep   [0][1]),       // output
         // .axis_tx_tid  (axis_in_tid     [0][1]),       // output
         .axis_tx_tdest   (axis_in_tdest   [0][1]),       // output
-        // .axis_tx_tuser   (axis_in_tuser   [0][1]),       // output
+        .axis_tx_tuser   (axis_in_tuser   [0][1]),       // output
         .axis_tx_tlast   (axis_in_tlast   [0][1]),       // output
         .axis_tx_tready  (axis_in_tready  [0][1])        // input
     );
 
         rtl_mvm #(
-        .DATAW          (TDATAW),                          // Bitwidth of axi-s tdata
+        .DATAW          (DATAW),                          // Bitwidth of axi-s tdata
         .BYTEW          (BYTEW),  		                    // Bitwidth of axi-s tkeep, tstrb
         .IDW            (IDW),                             // Bitwidth of axi-s tid
         .DESTW          (DESTW),		                    // Bitwidth of axi-s tdest
@@ -169,28 +191,28 @@ module mvm_top (
         .rst(~RST_N),                                   // input
 
         .axis_rx_tvalid  (axis_out_tvalid [1][0]),       // input
-        .axis_rx_tdata   (axis_out_tdata  [1][0][31:0]),       // input
+        .axis_rx_tdata   (axis_out_tdata  [1][0][DATAW-1:0]),       // input
         // .axis_rx_tstrb(axis_out_tstrb  [1][0]),       // input
         // .axis_rx_tkeep(axis_out_tkeep  [1][0]),       // input
         // .axis_rx_tid  (axis_out_tid    [1][0]),       // input
         .axis_rx_tdest   (axis_out_tdest  [1][0]),       // input
-        // .axis_rx_tuser   (axis_out_tuser  [1][0]),       // input
+        .axis_rx_tuser   (axis_out_tuser  [1][0]),       // input
         .axis_rx_tlast   (axis_out_tlast  [1][0]),       // input
         .axis_rx_tready  (axis_out_tready [1][0]),       // output
 
         .axis_tx_tvalid  (axis_in_tvalid  [1][0]),       // output
-        .axis_tx_tdata   (axis_in_tdata   [1][0][31:0]),       // output
+        .axis_tx_tdata   (axis_in_tdata   [1][0][DATAW-1:0]),       // output
         // .axis_tx_tstrb(axis_in_tstrb   [1][0]),       // output
         // .axis_tx_tkeep(axis_in_tkeep   [1][0]),       // output
         // .axis_tx_tid  (axis_in_tid     [1][0]),       // output
         .axis_tx_tdest   (axis_in_tdest   [1][0]),       // output
-        // .axis_tx_tuser   (axis_in_tuser   [1][0]),       // output
+        .axis_tx_tuser   (axis_in_tuser   [1][0]),       // output
         .axis_tx_tlast   (axis_in_tlast   [1][0]),       // output
         .axis_tx_tready  (axis_in_tready  [1][0])        // input
     );
 
         rtl_mvm #(
-        .DATAW          (TDATAW),                          // Bitwidth of axi-s tdata
+        .DATAW          (DATAW),                          // Bitwidth of axi-s tdata
         .BYTEW          (BYTEW),   		                    // Bitwidth of axi-s tkeep, tstrb
         .IDW            (IDW),                              // Bitwidth of axi-s tid
         .DESTW          (DESTW),		                    // Bitwidth of axi-s tdest
@@ -215,22 +237,22 @@ module mvm_top (
         .rst(~RST_N),                                   // input
 
         .axis_rx_tvalid  (axis_out_tvalid [1][1]),       // input
-        .axis_rx_tdata   (axis_out_tdata  [1][1][31:0]),       // input
+        .axis_rx_tdata   (axis_out_tdata  [1][1][DATAW-1:0]),       // input
         // .axis_rx_tstrb(axis_out_tstrb  [1][1]),       // input
         // .axis_rx_tkeep(axis_out_tkeep  [1][1]),       // input
         // .axis_rx_tid  (axis_out_tid    [1][1]),       // input
         .axis_rx_tdest   (axis_out_tdest  [1][1]),       // input
-        // .axis_rx_tuser   (axis_out_tuser  [1][1]),       // input
+        .axis_rx_tuser   (axis_out_tuser  [1][1]),       // input
         .axis_rx_tlast   (axis_out_tlast  [1][1]),       // input
         .axis_rx_tready  (axis_out_tready [1][1]),       // output
 
         .axis_tx_tvalid  (AXIS_M_TVALID),                // output
-        .axis_tx_tdata   (AXIS_M_TDATA [31:0]),                // output
+        .axis_tx_tdata   (AXIS_M_TDATA [DATAW-1:0]),                // output
         // .axis_tx_tstrb(AXIS_M_TSTRB ),                // output
         // .axis_tx_tkeep(AXIS_M_TKEEP ),                // output
         // .axis_tx_tid  (AXIS_M_TID   ),                // output
         .axis_tx_tdest   (AXIS_M_TDEST ),                // output
-        // .axis_tx_tuser   (AXIS_M_TUSER ),                // output
+        .axis_tx_tuser   (AXIS_M_TUSER ),                // output
         .axis_tx_tlast   (AXIS_M_TLAST ),                // output
         .axis_tx_tready  (AXIS_M_TREADY)                 // input
     );
@@ -265,7 +287,7 @@ module mvm_top (
 
         .axis_in_tvalid  (axis_in_tvalid),
         .axis_in_tready  (axis_in_tready),
-        .axis_in_tdata   (axis_in_tdata),
+        .axis_in_tdata   (mesh_in_tdata),
         .axis_in_tlast   (axis_in_tlast),
         // .axis_in_tuser   (axis_in_tuser),
         // .axis_in_tid  (axis_in_tid),
@@ -273,7 +295,7 @@ module mvm_top (
 
         .axis_out_tvalid (axis_out_tvalid),
         .axis_out_tready ({1'b1,1'b1,1'b1,1'b1}),
-        .axis_out_tdata  (axis_out_tdata),
+        .axis_out_tdata  (mesh_out_tdata),
         .axis_out_tlast  (axis_out_tlast),
         // .axis_out_tuser  (axis_out_tuser),
         // .axis_out_tid (axis_out_tid),
