@@ -42,7 +42,7 @@ module mvm_noc_tb();
         integer local_r;
 
         begin
-            valid_out = 0;
+            //valid_out = 0;
             // Read a line from the file
             local_r = $fgets(local_line, file_handle);
             if (local_r != 0) begin
@@ -50,6 +50,8 @@ module mvm_noc_tb();
                 local_r = $sscanf(local_line, "%h", data_out);
                 if (local_r == 1) begin
                     valid_out = 1;
+                end else begin
+                    valid_out = 0;
                 end
             end
         end
@@ -102,29 +104,27 @@ module mvm_noc_tb();
         axis_m_tready = 1;
         line_count = 35;
 
-        #(40ns);
-
-        rst_n = 1'b1;
+        #10 rst_n = 1'b1;
 
         $display("Starting Simulation");
 
         // -----------------------------------------------------------------------------
         // Test case: Write Register File NOC 1 
         // -----------------------------------------------------------------------------
-        @(posedge clk);
-        #(40ns);
+        #(60ns);
 
         // -----------------------------------------------------------------------------
         // Loop through the input file for 64 lines to write data to each register file 
         // from input file
         // -----------------------------------------------------------------------------
-        while (!$feof(rf_weights_file) && line_count < 105) begin
+        while (!$feof(rf_weights_file) && line_count < 100) begin
 
+            @(posedge clk);
             read_and_parse(rf_weights_file, data_word, axis_s_tvalid);
             
             if (axis_s_tvalid) begin
 
-                axis_s_tdata[31:0] <= data_word;
+                axis_s_tdata[31:0] = data_word;
                 axis_s_tdata[40:32  ] =   9'h1;
                 axis_s_tdata[34:33 ] =  2'b11;
                 axis_s_tdest = 12'h002;
@@ -138,7 +138,7 @@ module mvm_noc_tb();
                 line_count = line_count + 1;
 
             end
-            @(posedge clk);
+            //@(posedge clk);
         end
 
         @(posedge clk);
