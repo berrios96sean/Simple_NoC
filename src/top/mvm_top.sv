@@ -57,13 +57,6 @@ module mvm_top (
     logic [TDATAW-1:0] mesh_out_tdata   [ROWS][COLUMNS];
     logic [ USERW-1:0] mesh_out_tuser   [ROWS][COLUMNS];
 
-    logic [ USERW-1:0] mvm2_out_tuser;
-    logic [ USERW-1:0] mvm3_out_tuser;
-    logic [ USERW-1:0] mvm4_out_tuser;
-
-    wire dummy;
-    assign dummy = 75'b000000000000000000000000000000000000000000000000000000000000000000000000000;
-
     assign mesh_in_tdata  [0][0] = {axis_in_tuser [0][0],axis_in_tdata  [0][0]};
 
     assign mesh_in_tdata  [0][1] = {axis_in_tuser [0][1],axis_in_tdata  [0][1]};
@@ -77,19 +70,6 @@ module mvm_top (
     assign mesh_in_tdata  [1][1] = {axis_in_tuser [1][1],axis_in_tdata  [1][1]};
     assign axis_out_tdata [1][1] = mesh_out_tdata [1][1][DATAW-1:0];
     assign axis_out_tuser [1][1] = mesh_out_tdata [1][1][TDATAW-1:DATAW];
-
-    // TO-DO: Replace MVM 1 with a PE that can take in the AXIS signals 
-    // and then output them so that the data is routed to the correct NODE
-    // in the NOC
-    // assign axis_out_tvalid   [0][0] = AXIS_S_TVALID;
-    // assign axis_out_tdata    [0][0] = AXIS_S_TDATA ;
-    // assign axis_out_tstrb [0][0] = AXIS_S_TSTRB ;
-    // assign axis_out_tkeep [0][0] = AXIS_S_TKEEP ;
-    // assign axis_out_tid   [0][0] = AXIS_S_TID   ;
-    // assign axis_out_tdest    [0][0] = AXIS_S_TDEST ;
-    // assign axis_out_tuser    [0][0] = AXIS_S_TUSER ;
-    // assign axis_out_tlast    [0][0] = AXIS_S_TLAST ;
-    // assign axis_out_tready   [0][0] = AXIS_S_TREADY;
 
     // -------------------------------------------------------
     // Module Instantions
