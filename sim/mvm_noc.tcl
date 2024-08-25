@@ -40,6 +40,39 @@ vlog +acc $QSYS_SIMDIR/testbench/mvm_noc_tb.sv \
     $QSYS_SIMDIR/../src/mvm/*v \
     $QSYS_SIMDIR/../src/noc/*sv \
     $QSYS_SIMDIR/../src/top/mvm_top.sv
+
+# Define the path to the parameters.sv file
+set params_file "./parameters.sv"
+set wave_file "./test_files/mvm_noc/wave.do"
+set python_file "./test_files/mvm_noc/generate_wave.py"
+
+# Initialize variables to hold ROWS and COLUMNS values
+set ROWS ""
+set COLUMNS ""
+
+# Open the parameters.sv file for reading
+set file_id [open $params_file r]
+
+# Read the file line by line
+while {[gets $file_id line] >= 0} {
+    # Use regex to extract ROWS value
+    if {[regexp {parameter\s+int\s+ROWS\s*=\s*(\d+)\s*;} $line match rows_value]} {
+        set ROWS $rows_value
+    }
+    # Use regex to extract COLUMNS value
+    if {[regexp {parameter\s+int\s+COLUMNS\s*=\s*(\d+)\s*;} $line match columns_value]} {
+        set COLUMNS $columns_value
+    }
+}
+
+# Close the file
+close $file_id
+
+# Print the extracted values (or assign them to other variables as needed)
+puts "ROWS = $ROWS"
+puts "COLUMNS = $COLUMNS"
+
+exec python3 $python_file --rows $ROWS --columns $COLUMNS --output $wave_file
 #
 # Set the top-level simulation or testbench module/entity name, which is
 # used by the elab command to elaborate the top level.
@@ -50,10 +83,10 @@ set TOP_LEVEL_NAME mvm_noc_tb
 # set USER_DEFINED_ELAB_OPTIONS <elaboration options>
 #
 # Call command to elaborate your design and testbench.
-elab_debug
+elab_debug -suppress 14408
 #
 do test_files/mvm_noc/wave.do
-# Run the simulation.
+# Run the simulation with suppression.
 run -a
 #
 

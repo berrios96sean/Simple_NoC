@@ -27,12 +27,14 @@ add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TLAST
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TID
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TUSER
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TDEST
-add wave -noupdate -divider MVM2-Weights
+
+add wave -noupdate -divider MVM0_1-Weights
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_waddr}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_wen}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_wdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_rdata}
-add wave -noupdate -divider MVM2-Inputs
+
+add wave -noupdate -divider MVM0_1-Inputs
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tdest}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tid}
@@ -43,7 +45,8 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tuser}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tvalid}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tready}
-add wave -noupdate -divider MVM2-Outputs
+
+add wave -noupdate -divider MVM0_1-Outputs
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tdest}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tid}
@@ -53,8 +56,8 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tstrb}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tuser}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tvalid}
-add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tready}
-add wave -noupdate -divider MVM2-IFIFO
+
+add wave -noupdate -divider MVM0_1-IFIFO
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/clk}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/rst}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/push}
@@ -64,17 +67,14 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/empty}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/full}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/almost_full}
-add wave -noupdate -divider MVM3X3-Weights
+
+add wave -noupdate -divider MVM1_0-Weights
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_waddr}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_wen}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_wdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_rdata}
-add wave -noupdate -divider MVM2-Weights
-add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[2]/genblk1/genblk1/mvm_inst/rf_waddr}
-add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[2]/genblk1/genblk1/mvm_inst/rf_wen}
-add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[2]/genblk1/genblk1/mvm_inst/rf_wdata}
-add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[2]/genblk1/genblk1/mvm_inst/rf_rdata}
-add wave -noupdate -divider MVM3-Inputs
+
+add wave -noupdate -divider MVM1_0-Inputs
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_rx_tdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_rx_tdest}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_rx_tid}
@@ -85,7 +85,8 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_rx_tuser}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_rx_tvalid}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_tx_tready}
-add wave -noupdate -divider MVM3-Outputs
+
+add wave -noupdate -divider MVM1_0-Outputs
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_tx_tdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_tx_tdest}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_tx_tid}
@@ -95,8 +96,8 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_tx_tstrb}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_tx_tuser}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_tx_tvalid}
-add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/axis_rx_tready}
-add wave -noupdate -divider MVM3-IFIFO
+
+add wave -noupdate -divider MVM1_0-IFIFO
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/clk}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/rst}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/push}
@@ -106,12 +107,14 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/empty}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/full}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/almost_full}
-add wave -noupdate -divider MVM4-Weights
+
+add wave -noupdate -divider MVM1_1-Weights
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_waddr}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_wen}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_wdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_rdata}
-add wave -noupdate -divider MVM4-Inputs
+
+add wave -noupdate -divider MVM1_1-Inputs
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tdest}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tid}
@@ -122,7 +125,8 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tuser}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tvalid}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tready}
-add wave -noupdate -divider MVM4-Outputs
+
+add wave -noupdate -divider MVM1_1-Outputs
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tdata}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tdest}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tid}
@@ -132,8 +136,8 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tstrb}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tuser}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_tx_tvalid}
-add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/axis_rx_tready}
-add wave -noupdate -divider MVM4-IFIFO
+
+add wave -noupdate -divider MVM1_1-IFIFO
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/clk}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/rst}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/push}
@@ -143,6 +147,7 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/empty}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/full}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/almost_full}
+
 add wave -noupdate -divider AXIS-Mesh-NOC
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_in_tdest
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_in_tdata

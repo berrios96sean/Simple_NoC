@@ -30,8 +30,11 @@ parameter int FIFOD = 64;
 parameter int DATAPATH_DELAY = 12;
 
 // Mesh Parameters
-parameter int ROWS         = 3;
-parameter int COLUMNS      = 3;
+// 4x4 Mesh is verified but exceeds intel recommended design size
+// this causes the simulation to finish extremely slowly. For testing 
+// purposes recommend only using 3x3 noc or below. 
+parameter int ROWS         = 2;
+parameter int COLUMNS      = 2;
 parameter int TDATAW       = DATAW + USERW;
 parameter int TIDW         = 4;
 parameter int TDESTW       = 4;
