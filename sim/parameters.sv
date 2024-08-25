@@ -30,14 +30,18 @@ parameter int FIFOD = 64;
 parameter int DATAPATH_DELAY = 12;
 
 // Mesh Parameters
-parameter int ROWS         = 2;
-parameter int COLUMNS      = 2;
+parameter int ROWS         = 3;
+parameter int COLUMNS      = 3;
 parameter int TDATAW       = DATAW + USERW;
 parameter int TIDW         = 4;
 parameter int TDESTW       = 4;
 parameter int NUM_PACKETS  = 1;
 
 // Directories
-parameter string ROUTING_TABLES_DIR = "../routing_tables/mesh_2x2/";
+localparam string ROUTING_TABLES_DIR = 
+    (ROWS == 2 && COLUMNS == 2) ? "../routing_tables/mesh_2x2/" :
+    (ROWS == 3 && COLUMNS == 3) ? "../routing_tables/mesh_3x3/" :
+    (ROWS == 4 && COLUMNS == 4) ? "../routing_tables/mesh_4x4/" :
+    "../routing_tables/default/"; // Default this should be an error
 
 `endif // PARAMETERS_SV

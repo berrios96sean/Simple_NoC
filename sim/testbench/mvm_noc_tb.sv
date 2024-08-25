@@ -9,7 +9,7 @@ module mvm_noc_tb();
     integer local_r;
     logic [8*DATAW:1] line;
     logic [6:0] line_count = 0;
-    logic [DATAW:0] data_word;
+    logic [DATAW-1:0] data_word;
     integer r;
 
 
@@ -95,6 +95,16 @@ module mvm_noc_tb();
 
         end
 
+        input_vec_file = $fopen("./test_files/mvm_test/input_vec.in", "r");
+
+        if (input_vec_file == 0) begin
+
+            $display("Error: Could not open input file.");
+            $finish;
+
+        end
+
+
         rst_n = 1'b0;
 
         axis_s_tvalid = 0;
@@ -131,7 +141,7 @@ module mvm_noc_tb();
                 
                 if (axis_s_tvalid) begin
 
-                    axis_s_tdata[DATAW:0] = data_word;
+                    axis_s_tdata[DATAW-1:0] = data_word;
                     axis_s_tuser[ 8:0] =   9'h1;
                     axis_s_tuser[10:9] =  2'b11;
                     axis_s_tdest = start_dest_s;
@@ -161,6 +171,29 @@ module mvm_noc_tb();
             line_count = 11;
 
         end
+
+        // -----------------------------------------------------------------------------
+        // Load an Input vector to a router
+        // -----------------------------------------------------------------------------
+        @(posedge clk);
+        read_and_parse(input_vec_file, local_r, data_word, axis_s_tvalid);
+
+        if (axis_s_tvalid) begin
+
+        axis_s_tdata <= data_word;
+
+        end
+
+        axis_s_tuser[8:0  ] =   9'b0;
+        axis_s_tuser[10:9 ] =  2'b10;
+        axis_s_tuser[74:11] =  64'b0;
+        axis_s_tdest = 12'h001;
+        axis_s_tlast = 1;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
 
 
 

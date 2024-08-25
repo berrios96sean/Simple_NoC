@@ -59,7 +59,7 @@ if __name__ == "__main__":
     for i in range(num_rows):
         for j in range(num_cols):
             table = generate_table(num_rows, num_cols, i, j)
-            table_file = open("%s%d_%d.hex" % (table_prefix, i, j), "w")
+            table_file = open("%d_%d.hex" % (i, j), "w")
             for k in range(num_routers):
                 table_file.write("%d\n" % table[k])
             table_file.close()
