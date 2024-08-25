@@ -274,7 +274,7 @@ module mvm_top (
         .axis_in_tdest   (axis_in_tdest),
 
         .axis_out_tvalid (axis_out_tvalid),
-        .axis_out_tready ({1'b1,1'b1,1'b1,1'b1}),
+        .axis_out_tready (axis_out_tready),
         .axis_out_tdata  (mesh_out_tdata),
         .axis_out_tlast  (axis_out_tlast),
         // .axis_out_tuser  (axis_out_tuser),

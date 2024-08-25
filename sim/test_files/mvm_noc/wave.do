@@ -9,6 +9,7 @@ add wave -noupdate /mvm_noc_tb/data_word
 add wave -noupdate /mvm_noc_tb/axis_s_tvalid
 add wave -noupdate /mvm_noc_tb/top/mesh_in_tdata
 add wave -noupdate /mvm_noc_tb/top/mesh_out_tdata
+add wave -noupdate /mvm_noc_tb/router_weights_s
 add wave -noupdate -divider axis_passthrough
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/CLK
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/RST_N
@@ -60,7 +61,7 @@ add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_rx_tlast
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_3/axis_tx_tready
 add wave -noupdate -divider MVM4-Weights
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/rf_waddr
-add wave -noupdate -expand /mvm_noc_tb/top/mvm_inst_4/rf_wen
+add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/rf_wen
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/rf_wdata
 add wave -noupdate /mvm_noc_tb/top/mvm_inst_4/rf_rdata
 add wave -noupdate -divider MVM4-Inputs
@@ -234,7 +235,7 @@ add wave -noupdate {/mvm_noc_tb/top/axis_mesh_inst/shim_gen/for_rows[0]/for_cols
 add wave -noupdate {/mvm_noc_tb/top/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[0]/shim_in/axis_tvalid}
 add wave -noupdate {/mvm_noc_tb/top/axis_mesh_inst/shim_gen/for_rows[0]/for_cols[0]/shim_in/axis_tvalid}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {920661 ps} 0}
+WaveRestoreCursors {{Cursor 1} {147793 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 362
 configure wave -valuecolwidth 100
@@ -250,4 +251,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {960750 ps}
+WaveRestoreZoom {0 ps} {2388750 ps}

@@ -5,7 +5,8 @@ module mvm_noc_tb();
 
     logic clk, clk_noc, rst_n;
     integer i, j, file, input1_file, input2_file, output_file;
-    integer rf_weights_file, input_vec_file; 
+    integer rf_weights_file, input_vec_file, router_weights_s; 
+    integer local_r;
     logic [8*DATAW:1] line;
     logic [6:0] line_count = 0;
     logic [DATAW:0] data_word;
@@ -31,15 +32,16 @@ module mvm_noc_tb();
     wire              axis_m_tlast;
     logic             axis_m_tready;
 
+    logic [DESTW-1:0] start_dest_s;
+
     integer NUM_PACKET_INJ = 10;
 
     // -----------------------------------------------------------------------------
     // Function to Read a data word from I/O
     // -----------------------------------------------------------------------------
-    task read_and_parse(input integer file_handle, output reg [DATAW:0] data_out, output reg valid_out);
+    task read_and_parse(input integer file_handle, input integer local_r, output reg [DATAW:0] data_out, output reg valid_out);
       
         reg [8*DATAW:1] local_line;  // Local line buffer for the task
-        integer local_r;
 
         begin
             //valid_out = 0;
@@ -102,6 +104,8 @@ module mvm_noc_tb();
         axis_s_tuser = 0;
         axis_s_tlast = 0;
         axis_m_tready = 1;
+        router_weights_s = 1;
+        start_dest_s = 12'h001;
         line_count = 11;
 
         #10 rst_n = 1'b1;
@@ -117,37 +121,50 @@ module mvm_noc_tb();
         // Loop through the input file for 64 lines to write data to each register file 
         // from input file
         // -----------------------------------------------------------------------------
-        while (!$feof(rf_weights_file) && line_count < USERW) begin
+        while (router_weights_s < (ROWS * COLUMNS) - 1) begin 
 
             @(posedge clk);
-            read_and_parse(rf_weights_file, data_word, axis_s_tvalid);
-            
-            if (axis_s_tvalid) begin
+            while (!$feof(rf_weights_file) && line_count < USERW) begin
 
-                axis_s_tdata[DATAW:0] = data_word;
-                axis_s_tuser[ 8:0] =   9'h1;
-                axis_s_tuser[10:9] =  2'b11;
-                axis_s_tdest = 12'h001;
-
-                if (line_count > 11) begin 
-                axis_s_tuser[line_count-1] = 0; 
-                end
+                @(posedge clk);
+                read_and_parse(rf_weights_file, local_r, data_word, axis_s_tvalid);
                 
-                axis_s_tuser[line_count] = 1;
-                axis_s_tlast = 1;
-                line_count = line_count + 1;
+                if (axis_s_tvalid) begin
 
+                    axis_s_tdata[DATAW:0] = data_word;
+                    axis_s_tuser[ 8:0] =   9'h1;
+                    axis_s_tuser[10:9] =  2'b11;
+                    axis_s_tdest = start_dest_s;
+
+                    if (line_count > 11) begin 
+                    axis_s_tuser[line_count-1] = 0; 
+                    end
+                    
+                    axis_s_tuser[line_count] = 1;
+                    axis_s_tlast = 1;
+                    line_count = line_count + 1;
+
+                end
+                //@(posedge clk);
             end
-            //@(posedge clk);
+
+            @(posedge clk);
+            axis_s_tuser[line_count - 1] = 0;
+            axis_s_tvalid = 0;
+            axis_s_tdata = 0;
+            axis_s_tlast = 0;
+
+            @(posedge clk);
+            local_r = $fseek(rf_weights_file, 0, 0);
+            router_weights_s <= router_weights_s + 1; 
+            start_dest_s    <= start_dest_s + 12'h001;
+            line_count = 11;
+
         end
 
-        @(posedge clk);
-        axis_s_tuser[line_count - 1] = 0;
-        axis_s_tvalid = 0;
-        axis_s_tdata = 0;
-        axis_s_tlast = 0;
 
-        #(200ns);
+
+        #(500ns); // wait for data to go through design
         $display("Simulation Finished");
     	$finish;
 
