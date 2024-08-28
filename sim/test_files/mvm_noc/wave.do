@@ -10,6 +10,7 @@ add wave -noupdate /mvm_noc_tb/axis_s_tvalid
 add wave -noupdate /mvm_noc_tb/top/mesh_in_tdata
 add wave -noupdate /mvm_noc_tb/top/mesh_out_tdata
 add wave -noupdate /mvm_noc_tb/router_weights_s
+add wave -noupdate /mvm_noc_tb/weight_pass_s
 add wave -noupdate -divider axis_passthrough
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/CLK
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/RST_N

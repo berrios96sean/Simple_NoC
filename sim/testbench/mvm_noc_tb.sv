@@ -7,9 +7,9 @@ module mvm_noc_tb();
     integer i, j, file, input1_file, input2_file, output_file;
     integer rf_weights_file, input_vec_file, router_weights_s; 
     integer local_r;
-    logic [8*DATAW:1] line;
+    logic [8*(DATAW*2):1] line;
     logic [6:0] line_count = 0;
-    logic [DATAW-1:0] data_word;
+    logic [(DATAW*2)-1:0] data_word;
     integer r;
 
 
@@ -33,15 +33,15 @@ module mvm_noc_tb();
     logic             axis_m_tready;
 
     logic [DESTW-1:0] start_dest_s;
-
+    logic             weight_pass_s;
     integer NUM_PACKET_INJ = 10;
 
     // -----------------------------------------------------------------------------
     // Function to Read a data word from I/O
     // -----------------------------------------------------------------------------
-    task read_and_parse(input integer file_handle, input integer local_r, output reg [DATAW:0] data_out, output reg valid_out);
+    task read_and_parse(input integer file_handle, input integer local_r, output reg [(DATAW*2):0] data_out, output reg valid_out);
       
-        reg [8*DATAW:1] local_line;  // Local line buffer for the task
+        reg [8*(DATAW*2):1] local_line;  // Local line buffer for the task
 
         begin
             //valid_out = 0;
@@ -117,6 +117,7 @@ module mvm_noc_tb();
         router_weights_s = 1;
         start_dest_s = 12'h001;
         line_count = 11;
+        weight_pass_s = 1'h0;
 
         #10 rst_n = 1'b1;
 
@@ -131,7 +132,7 @@ module mvm_noc_tb();
         // Loop through the input file for 64 lines to write data to each register file 
         // from input file
         // -----------------------------------------------------------------------------
-        while (router_weights_s < (ROWS * COLUMNS) - 1) begin 
+        while (router_weights_s < (ROWS * COLUMNS) - 2) begin 
 
             @(posedge clk);
             while (!$feof(rf_weights_file) && line_count < USERW) begin
@@ -141,13 +142,22 @@ module mvm_noc_tb();
                 
                 if (axis_s_tvalid) begin
 
-                    axis_s_tdata[DATAW-1:0] = data_word;
-                    axis_s_tuser[ 8:0] =   9'h1;
-                    axis_s_tuser[10:9] =  2'b11;
+                    if (weight_pass_s == 1'h0) begin
+
+                        axis_s_tdata[DATAW-1:0] = data_word[1023:512];
+
+                    end else if (weight_pass_s == 1'h1) begin
+
+                        axis_s_tdata[DATAW-1:0] = data_word[511:0];
+
+                    end
+
+                    axis_s_tuser[ 8:0] =   9'h1; // RF Address
+                    axis_s_tuser[10:9] =  2'b11; // Operation
                     axis_s_tdest = start_dest_s;
 
                     if (line_count > 11) begin 
-                    axis_s_tuser[line_count-1] = 0; 
+                    axis_s_tuser[line_count-1] = 0; // 74:11
                     end
                     
                     axis_s_tuser[line_count] = 1;
@@ -165,9 +175,22 @@ module mvm_noc_tb();
             axis_s_tlast = 0;
 
             @(posedge clk);
-            local_r = $fseek(rf_weights_file, 0, 0);
-            router_weights_s <= router_weights_s + 1; 
-            start_dest_s    <= start_dest_s + 12'h001;
+
+            if (weight_pass_s == 1'h0) begin
+
+                local_r = $fseek(rf_weights_file, 0, 0);
+                router_weights_s <= router_weights_s + 1; 
+                start_dest_s     <= start_dest_s + 12'h001;
+                weight_pass_s <= 1'h1;
+
+            end else begin
+
+                router_weights_s <= 1; 
+                start_dest_s     <= 12'h001;
+                weight_pass_s <= 1'h0;
+
+            end
+
             line_count = 11;
 
         end
