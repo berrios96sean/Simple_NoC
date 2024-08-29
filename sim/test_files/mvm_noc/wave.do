@@ -69,6 +69,35 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/full}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/input_fifo/almost_full}
 
+                    add wave -noupdate -divider MVM0_1-Test_signals
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/output_fifo_empty}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/output_fifo_full}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/output_fifo_almost_full}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/output_fifo_odest}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/output_fifo_oop}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/output_fifo_odata}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/output_fifo_pop}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/accum_mem_waddr}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/accum_mem_rdata}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/datapath_results}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/datapath_ovalid}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/datapath_dest}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/datapath_op}"")
+
+                        
 add wave -noupdate -divider MVM1_0-Weights
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_waddr}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_wen}
@@ -109,6 +138,35 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/m
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/full}
 add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/input_fifo/almost_full}
 
+                    add wave -noupdate -divider MVM1_0-Test_signals
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/output_fifo_empty}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/output_fifo_full}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/output_fifo_almost_full}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/output_fifo_odest}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/output_fifo_oop}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/output_fifo_odata}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/output_fifo_pop}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/accum_mem_waddr}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/accum_mem_rdata}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/datapath_results}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/datapath_ovalid}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/datapath_dest}
+
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/datapath_op}"")
+
+                        
 add wave -noupdate -divider AXIS-Passthrough-Output
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TVALID
 add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TDATA
