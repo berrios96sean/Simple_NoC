@@ -38,8 +38,8 @@ add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TDEST
         # Generating waves for each MVM instance
         for i in range(rows):
             for j in range(columns):
-                if i == 0 and j == 0:
-                    continue  # Skip axis_passthrough at [0][0]
+                if (i == 0 and j == 0) | (i == 1 and j == 1):
+                    continue  # Skip axis_passthrough at [0][0] and [1][1]
                 
                 instance_name = f"/mvm_noc_tb/top/NUM_ROWS[{i}]/NUM_COLUMNS[{j}]/genblk1/genblk1/mvm_inst"
                 
@@ -85,6 +85,21 @@ add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TDEST
                 
         # Additional common signals
         f.write("""
+add wave -noupdate -divider AXIS-Passthrough-Output
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TVALID
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TDATA
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TLAST
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TID
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TUSER
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TDEST
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_M_TREADY
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_S_TREADY
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_M_TVALID
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_M_TDATA
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_M_TLAST
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_M_TID
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_M_TUSER
+add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst2/AXIS_M_TDEST            
 add wave -noupdate -divider AXIS-Mesh-NOC
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_in_tdest
 add wave -noupdate /mvm_noc_tb/top/axis_mesh_inst/axis_in_tdata

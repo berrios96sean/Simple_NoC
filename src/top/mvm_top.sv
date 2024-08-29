@@ -115,6 +115,28 @@ module mvm_top (
         .AXIS_M_TUSER(axis_in_tuser[0][0]),
         .AXIS_M_TDEST(axis_in_tdest[0][0])
     );
+
+    axis_passthrough #(
+        .DATAW(DATAW),
+        .IDW(IDW),
+        .USERW(USERW),
+        .DESTW(DESTW)
+    ) axis_passthrough_inst2 (
+        .CLK(CLK),
+        .RST_N(RST_N),
+        .AXIS_S_TVALID(axis_out_tvalid [1][1]),
+        .AXIS_S_TREADY(axis_out_tready [1][1]),
+        .AXIS_S_TDATA (axis_out_tdata  [1][1]),
+        .AXIS_S_TLAST (axis_out_tlast  [1][1]),
+        .AXIS_S_TUSER (axis_out_tuser  [1][1]),
+        .AXIS_S_TDEST (axis_out_tdest  [1][1]),
+        .AXIS_M_TVALID(AXIS_M_TVALID),
+        .AXIS_M_TREADY(AXIS_M_TREADY),
+        .AXIS_M_TDATA (AXIS_M_TDATA),
+        .AXIS_M_TLAST (AXIS_M_TLAST),
+        .AXIS_M_TUSER (AXIS_M_TUSER),
+        .AXIS_M_TDEST (AXIS_M_TDEST)
+    );
     
     // Generate rtl_mvm instances, skipping [0][0]
     generate
@@ -122,7 +144,8 @@ module mvm_top (
 
             for (j = 0; j < COLUMNS; j = j + 1) begin : NUM_COLUMNS
 
-                if (!(i == 0 && j == 0)) begin  // Skip [0][0]
+                // Skipping [1][1] for now to use a passthrough block
+                if (!(i == 0 && j == 0) && !(i == 1 && j == 1)) begin  // Skip [0][0]
 
                     if (i != ROWS-1 || j != COLUMNS-1) begin
                         
