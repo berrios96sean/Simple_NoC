@@ -82,6 +82,23 @@ add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TDEST
                 f.write(f"add wave -noupdate {{{instance_name}/input_fifo/empty}}\n")
                 f.write(f"add wave -noupdate {{{instance_name}/input_fifo/full}}\n")
                 f.write(f"add wave -noupdate {{{instance_name}/input_fifo/almost_full}}\n")
+
+                f.write(f"""
+                    add wave -noupdate -divider MVM{i}_{j}-Test_signals\n
+                    add wave -noupdate {{{instance_name}/output_fifo_empty}}\n
+                    add wave -noupdate {{{instance_name}/output_fifo_full}}\n
+                    add wave -noupdate {{{instance_name}/output_fifo_almost_full}}\n
+                    add wave -noupdate {{{instance_name}/output_fifo_odest}}\n
+                    add wave -noupdate {{{instance_name}/output_fifo_oop}}\n
+                    add wave -noupdate {{{instance_name}/output_fifo_odata}}\n
+                    add wave -noupdate {{{instance_name}/output_fifo_pop}}\n
+                    add wave -noupdate {{{instance_name}/accum_mem_waddr}}\n
+                    add wave -noupdate {{{instance_name}/accum_mem_rdata}}\n
+                    add wave -noupdate {{{instance_name}/datapath_results}}\n
+                    add wave -noupdate {{{instance_name}/datapath_ovalid}}\n
+                    add wave -noupdate {{{instance_name}/datapath_dest}}\n
+                    add wave -noupdate {{{instance_name}/datapath_op}}"")\n
+                        """)
                 
         # Additional common signals
         f.write("""

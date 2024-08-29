@@ -95,7 +95,7 @@ module mvm_noc_tb();
 
         end
 
-        input_vec_file = $fopen("./test_files/mvm_test/input_vec.in", "r");
+        input_vec_file = $fopen("./test_files/mvm_noc/input_vec.in", "r");
 
         if (input_vec_file == 0) begin
 
@@ -168,7 +168,7 @@ module mvm_noc_tb();
 
             @(posedge clk);
 
-            //local_r = $fseek(rf_weights_file, 513, 0); // resets mvm input to first line to read
+            //local_r = $fseek(rf_weights_file, 0, 0); // resets mvm input to first line to read
             router_weights_s <= router_weights_s + 1; 
             start_dest_s     <= start_dest_s + 12'h001;
             line_count = 11;
@@ -176,14 +176,14 @@ module mvm_noc_tb();
         end
 
         // -----------------------------------------------------------------------------
-        // Load an Input vector to a router
+        // Load an Input vector 1 to router 1
         // -----------------------------------------------------------------------------
         @(posedge clk);
         read_and_parse(input_vec_file, local_r, data_word, axis_s_tvalid);
 
         if (axis_s_tvalid) begin
 
-        axis_s_tdata <= data_word;
+        axis_s_tdata <= data_word[1023:512];
 
         end
 
@@ -198,9 +198,59 @@ module mvm_noc_tb();
         axis_s_tdata = 0;
         axis_s_tlast = 0;
 
+        local_r = $fseek(input_vec_file, 0, 0); // reset file pointer for input vector
+
+        // -----------------------------------------------------------------------------
+        // Load an Input vector 2 to router 2
+        // -----------------------------------------------------------------------------
+        @(posedge clk);
+        read_and_parse(input_vec_file, local_r, data_word, axis_s_tvalid);
+
+        if (axis_s_tvalid) begin
+
+        axis_s_tdata <= data_word[511:0];
+
+        end
+
+        axis_s_tuser[8:0  ] =   9'b0;
+        axis_s_tuser[10:9 ] =  2'b10;
+        axis_s_tuser[74:11] =  64'b0;
+        axis_s_tdest = 12'h002;
+        axis_s_tlast = 1;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
+
+        // -----------------------------------------------------------------------------
+        // Test case: Load first MVM instruction router 1 set to accumulate
+        // -----------------------------------------------------------------------------
+        @(posedge clk);
+        axis_s_tvalid = 1;
+        axis_s_tdata[    0] = 1'b0; // RDC
+        axis_s_tdata[    1] = 1'b1; // ACM EN
+        axis_s_tdata[    2] = 1'b1; // RLS
+        axis_s_tdata[    3] = 1'b1; // LST
+        axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
+        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
+        axis_s_tdata[30:22] = 9'h3; // RLS_DEST
+        axis_s_tdata[   31] = 1'b1; // RLS_OP
+
+        axis_s_tuser[8:0  ] =  9'b0;
+        axis_s_tuser[10:9 ] =  2'b0;
+        axis_s_tuser[74:11] = 64'b0;
+        axis_s_tlast = 1;
+        axis_s_tdest = 12'h001;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
 
 
-        #(500ns); // wait for data to go through design
+
+        #(1000ns); // wait for data to go through design
         $display("Simulation Finished");
     	$finish;
 
