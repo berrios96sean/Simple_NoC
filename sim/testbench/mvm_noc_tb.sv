@@ -142,16 +142,8 @@ module mvm_noc_tb();
                 
                 if (axis_s_tvalid) begin
 
-                    if (weight_pass_s == 1'h0) begin
 
-                        axis_s_tdata[DATAW-1:0] = data_word[1023:512];
-
-                    end else if (weight_pass_s == 1'h1) begin
-
-                        axis_s_tdata[DATAW-1:0] = data_word[511:0];
-
-                    end
-
+                    axis_s_tdata[DATAW-1:0] = data_word[1023:512];
                     axis_s_tuser[ 8:0] =   9'h1; // RF Address
                     axis_s_tuser[10:9] =  2'b11; // Operation
                     axis_s_tdest = start_dest_s;
@@ -176,21 +168,9 @@ module mvm_noc_tb();
 
             @(posedge clk);
 
-            if (weight_pass_s == 1'h0) begin
-
-                local_r = $fseek(rf_weights_file, 0, 0);
-                router_weights_s <= router_weights_s + 1; 
-                start_dest_s     <= start_dest_s + 12'h001;
-                weight_pass_s <= 1'h1;
-
-            end else begin
-
-                router_weights_s <= 1; 
-                start_dest_s     <= 12'h001;
-                weight_pass_s <= 1'h0;
-
-            end
-
+            //local_r = $fseek(rf_weights_file, 513, 0); // resets mvm input to first line to read
+            router_weights_s <= router_weights_s + 1; 
+            start_dest_s     <= start_dest_s + 12'h001;
             line_count = 11;
 
         end
