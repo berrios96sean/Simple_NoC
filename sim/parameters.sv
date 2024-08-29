@@ -10,7 +10,7 @@ parameter int LFSR_DEFAULT = 8'h01;
 parameter int DATAW = 512;
 parameter int BYTEW = 8;
 parameter int IDW = 4;
-parameter int DESTW = 4;
+parameter int DESTW = 12;
 parameter int IPRECISION = 8;
 parameter int OPRECISION = 32;
 parameter int LANES = DATAW / IPRECISION;
@@ -37,7 +37,7 @@ parameter int ROWS         = 2;
 parameter int COLUMNS      = 2;
 parameter int TDATAW       = DATAW + USERW;
 parameter int TIDW         = 4;
-parameter int TDESTW       = 4;
+parameter int TDESTW       = 12;
 parameter int NUM_PACKETS  = 1;
 
 // Directories

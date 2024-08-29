@@ -128,13 +128,13 @@ module mvm_top (
         .AXIS_S_TREADY(axis_out_tready [1][1]),
         .AXIS_S_TDATA (axis_out_tdata  [1][1]),
         .AXIS_S_TLAST (axis_out_tlast  [1][1]),
-        .AXIS_S_TUSER (axis_out_tuser  [1][1]),
+        // .AXIS_S_TUSER (axis_out_tuser  [1][1]),
         .AXIS_S_TDEST (axis_out_tdest  [1][1]),
         .AXIS_M_TVALID(AXIS_M_TVALID),
         .AXIS_M_TREADY(AXIS_M_TREADY),
         .AXIS_M_TDATA (AXIS_M_TDATA),
         .AXIS_M_TLAST (AXIS_M_TLAST),
-        .AXIS_M_TUSER (AXIS_M_TUSER),
+        // .AXIS_M_TUSER (AXIS_M_TUSER),
         .AXIS_M_TDEST (AXIS_M_TDEST)
     );
     
@@ -169,7 +169,7 @@ module mvm_top (
                             .AXIS_OPS(4),
                             .AXIS_OPSW($clog2(AXIS_OPS)),
                             .FIFOD(64),
-                            .DATAPATH_DELAY(2)
+                            .DATAPATH_DELAY(12)
                         ) mvm_inst (
                             .clk(CLK),
                             .rst(~RST_N),

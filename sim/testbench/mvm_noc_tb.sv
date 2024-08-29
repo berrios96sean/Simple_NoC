@@ -384,7 +384,7 @@ module mvm_noc_tb();
         axis_s_tdata[    0] = 1'b0; // RDC
         axis_s_tdata[    1] = 1'b1; // ACM EN
         axis_s_tdata[    2] = 1'b1; // RLS
-        axis_s_tdata[    3] = 1'b1; // LST
+        axis_s_tdata[    3] = 1'b0; // LST
         axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
         axis_s_tdata[21:13] = 9'h1; // RF_ADDR
         axis_s_tdata[30:22] = 9'h3; // RLS_DEST
@@ -404,7 +404,7 @@ module mvm_noc_tb();
         // -----------------------------------------------------------------------------
         // Test case: Load first MVM instruction router 1 set to accumulate
         // -----------------------------------------------------------------------------
-        @(posedge clk);
+        #(500ns);
         axis_s_tvalid = 1;
         axis_s_tdata[    0] = 1'b0; // RDC
         axis_s_tdata[    1] = 1'b1; // ACM EN
@@ -428,7 +428,7 @@ module mvm_noc_tb();
 
 
 
-        #(1000ns); // wait for data to go through design
+        #(2000ns); // wait for data to go through design
         $display("Simulation Finished");
     	$finish;
 
