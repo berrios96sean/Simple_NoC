@@ -230,6 +230,136 @@ module mvm_noc_tb();
         axis_s_tvalid = 1;
         axis_s_tdata[    0] = 1'b0; // RDC
         axis_s_tdata[    1] = 1'b1; // ACM EN
+        axis_s_tdata[    2] = 1'b0; // RLS
+        axis_s_tdata[    3] = 1'b1; // LST
+        axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
+        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
+        axis_s_tdata[30:22] = 9'h3; // RLS_DEST
+        axis_s_tdata[   31] = 1'b1; // RLS_OP
+
+        axis_s_tuser[8:0  ] =  9'b0;
+        axis_s_tuser[10:9 ] =  2'b0;
+        axis_s_tuser[74:11] = 64'b0;
+        axis_s_tlast = 1;
+        axis_s_tdest = 12'h001;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
+
+        // -----------------------------------------------------------------------------
+        // Test case: Load second MVM instruction router 2 set to accumulate
+        // -----------------------------------------------------------------------------
+        @(posedge clk);
+        axis_s_tvalid = 1;
+        axis_s_tdata[    0] = 1'b0; // RDC
+        axis_s_tdata[    1] = 1'b0; // ACM EN
+        axis_s_tdata[    2] = 1'b0; // RLS
+        axis_s_tdata[    3] = 1'b0; // LST
+        axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
+        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
+        axis_s_tdata[30:22] = 9'h3; // RLS_DEST
+        axis_s_tdata[   31] = 1'b1; // RLS_OP
+
+        axis_s_tuser[8:0  ] =  9'b0;
+        axis_s_tuser[10:9 ] =  2'b0;
+        axis_s_tuser[74:11] = 64'b0;
+        axis_s_tlast = 1;
+        axis_s_tdest = 12'h002;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
+
+        @(posedge clk);
+        local_r = $fseek(rf_weights_file, 0, 0); // resets mvm input to first line to read
+        router_weights_s <= 1;
+        start_dest_s     <= 12'h001;
+        line_count       <= 11;
+
+        @(posedge clk);
+        // -----------------------------------------------------------------------------
+        // Load second set of weights to accumulate and then release
+        // -----------------------------------------------------------------------------
+        while (router_weights_s < (ROWS * COLUMNS) - 2) begin 
+
+            @(posedge clk);
+            while (!$feof(rf_weights_file) && line_count < USERW) begin
+
+                @(posedge clk);
+                read_and_parse(rf_weights_file, local_r, data_word, axis_s_tvalid);
+                
+                if (axis_s_tvalid) begin
+
+
+                    axis_s_tdata[DATAW-1:0] = data_word[511:0];
+                    axis_s_tuser[ 8:0] =   9'h1; // RF Address
+                    axis_s_tuser[10:9] =  2'b11; // Operation
+                    axis_s_tdest = start_dest_s;
+
+                    if (line_count > 11) begin 
+                    axis_s_tuser[line_count-1] = 0; // 74:11
+                    end
+                    
+                    axis_s_tuser[line_count] = 1;
+                    axis_s_tlast = 1;
+                    line_count = line_count + 1;
+
+                end
+                //@(posedge clk);
+            end
+
+            @(posedge clk);
+            axis_s_tuser[line_count - 1] = 0;
+            axis_s_tvalid = 0;
+            axis_s_tdata = 0;
+            axis_s_tlast = 0;
+
+            @(posedge clk);
+
+            //local_r = $fseek(rf_weights_file, 0, 0); // resets mvm input to first line to read
+            router_weights_s <= router_weights_s + 1; 
+            start_dest_s     <= start_dest_s + 12'h001;
+            line_count = 11;
+
+        end
+
+        local_r = $fseek(input_vec_file, 0, 0); // reset file pointer for input vector
+
+        // -----------------------------------------------------------------------------
+        // Load an Input vector 1 to router 1
+        // -----------------------------------------------------------------------------
+        @(posedge clk);
+        read_and_parse(input_vec_file, local_r, data_word, axis_s_tvalid);
+
+        if (axis_s_tvalid) begin
+
+        axis_s_tdata <= data_word[511:0];
+
+        end
+
+        axis_s_tuser[8:0  ] =   9'b0;
+        axis_s_tuser[10:9 ] =  2'b10;
+        axis_s_tuser[74:11] =  64'b0;
+        axis_s_tdest = 12'h001;
+        axis_s_tlast = 1;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
+
+        local_r = $fseek(input_vec_file, 0, 0); // reset file pointer for input vector
+
+        // -----------------------------------------------------------------------------
+        // Test case: Load first MVM instruction router 1 set to accumulate
+        // -----------------------------------------------------------------------------
+        @(posedge clk);
+        axis_s_tvalid = 1;
+        axis_s_tdata[    0] = 1'b0; // RDC
+        axis_s_tdata[    1] = 1'b1; // ACM EN
         axis_s_tdata[    2] = 1'b1; // RLS
         axis_s_tdata[    3] = 1'b1; // LST
         axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
