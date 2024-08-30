@@ -39,8 +39,8 @@ if __name__ == "__main__":
 
     # input_vec = "test_files/mvm_noc/input_vec_test.in"
     # rf_weights = "test_files/mvm_noc/rf_weights_test.in"
-    input_vec = "./input_vec_test.in"
-    rf_weights = "./rf_weights_test.in"
+    input_vec = "test_files/mvm_noc/input_vec.in"
+    rf_weights = "test_files/mvm_noc/rf_weights.in"
 
     # Example usage
     file_specs = [

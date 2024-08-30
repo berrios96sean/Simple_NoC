@@ -35,9 +35,9 @@ def main():
     # input_vector_file = 'test_files/mvm_noc/input_vec.in'
     # weights_matrix_file = 'test_files/mvm_noc/rf_weights.in'
     # output_vector_file = 'test_files/mvm_noc/gold_output_vector.out'
-    input_vector_file = './input_vec_test.in'
-    weights_matrix_file = './rf_weights_test.in'
-    output_vector_file = './gold_output_vector_test.out'
+    input_vector_file = 'test_files/mvm_noc/input_vec.in'
+    weights_matrix_file = 'test_files/mvm_noc/rf_weights.in'
+    output_vector_file = 'test_files/mvm_noc/gold_output_vector.out'
 
     # Read input data
     input_vector = read_input_vector(input_vector_file)

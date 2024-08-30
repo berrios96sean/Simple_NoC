@@ -28,7 +28,24 @@ source $QSYS_SIMDIR/mentor/msim_setup.tcl
 #
 # Call command to compile the Quartus-generated IP simulation files.
 # com
-#
+
+# Set up test bench files
+set output_file_path $QSYS_SIMDIR/test_files/mvm_noc/output.out
+set output_file "./test_files/mvm_noc/results.txt"
+
+if {[file exists $output_file_path]} {
+    # Delete the existing file
+    file delete -force $output_file_path
+}
+
+# Create a new output file
+set file_id [open $output_file_path w]
+close $file_id
+
+# Create Stimulus and golden output files
+exec python3 test_files/mvm_noc/create_stimulus.py
+exec python3 test_files/mvm_noc/golden_out.py
+
 # Add commands to compile all design files and testbench files, including
 # the top level. (These are all the files required for simulation other
 # than the files compiled by the Quartus-generated IP simulation script)
@@ -89,6 +106,18 @@ do test_files/mvm_noc/wave.do
 # Run the simulation with suppression.
 run -a
 #
+
+# Check results for Pass or Fail report 
+exec python3 test_files/mvm_noc/compare_output.py
+
+
+# Read the results from results.txt
+set result_file [open $output_file r]
+set result [read $result_file]
+close $result_file
+
+# Print the result to the QuestaSim console
+puts "Comparison result: $result"
 
 # Report success to the shell.
 # exit -code 0

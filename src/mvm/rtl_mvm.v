@@ -127,6 +127,8 @@ reg [DATAW-1:0] r_reduction_operands, rr_reduction_operands;
 reg [RFADDRW-1:0] r_inst_accum_raddr, rr_inst_accum_raddr;
 reg [NODESW-1:0] r_inst_release_dest, rr_inst_release_dest;
 
+wire last_dword_s;
+
 // FIFO to store instructions
 fifo # (
 	.DATAW(INSTW),
@@ -390,16 +392,16 @@ end
 
 // MVM output FIFO
 fifo # (
-	.DATAW(1 + NODESW + DATAW),
+	.DATAW(1 + NODESW + DATAW + 1),
 	.DEPTH(FIFOD),
 	.ALMOST_FULL_DEPTH(FIFOD-13)
 ) output_data_fifo (
 	.clk(clk),
 	.rst(rst),
 	.push(datapath_ovalid[0]),
-	.idata({datapath_op, datapath_dest, truncated_datapath_results}),
+	.idata({datapath_op, datapath_dest, truncated_datapath_results, axis_rx_tlast}),
 	.pop(axis_tx_tready && !output_fifo_empty),
-	.odata({output_fifo_oop, output_fifo_odest, output_fifo_odata}),
+	.odata({output_fifo_oop, output_fifo_odest, output_fifo_odata, last_dword_s}),
 	.empty(output_fifo_empty),
 	.full(output_fifo_full),
 	.almost_full(output_fifo_almost_full)
@@ -415,6 +417,6 @@ assign axis_tx_tuser = {64'h0, tx_tuser_op, 9'h0}; // Send tuser field as either
 // Hook up rest of Tx signals to dummy values to avoid optimizing them out
 assign axis_tx_tstrb = output_fifo_odata[BYTEW-1:0];
 assign axis_tx_tkeep = output_fifo_odata[2*BYTEW-1:BYTEW];
-assign axis_tx_tlast = output_fifo_odata[31];
+assign axis_tx_tlast = last_dword_s;
 
 endmodule

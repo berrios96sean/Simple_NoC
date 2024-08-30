@@ -12,6 +12,7 @@ module mvm_noc_tb();
     logic [(DATAW*2)-1:0] data_word;
     integer r;
 
+    logic [(DATAW*2)-1:0] output_data_s;
 
 
     logic rst;
@@ -100,6 +101,15 @@ module mvm_noc_tb();
         if (input_vec_file == 0) begin
 
             $display("Error: Could not open input file.");
+            $finish;
+
+        end
+
+        output_file = $fopen("./test_files/mvm_noc/output.out", "w");
+
+        if (output_file == 0) begin
+
+            $display("Error: Could not open output file.");
             $finish;
 
         end
@@ -384,31 +394,6 @@ module mvm_noc_tb();
         axis_s_tdata[    0] = 1'b0; // RDC
         axis_s_tdata[    1] = 1'b1; // ACM EN
         axis_s_tdata[    2] = 1'b1; // RLS
-        axis_s_tdata[    3] = 1'b0; // LST
-        axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
-        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
-        axis_s_tdata[30:22] = 9'h3; // RLS_DEST
-        axis_s_tdata[   31] = 1'b1; // RLS_OP
-
-        axis_s_tuser[8:0  ] =  9'b0;
-        axis_s_tuser[10:9 ] =  2'b0;
-        axis_s_tuser[74:11] = 64'b0;
-        axis_s_tlast = 1;
-        axis_s_tdest = 12'h001;
-
-        @(posedge clk);
-        axis_s_tvalid = 0;
-        axis_s_tdata = 0;
-        axis_s_tlast = 0;
-
-        // -----------------------------------------------------------------------------
-        // Test case: Load first MVM instruction router 1 set to accumulate
-        // -----------------------------------------------------------------------------
-        #(500ns);
-        axis_s_tvalid = 1;
-        axis_s_tdata[    0] = 1'b0; // RDC
-        axis_s_tdata[    1] = 1'b1; // ACM EN
-        axis_s_tdata[    2] = 1'b1; // RLS
         axis_s_tdata[    3] = 1'b1; // LST
         axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
         axis_s_tdata[21:13] = 9'h1; // RF_ADDR
@@ -426,6 +411,39 @@ module mvm_noc_tb();
         axis_s_tdata = 0;
         axis_s_tlast = 0;
 
+        wait (axis_m_tvalid == 1);
+        output_data_s[1023:512] <= axis_m_tdata;
+
+        // -----------------------------------------------------------------------------
+        // Test case: Load first MVM instruction router 1 set to accumulate
+        // // -----------------------------------------------------------------------------
+        #(500ns);
+        axis_s_tvalid = 1;
+        axis_s_tdata[    0] = 1'b0; // RDC
+        axis_s_tdata[    1] = 1'b1; // ACM EN
+        axis_s_tdata[    2] = 1'b1; // RLS
+        axis_s_tdata[    3] = 1'b1; // LST
+        axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
+        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
+        axis_s_tdata[30:22] = 9'h3; // RLS_DEST
+        axis_s_tdata[   31] = 1'b1; // RLS_OP
+
+        axis_s_tuser[8:0  ] =  9'b0;
+        axis_s_tuser[10:9 ] =  2'b0;
+        axis_s_tuser[74:11] = 64'b0;
+        axis_s_tlast = 1;
+        axis_s_tdest = 12'h001;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
+
+        wait (axis_m_tvalid == 1);
+        output_data_s[511:0] <= axis_m_tdata;
+
+        @(posedge clk);
+        $fwrite(output_file, "Output Data: %h\n", output_data_s);
 
 
         #(2000ns); // wait for data to go through design
