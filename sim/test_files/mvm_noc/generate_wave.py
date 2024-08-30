@@ -98,7 +98,7 @@ add wave -noupdate /mvm_noc_tb/top/axis_passthrough_inst/AXIS_M_TDEST
                     add wave -noupdate {{{instance_name}/datapath_results}}\n
                     add wave -noupdate {{{instance_name}/datapath_ovalid}}\n
                     add wave -noupdate {{{instance_name}/datapath_dest}}\n
-                    add wave -noupdate {{{instance_name}/datapath_op}}"")\n
+                    add wave -noupdate {{{instance_name}/datapath_op}}""\n
                         """)
                 
         # Additional common signals
