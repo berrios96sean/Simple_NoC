@@ -240,7 +240,14 @@ for (dpe_id = 0; dpe_id < DPES; dpe_id = dpe_id + 1) begin: generate_datapath
 		.o_result(datapath_results[(dpe_id+1)*OPRECISION-1:dpe_id*OPRECISION])
 	);
 	
-	assign truncated_datapath_results[(dpe_id+1)*IPRECISION-1:dpe_id*IPRECISION] = datapath_results[dpe_id*OPRECISION+IPRECISION-1:dpe_id*OPRECISION];
+	// Apply ReLU function
+    wire signed [OPRECISION-1:0] mvm_result = datapath_results[(dpe_id+1)*OPRECISION-1:dpe_id*OPRECISION];
+    wire signed [OPRECISION-1:0] relu_result = (mvm_result < 0) ? 0 : mvm_result;
+
+    // Truncate and assign result
+    assign truncated_datapath_results[(dpe_id+1)*IPRECISION-1:dpe_id*IPRECISION] = relu_result[IPRECISION-1:0];
+	
+	// assign truncated_datapath_results[(dpe_id+1)*IPRECISION-1:dpe_id*IPRECISION] = datapath_results[dpe_id*OPRECISION+IPRECISION-1:dpe_id*OPRECISION];
 end
 endgenerate
 
