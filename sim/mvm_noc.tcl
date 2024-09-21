@@ -45,6 +45,8 @@ close $file_id
 # Create Stimulus and golden output files
 exec python3 test_files/mvm_noc/create_stimulus.py
 exec python3 test_files/mvm_noc/golden_out.py
+exec python3 test_files/mvm_noc/create_stimulus_signed.py
+exec python3 test_files/mvm_noc/golden_out_signed.py
 
 # Add commands to compile all design files and testbench files, including
 # the top level. (These are all the files required for simulation other
