@@ -32,5 +32,8 @@ with torch.no_grad():
 
 # Forward pass with modified weights
 output = mlp(inputs)
-print(f"Output with modified weights: {output.item()}")
 
+# Convert output to int, then to hex
+output_value = int(output.item())  # Convert the output to an integer (assuming the output is an integer-like value)
+output_hex = hex(output_value & 0xFF)  # Convert to hex and mask with 0xFF to ensure it's 8-bit
+print(f"Output with modified weights (in hex): {output_hex}")
