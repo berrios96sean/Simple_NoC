@@ -45,8 +45,9 @@ close $file_id
 # Create Stimulus and golden output files
 exec python3 test_files/mvm_noc/create_stimulus.py
 exec python3 test_files/mvm_noc/golden_out.py
-exec python3 test_files/mvm_noc/create_stimulus_signed.py
-exec python3 test_files/mvm_noc/golden_out_signed.py
+# Only needed if using ReLU
+# exec python3 test_files/mvm_noc/create_stimulus_signed.py
+# exec python3 test_files/mvm_noc/golden_out_signed.py
 
 # Add commands to compile all design files and testbench files, including
 # the top level. (These are all the files required for simulation other
@@ -54,14 +55,14 @@ exec python3 test_files/mvm_noc/golden_out_signed.py
 #
 
 vlog +acc $QSYS_SIMDIR/testbench/mvm_noc_tb.sv \
-    $QSYS_SIMDIR/parameters.sv \
+    $QSYS_SIMDIR/test_files/mvm_noc/parameters.sv \
     $QSYS_SIMDIR/../src/axis/axis_passthrough.sv \
     $QSYS_SIMDIR/../src/mvm/*v \
     $QSYS_SIMDIR/../src/noc/*sv \
     $QSYS_SIMDIR/../src/top/mvm_top.sv
 
 # Define the path to the parameters.sv file
-set params_file "./parameters.sv"
+set params_file "./test_files/mvm_noc/parameters.sv"
 set wave_file "./test_files/mvm_noc/wave.do"
 set python_file "./test_files/mvm_noc/generate_wave.py"
 

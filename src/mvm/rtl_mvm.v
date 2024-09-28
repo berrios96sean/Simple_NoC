@@ -32,6 +32,7 @@ module rtl_mvm # (
 	parameter AXIS_OPS = 4, // Number of AXI-S operations (max 4) {instruction, reduction vector, input vector, matrix}
 	parameter AXIS_OPSW = $clog2(AXIS_OPS),
 	parameter FIFOD = 64,          // Depth of input, accumulation, and output FIFOs
+	parameter USE_RELU = 1, 
 	parameter DATAPATH_DELAY = 12  // Delay of datpath (inputs -> result)
 )(
 	input  clk,
@@ -239,19 +240,19 @@ for (dpe_id = 0; dpe_id < DPES; dpe_id = dpe_id + 1) begin: generate_datapath
 		.o_valid(datapath_ovalid[dpe_id]),
 		.o_result(datapath_results[(dpe_id+1)*OPRECISION-1:dpe_id*OPRECISION])
 	);
-	
+
 	// Apply ReLU function with proper sign handling
-	wire signed [OPRECISION-1:0] mvm_result = datapath_results[(dpe_id+1)*OPRECISION-1:dpe_id*OPRECISION];
-	// Extract the relevant bits for comparison and truncation
-	wire signed [IPRECISION-1:0] mvm_input_result = mvm_result[IPRECISION-1:0];
+	// wire signed [OPRECISION-1:0] mvm_result = datapath_results[(dpe_id+1)*OPRECISION-1:dpe_id*OPRECISION];
+	// // Extract the relevant bits for comparison and truncation
+	// wire signed [IPRECISION-1:0] mvm_input_result = mvm_result[IPRECISION-1:0];
 
-	// Apply ReLU function (zero out negative values)
-	wire [IPRECISION-1:0] relu_result = (mvm_input_result < 0) ? {IPRECISION{1'b0}} : mvm_input_result;
+	// // Apply ReLU function (zero out negative values) if USE_RELU is set
+	// wire [IPRECISION-1:0] relu_result = (USE_RELU && (mvm_input_result < 0)) ? {IPRECISION{1'b0}} : mvm_input_result;
 
-	// Truncate and assign result
-	assign truncated_datapath_results[(dpe_id+1)*IPRECISION-1:dpe_id*IPRECISION] = relu_result;
+	// // Truncate and assign result
+	// assign truncated_datapath_results[(dpe_id+1)*IPRECISION-1:dpe_id*IPRECISION] = relu_result;
 
-	// assign truncated_datapath_results[(dpe_id+1)*IPRECISION-1:dpe_id*IPRECISION] = datapath_results[dpe_id*OPRECISION+IPRECISION-1:dpe_id*OPRECISION];
+	assign truncated_datapath_results[(dpe_id+1)*IPRECISION-1:dpe_id*IPRECISION] = datapath_results[dpe_id*OPRECISION+IPRECISION-1:dpe_id*OPRECISION];
 
 end
 endgenerate

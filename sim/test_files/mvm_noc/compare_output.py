@@ -19,7 +19,7 @@ def compare_first_line(file1, file2, output_file):
 
 if __name__ == "__main__":
     file1 = "test_files/mvm_noc/output.out"
-    file2 = "test_files/mvm_noc/gold_output_vector_signed.out"
+    file2 = "test_files/mvm_noc/gold_output_vector.out"
     output_file = "test_files/mvm_noc/results.txt"
 
     compare_first_line(file1, file2, output_file)

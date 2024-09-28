@@ -33,3 +33,15 @@ sim/test_files/mvm_noc/gold_output_vector.out
 sim/test_files/mvm_noc/input_vec.in
 sim/test_files/mvm_noc/output.out
 sim/test_files/mvm_noc/rf_weights.in
+sim/test_files/mlp/*.out
+sim/test_files/mvm_noc/*.out
+sim/test_files/mvm_noc/*.in
+transcript
+golden*
+layer*
+venv
+.venv
+*mif*/
+sim/test_files/mvm_test/*.in
+sim/test_files/mvm_test/input_vec.in
+sim/test_files/mvm_test/rf_weights.in

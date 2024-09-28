@@ -96,7 +96,7 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/m
 
                     add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/datapath_dest}
 
-                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/datapath_op}""
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/datapath_op}
 
                         
 add wave -noupdate -divider MVM1_0-Weights
@@ -165,7 +165,7 @@ add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/m
 
                     add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/datapath_dest}
 
-                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/datapath_op}""
+                    add wave -noupdate {/mvm_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/datapath_op}
 
                         
 add wave -noupdate -divider AXIS-Passthrough-Output
