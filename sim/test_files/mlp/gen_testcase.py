@@ -104,32 +104,56 @@ else:
   for file in files:
     os.remove(file)
 
+# # Write weight MIFs
+# for l in range(num_layers):
+#   layer_mvms = num_mvms[l]
+#   mvm_idx = 0
+#   limx = int(padded_weights[l].shape[1] / native_dim)
+#   limy = int(padded_weights[l].shape[0] / native_dim)
+#   mifs = []
+#   for m in range(layer_mvms):
+#     mifs.append([])
+#     for d in range(native_dim):
+#       mifs[m].append(open('weight_mifs/layer'+str(l)+'_mvm'+str(m)+'_dot'+str(d)+'.mif', 'w'))
+  
+#   for i in range(limx):
+#     for j in range(limy):
+#       for d in range(native_dim):
+#         for e in range(native_dim):
+#           mifs[mvm_idx][d].write(str(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e]) + ' ')
+#         mifs[mvm_idx][d].write('\n')
+#     if (mvm_idx == layer_mvms-1):
+#       mvm_idx = 0
+#     else:
+#       mvm_idx = mvm_idx + 1
+
+#   for mvm_mifs in mifs:
+#     for mif in mvm_mifs:
+#       mif.close()
+
 # Write weight MIFs
 for l in range(num_layers):
   layer_mvms = num_mvms[l]
   mvm_idx = 0
   limx = int(padded_weights[l].shape[1] / native_dim)
   limy = int(padded_weights[l].shape[0] / native_dim)
-  mifs = []
+
   for m in range(layer_mvms):
-    mifs.append([])
-    for d in range(native_dim):
-      mifs[m].append(open('weight_mifs/layer'+str(l)+'_mvm'+str(m)+'_dot'+str(d)+'.mif', 'w'))
-  
-  for i in range(limx):
-    for j in range(limy):
-      for d in range(native_dim):
-        for e in range(native_dim):
-          mifs[mvm_idx][d].write(str(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e]) + ' ')
-        mifs[mvm_idx][d].write('\n')
-    if (mvm_idx == layer_mvms-1):
+    # Open a single MIF file for each MVM
+    with open('weight_mifs/layer'+str(l)+'_mvm'+str(m)+'.mif', 'w') as mif_file:
+      for i in range(limx):
+        for j in range(limy):
+          for d in range(native_dim):
+            # Write all dot products for this MVM to the same file
+            for e in range(native_dim):
+              mif_file.write(str(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e]) + ' ')
+            mif_file.write('\n')
+    # Move to the next MVM
+    if mvm_idx == layer_mvms - 1:
       mvm_idx = 0
     else:
-      mvm_idx = mvm_idx + 1
+      mvm_idx += 1
 
-  for mvm_mifs in mifs:
-    for mif in mvm_mifs:
-      mif.close()
 
 # Prepare instruction MIFs directory
 if(not(os.path.exists('./inst_mifs'))):
