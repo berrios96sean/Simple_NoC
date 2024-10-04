@@ -9,13 +9,6 @@ native_dim = 64
 num_test_inputs = 1
 num_noc_routers = 16
 
-# Helper function to convert signed integer to hexadecimal format
-def signed_to_hex(value, bit_width=8):
-    if value < 0:
-        value = (1 << bit_width) + value  # Two's complement representation for negative values
-    return format(value, f'0{bit_width // 4}x')  # Format as hexadecimal, with appropriate width
-
-
 if ('-h' in sys.argv or '--help' in sys.argv):
   print('python gen_testcase.py <num_layers> <input_dim> [<hidden_dims>] [<mvms_per_layer>]')
   exit(1)
@@ -138,30 +131,7 @@ else:
 #     for mif in mvm_mifs:
 #       mif.close()
 
-# Write weight MIFs same file 
-# for l in range(num_layers):
-#   layer_mvms = num_mvms[l]
-#   mvm_idx = 0
-#   limx = int(padded_weights[l].shape[1] / native_dim)
-#   limy = int(padded_weights[l].shape[0] / native_dim)
-
-#   for m in range(layer_mvms):
-#     # Open a single MIF file for each MVM
-#     with open('weight_mifs/layer'+str(l)+'_mvm'+str(m)+'.mif', 'w') as mif_file:
-#       for i in range(limx):
-#         for j in range(limy):
-#           for d in range(native_dim):
-#             # Write all dot products for this MVM to the same file
-#             for e in range(native_dim):
-#               mif_file.write(str(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e]) + ' ')
-#             mif_file.write('\n')
-#     # Move to the next MVM
-#     if mvm_idx == layer_mvms - 1:
-#       mvm_idx = 0
-#     else:
-#       mvm_idx += 1
-
-# Write weight MIFs in hexadecimal format for signed values
+# Write weight MIFs in hexadecimal format
 for l in range(num_layers):
   layer_mvms = num_mvms[l]
   mvm_idx = 0
@@ -174,9 +144,10 @@ for l in range(num_layers):
       for i in range(limx):
         for j in range(limy):
           for d in range(native_dim):
-            # Write all dot products for this MVM to the same file in hexadecimal for signed values
+            # Write all dot products for this MVM to the same file in hexadecimal
             for e in range(native_dim):
-              hex_value = signed_to_hex(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e])
+              # Convert to hexadecimal, remove '0x', and format with 2 digits
+              hex_value = format(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e], '02x')
               mif_file.write(hex_value + ' ')
             mif_file.write('\n')
     # Move to the next MVM
@@ -184,7 +155,6 @@ for l in range(num_layers):
       mvm_idx = 0
     else:
       mvm_idx += 1
-
 
 
 # Prepare instruction MIFs directory
@@ -197,90 +167,57 @@ else:
 
 # Generate instruction MIFs
 # release_op, release_dest, rf_raddr, accum_raddr, last, release, accum_en, reduce
-# for l in range(num_layers):
-#   layer_mvms = num_mvms[l]
-#   limx = int(padded_weights[l].shape[1] / native_dim / layer_mvms)
-#   limy = int(padded_weights[l].shape[0] / native_dim)
-#   for m in range(layer_mvms):
-#     inst_mif = open('inst_mifs/layer'+str(l)+'_mvm'+str(m)+'.mif', 'w')
-#     for i in range(limx):
-#       for j in range(limy):
-#         # release_op
-#         if (m == layer_mvms - 1):
-#           inst_mif.write('1 ')
-#         else:
-#           inst_mif.write('0 ')
-#         # release_dest
-#         if ((l == num_layers - 1) and (m == layer_mvms - 1)):
-#           inst_mif.write(str(placement_dict['output_collector']) + ' ')
-#         elif (m == layer_mvms - 1):
-#           dest_layer = l + 1
-#           dest_mvm = j % num_mvms[l+1]
-#           dest_str = 'layer' + str(dest_layer) + '_mvm' + str(dest_mvm)
-#           inst_mif.write(str(placement_dict[dest_str]) + ' ')
-#         else:
-#           dest_layer = l
-#           dest_mvm = m + 1
-#           dest_str = 'layer' + str(dest_layer) + '_mvm' + str(dest_mvm)
-#           inst_mif.write(str(placement_dict[dest_str]) + ' ')
-#         # rf_raddr
-#         inst_mif.write(str(i * limy + j) + ' ')
-#         # accum_raddr
-#         inst_mif.write(str(j) + ' ')
-#         # last
-#         if (j == limy-1):
-#           inst_mif.write('1 ')
-#         else:
-#           inst_mif.write('0 ')
-#         # release
-#         if (i == limx-1):
-#           inst_mif.write('1 ')
-#         else:
-#           inst_mif.write('0 ')
-#         # accum_en
-#         if (i == 0):
-#           inst_mif.write('0 ')
-#         else:
-#           inst_mif.write('1 ')
-#         # reduce
-#         if (m == 0 or i < limx-1):
-#           inst_mif.write('0\n')
-#         else:
-#           inst_mif.write('1\n')
-#     inst_mif.close()
-
-# Generate instruction MIFs in hexadecimal format for signed values
 for l in range(num_layers):
   layer_mvms = num_mvms[l]
   limx = int(padded_weights[l].shape[1] / native_dim / layer_mvms)
   limy = int(padded_weights[l].shape[0] / native_dim)
   for m in range(layer_mvms):
-    with open('inst_mifs/layer'+str(l)+'_mvm'+str(m)+'.mif', 'w') as inst_mif:
-      for i in range(limx):
-        for j in range(limy):
-          # Write each instruction value in hexadecimal
-          inst_mif.write(signed_to_hex(1 if m == layer_mvms - 1 else 0) + ' ')
-          if (l == num_layers - 1) and (m == layer_mvms - 1):
-            release_dest = placement_dict['output_collector']
-          elif m == layer_mvms - 1:
-            dest_layer = l + 1
-            dest_mvm = j % num_mvms[l + 1]
-            dest_str = 'layer' + str(dest_layer) + '_mvm' + str(dest_mvm)
-            release_dest = placement_dict[dest_str]
-          else:
-            dest_layer = l
-            dest_mvm = m + 1
-            dest_str = 'layer' + str(dest_layer) + '_mvm' + str(dest_mvm)
-            release_dest = placement_dict[dest_str]
-          inst_mif.write(signed_to_hex(release_dest) + ' ')
-          inst_mif.write(signed_to_hex(i * limy + j) + ' ')
-          inst_mif.write(signed_to_hex(j) + ' ')
-          inst_mif.write(signed_to_hex(1 if j == limy - 1 else 0) + ' ')
-          inst_mif.write(signed_to_hex(1 if i == limx - 1 else 0) + ' ')
-          inst_mif.write(signed_to_hex(0 if i == 0 else 1) + ' ')
-          inst_mif.write(signed_to_hex(0 if (m == 0 or i < limx - 1) else 1) + '\n')
-
-
+    inst_mif = open('inst_mifs/layer'+str(l)+'_mvm'+str(m)+'.mif', 'w')
+    for i in range(limx):
+      for j in range(limy):
+        # release_op
+        if (m == layer_mvms - 1):
+          inst_mif.write('1 ')
+        else:
+          inst_mif.write('0 ')
+        # release_dest
+        if ((l == num_layers - 1) and (m == layer_mvms - 1)):
+          inst_mif.write(str(placement_dict['output_collector']) + ' ')
+        elif (m == layer_mvms - 1):
+          dest_layer = l + 1
+          dest_mvm = j % num_mvms[l+1]
+          dest_str = 'layer' + str(dest_layer) + '_mvm' + str(dest_mvm)
+          inst_mif.write(str(placement_dict[dest_str]) + ' ')
+        else:
+          dest_layer = l
+          dest_mvm = m + 1
+          dest_str = 'layer' + str(dest_layer) + '_mvm' + str(dest_mvm)
+          inst_mif.write(str(placement_dict[dest_str]) + ' ')
+        # rf_raddr
+        inst_mif.write(str(i * limy + j) + ' ')
+        # accum_raddr
+        inst_mif.write(str(j) + ' ')
+        # last
+        if (j == limy-1):
+          inst_mif.write('1 ')
+        else:
+          inst_mif.write('0 ')
+        # release
+        if (i == limx-1):
+          inst_mif.write('1 ')
+        else:
+          inst_mif.write('0 ')
+        # accum_en
+        if (i == 0):
+          inst_mif.write('0 ')
+        else:
+          inst_mif.write('1 ')
+        # reduce
+        if (m == 0 or i < limx-1):
+          inst_mif.write('0\n')
+        else:
+          inst_mif.write('1\n')
+    inst_mif.close()
 
 # Prepare input MIFs directory
 if(not(os.path.exists('./input_mifs'))):
@@ -291,36 +228,17 @@ else:
     os.remove(file)
 
 # Generate test input MIFs
-# padded_input_dim = int(math.ceil(input_dim * 1.0 / native_dim / num_mvms[0]) * native_dim * num_mvms[0])
-# test_inputs = np.zeros(shape=(num_test_inputs, padded_input_dim), dtype=int)
-# test_inputs[:, :input_dim] = np.random.randint(-2, 2, size=(num_test_inputs, input_dim))
-# input_files = []
-# for i in range(num_mvms[0]):
-#   input_files.append(open('input_mifs/inputs_mvm' + str(i) + '.mif', 'w'))
-# for i in range(num_test_inputs):
-#   for c in range(int(padded_input_dim / native_dim)):
-#     for e in range(native_dim):
-#       input_files[c % num_mvms[0]].write(str(test_inputs[i][(c * native_dim) + e]) + ' ')
-#     input_files[c % num_mvms[0]].write('\n')
-# for file in input_files:
-#   file.close()
-
-# Generate test input MIFs in hexadecimal format for signed values
 padded_input_dim = int(math.ceil(input_dim * 1.0 / native_dim / num_mvms[0]) * native_dim * num_mvms[0])
 test_inputs = np.zeros(shape=(num_test_inputs, padded_input_dim), dtype=int)
 test_inputs[:, :input_dim] = np.random.randint(-2, 2, size=(num_test_inputs, input_dim))
 input_files = []
-
 for i in range(num_mvms[0]):
   input_files.append(open('input_mifs/inputs_mvm' + str(i) + '.mif', 'w'))
-
 for i in range(num_test_inputs):
   for c in range(int(padded_input_dim / native_dim)):
     for e in range(native_dim):
-      hex_value = signed_to_hex(test_inputs[i][(c * native_dim) + e])
-      input_files[c % num_mvms[0]].write(hex_value + ' ')
+      input_files[c % num_mvms[0]].write(str(test_inputs[i][(c * native_dim) + e]) + ' ')
     input_files[c % num_mvms[0]].write('\n')
-
 for file in input_files:
   file.close()
 
@@ -336,21 +254,11 @@ for l in range(1, num_layers):
 test_outputs = np.transpose(test_outputs)
 
 # Generate test output MIFs
-# output_file = open('./golden_outputs.mif', 'w')
-# for o in range(test_outputs.shape[0]):
-#   for c in range(int(test_outputs.shape[1] / native_dim)):
-#     for e in range(native_dim):
-#       output_file.write(str(test_outputs[o][(c * native_dim) + e]) + ' ')
-#     output_file.write('\n')
-# output_file.close()
-
-# Generate test output MIFs in hexadecimal format for signed values
 output_file = open('./golden_outputs.mif', 'w')
 for o in range(test_outputs.shape[0]):
   for c in range(int(test_outputs.shape[1] / native_dim)):
     for e in range(native_dim):
-      hex_value = signed_to_hex(test_outputs[o][(c * native_dim) + e])
-      output_file.write(hex_value + ' ')
+      output_file.write(str(test_outputs[o][(c * native_dim) + e]) + ' ')
     output_file.write('\n')
 output_file.close()
 
