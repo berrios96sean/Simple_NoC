@@ -7,7 +7,7 @@ import numpy as np
 # Defining constants
 native_dim = 64
 num_test_inputs = 1
-num_noc_routers = 6
+num_noc_routers = 16
 
 if ('-h' in sys.argv or '--help' in sys.argv):
   print('python gen_testcase.py <num_layers> <input_dim> [<hidden_dims>] [<mvms_per_layer>]')
@@ -104,7 +104,7 @@ else:
   for file in files:
     os.remove(file)
 
-# # Write weight MIFs
+# Write weight MIFs
 # for l in range(num_layers):
 #   layer_mvms = num_mvms[l]
 #   mvm_idx = 0
