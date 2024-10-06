@@ -5,7 +5,7 @@ module mlp_noc_tb();
 
     logic clk, clk_noc, rst_n;
     integer i, j, file, input1_file, input2_file, output_file;
-    integer rf_weights_file, input_vec_file, router_weights_s; 
+    integer rf_weights_file, input_vec_file, router_weights_s, input_vec_file2; 
     integer rf_weights_file_2;
     integer local_r;
     logic [8*(DATAW):1] line;
@@ -114,6 +114,15 @@ module mlp_noc_tb();
 
         end
 
+        input_vec_file2 = $fopen("./test_files/mlp/inputs_mvm1_converted.mif", "r");
+
+        if (input_vec_file2 == 0) begin
+
+            $display("Error: Could not open input file.");
+            $finish;
+
+        end
+
         output_file = $fopen("./test_files/mlp/output.out", "w");
 
         if (output_file == 0) begin
@@ -165,7 +174,7 @@ module mlp_noc_tb();
                     axis_s_tdata[DATAW-1:0] = data_word;
                     axis_s_tuser[ 8:0] =   9'h1; // RF Address
                     axis_s_tuser[10:9] =  2'b11; // Operation
-                    axis_s_tdest = start_dest_s;
+                    axis_s_tdest = 12'h001;
 
                     if (line_count > 11) begin 
                     axis_s_tuser[line_count-1] = 0; // 74:11
@@ -203,9 +212,9 @@ module mlp_noc_tb();
 
 
                     axis_s_tdata[DATAW-1:0] = data_word;
-                    axis_s_tuser[ 8:0] =   9'h3; // RF Address
+                    axis_s_tuser[ 8:0] =   9'h2; // RF Address
                     axis_s_tuser[10:9] =  2'b11; // Operation
-                    axis_s_tdest = start_dest_s;
+                    axis_s_tdest = 12'h001;
 
                     if (line_count > 11) begin 
                     axis_s_tuser[line_count-1] = 0; // 74:11
@@ -246,9 +255,9 @@ module mlp_noc_tb();
 
 
                     axis_s_tdata[DATAW-1:0] = data_word;
-                    axis_s_tuser[ 8:0] =   9'h2; // RF Address
+                    axis_s_tuser[ 8:0] =   9'h1; // RF Address
                     axis_s_tuser[10:9] =  2'b11; // Operation
-                    axis_s_tdest = start_dest_s;
+                    axis_s_tdest = 12'h002;
 
                     if (line_count > 11) begin 
                     axis_s_tuser[line_count-1] = 0; // 74:11
@@ -298,37 +307,8 @@ module mlp_noc_tb();
         axis_s_tdata = 0;
         axis_s_tlast = 0;
 
-        //local_r = $fseek(input_vec_file, 0, 0); // reset file pointer for input vector
-        // load second input vector to second mvm router
-
-        // -----------------------------------------------------------------------------
-        // Test case: Load first MVM instruction router 1 set to accumulate
-        // -----------------------------------------------------------------------------
-        @(posedge clk);
-        axis_s_tvalid = 1;
-        axis_s_tdata[    0] = 1'b0; // RDC
-        axis_s_tdata[    1] = 1'b0; // ACM EN
-        axis_s_tdata[    2] = 1'b0; // RLS
-        axis_s_tdata[    3] = 1'b1; // LST
-        axis_s_tdata[ 12:4] = 9'h1; // ACCUM_ADDR
-        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
-        axis_s_tdata[30:22] = 9'h1; // RLS_DEST
-        axis_s_tdata[   31] = 1'b1; // RLS_OP
-
-        axis_s_tuser[8:0  ] =  9'b0;
-        axis_s_tuser[10:9 ] =  2'b0;
-        axis_s_tuser[74:11] = 64'b0;
-        axis_s_tlast = 1;
-        axis_s_tdest = 12'h001;
-
-        @(posedge clk);
-        axis_s_tvalid = 0;
-        axis_s_tdata = 0;
-        axis_s_tlast = 0;
-
-
-        @(posedge clk);
-        read_and_parse(input_vec_file, local_r, data_word, axis_s_tvalid);
+                @(posedge clk);
+        read_and_parse(input_vec_file2, local_r, data_word, axis_s_tvalid);
 
         if (axis_s_tvalid) begin
 
@@ -339,7 +319,7 @@ module mlp_noc_tb();
         axis_s_tuser[8:0  ] =   9'b0;
         axis_s_tuser[10:9 ] =  2'b10;
         axis_s_tuser[74:11] =  64'b0;
-        axis_s_tdest = 12'h001;
+        axis_s_tdest = 12'h002;
         axis_s_tlast = 1;
 
         @(posedge clk);
@@ -347,16 +327,43 @@ module mlp_noc_tb();
         axis_s_tdata = 0;
         axis_s_tlast = 0;
 
-        
-        // second mvm for output send to first layer
+        //local_r = $fseek(input_vec_file, 0, 0); // reset file pointer for input vector
+        // load second input vector to second mvm router
+
+        // -----------------------------------------------------------------------------
+        // Test case: Load first MVM instruction router 1 set to accumulate
+        // -----------------------------------------------------------------------------
         @(posedge clk);
         axis_s_tvalid = 1;
         axis_s_tdata[    0] = 1'b0; // RDC
-        axis_s_tdata[    1] = 1'b1; // ACM EN
+        axis_s_tdata[    1] = 1'b0; // ACM EN
         axis_s_tdata[    2] = 1'b1; // RLS
         axis_s_tdata[    3] = 1'b1; // LST
         axis_s_tdata[ 12:4] = 9'h1; // ACCUM_ADDR
-        axis_s_tdata[21:13] = 9'h2; // RF_ADDR
+        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
+        axis_s_tdata[30:22] = 9'h2; // RLS_DEST
+        axis_s_tdata[   31] = 1'b0; // RLS_OP
+
+        axis_s_tuser[8:0  ] =  9'b0;
+        axis_s_tuser[10:9 ] =  2'b0;
+        axis_s_tuser[74:11] = 64'b0;
+        axis_s_tlast = 1;
+        axis_s_tdest = 12'h001;
+
+        @(posedge clk);
+        axis_s_tvalid = 0;
+        axis_s_tdata = 0;
+        axis_s_tlast = 0;
+
+        // second mvm for output send to first layer
+        @(posedge clk);
+        axis_s_tvalid = 1;
+        axis_s_tdata[    0] = 1'b1; // RDC
+        axis_s_tdata[    1] = 1'b0; // ACM EN
+        axis_s_tdata[    2] = 1'b1; // RLS
+        axis_s_tdata[    3] = 1'b1; // LST
+        axis_s_tdata[ 12:4] = 9'h1; // ACCUM_ADDR
+        axis_s_tdata[21:13] = 9'h1; // RF_ADDR
         axis_s_tdata[30:22] = 9'h1; // RLS_DEST
         axis_s_tdata[   31] = 1'b1; // RLS_OP
 
@@ -364,7 +371,7 @@ module mlp_noc_tb();
         axis_s_tuser[10:9 ] =  2'b0;
         axis_s_tuser[74:11] = 64'b0;
         axis_s_tlast = 1;
-        axis_s_tdest = 12'h001;
+        axis_s_tdest = 12'h002;
 
         @(posedge clk);
         axis_s_tvalid = 0;
@@ -379,7 +386,7 @@ module mlp_noc_tb();
         axis_s_tdata[    2] = 1'b1; // RLS
         axis_s_tdata[    3] = 1'b1; // LST
         axis_s_tdata[ 12:4] = 9'b0; // ACCUM_ADDR
-        axis_s_tdata[21:13] = 9'h3; // RF_ADDR
+        axis_s_tdata[21:13] = 9'h2; // RF_ADDR
         axis_s_tdata[30:22] = 9'h3; // RLS_DEST
         axis_s_tdata[   31] = 1'b1; // RLS_OP
 

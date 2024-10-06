@@ -177,21 +177,30 @@ fifo # (
 	.almost_full(input_fifo_almost_full)
 );
 
+// Reverse the data bytes before sending to reduction FIFO
+wire [DATAW-1:0] reversed_fifo_idata;
+genvar byte_idx;
+for (byte_idx = 0; byte_idx < DATAW/BYTEW; byte_idx = byte_idx + 1) begin : reverse_bytes_fifo
+    assign reversed_fifo_idata[(8 * (DATAW/BYTEW - 1 - byte_idx)) +: 8] =
+        reduction_fifo_idata[(8 * byte_idx) +: 8];
+end
+
 // FIFO for accumulation vectors sent to the MVM
-fifo # (
-	.DATAW(DATAW),
-	.DEPTH(FIFOD)
+fifo #(
+    .DATAW(DATAW),
+    .DEPTH(FIFOD)
 ) reduction_fifo (
-	.clk(clk),
-	.rst(rst),
-	.push(reduction_fifo_push),
-	.idata(reduction_fifo_idata),
-	.pop(reduction_fifo_pop),
-	.odata(reduction_fifo_odata),
-	.empty(reduction_fifo_empty),
-	.full(reduction_fifo_full),
-	.almost_full(reduction_fifo_almost_full)
+    .clk(clk),
+    .rst(rst),
+    .push(reduction_fifo_push),
+    .idata(reversed_fifo_idata), // Use the reversed data here
+    .pop(reduction_fifo_pop),
+    .odata(reduction_fifo_odata),
+    .empty(reduction_fifo_empty),
+    .full(reduction_fifo_full),
+    .almost_full(reduction_fifo_almost_full)
 );
+
 
 // Pipeline to pass release_dest and release_op alongside datapath
 pipeline # (

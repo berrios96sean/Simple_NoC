@@ -41,6 +41,7 @@ add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/m
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/reduction_fifo_full}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/reduction_fifo_empty}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/reduction_fifo_idata}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/reduction_fifo_odata}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_rdata}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_waddr}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[1]/NUM_COLUMNS[0]/genblk1/genblk1/mvm_inst/rf_wdata}
@@ -72,7 +73,7 @@ add wave -noupdate {/mlp_noc_tb/top/axis_in_tdata[0][1]}
 add wave -noupdate {/mlp_noc_tb/top/axis_in_tdata[1][0]}
 add wave -noupdate {/mlp_noc_tb/top/axis_in_tdata[1][1]}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {2335000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {852708 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 485
 configure wave -valuecolwidth 100
@@ -88,4 +89,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {2124280 ps} {2323831 ps}
+WaveRestoreZoom {0 ps} {3314629 ps}
