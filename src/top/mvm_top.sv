@@ -148,7 +148,18 @@ module mvm_top (
                 if (!(i == 0 && j == 0) && !(i == 1 && j == 1)) begin  // Skip [0][0]
 
                     if (i != ROWS-1 || j != COLUMNS-1) begin
+
+                        // Define a wire for the inverted data
+                        logic [DATAW-1:0] axis_tx_tdata_inverted;
                         
+                        // Reverse the data bytes
+                        genvar byte_idx;
+                        for (byte_idx = 0; byte_idx < NUM_BYTES; byte_idx = byte_idx + 1) begin : byte_reverse
+                            assign axis_in_tdata[i][j][(8 * (NUM_BYTES - 1 - byte_idx)) +: 8] = 
+                                axis_tx_tdata_inverted[(8 * byte_idx) +: 8];
+                        end
+
+
                         rtl_mvm #(
                             .DATAW(DATAW),
                             .BYTEW(BYTEW),
@@ -180,7 +191,7 @@ module mvm_top (
                             .axis_rx_tlast(axis_out_tlast[i][j]),
                             .axis_rx_tready(axis_out_tready[i][j]),
                             .axis_tx_tvalid(axis_in_tvalid[i][j]),
-                            .axis_tx_tdata(axis_in_tdata[i][j][DATAW-1:0]),
+                            .axis_tx_tdata(axis_tx_tdata_inverted), // Assign the inverted data here
                             .axis_tx_tdest(axis_in_tdest[i][j]),
                             .axis_tx_tuser(axis_in_tuser[i][j]),
                             .axis_tx_tlast(axis_in_tlast[i][j]),

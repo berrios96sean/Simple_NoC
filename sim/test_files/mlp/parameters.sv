@@ -16,6 +16,8 @@ parameter int OPRECISION = 32;
 parameter int LANES = DATAW / IPRECISION;
 parameter int USERW = LANES + 11; // Lanes = # RF weigts for each MVM
                                   // + 11 for user operations 10:0
+
+parameter int NUM_BYTES = DATAW / BYTEW;
 parameter int DPES = LANES;
 parameter int NODES = 512;
 parameter int NODESW = $clog2(NODES);

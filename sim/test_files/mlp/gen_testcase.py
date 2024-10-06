@@ -8,6 +8,7 @@ import numpy as np
 native_dim = 64
 num_test_inputs = 1
 num_noc_routers = 16
+mvm_routers = 2
 
 if ('-h' in sys.argv or '--help' in sys.argv):
   print('python gen_testcase.py <num_layers> <input_dim> [<hidden_dims>] [<mvms_per_layer>]')
@@ -97,12 +98,12 @@ for l in range(num_layers):
   padded_weights[l][:hidden_dims[l], :layer_input_dim] = np.random.randint(-2, 2, size=(hidden_dims[l], layer_input_dim))
 
 # Prepare weight MIFs directory
-if(not(os.path.exists('./weight_mifs'))):
-  os.mkdir('weight_mifs')
-else:
-  files = glob.glob('weight_mifs/*.mif')
-  for file in files:
-    os.remove(file)
+# if(not(os.path.exists('./weight_mifs'))):
+#   os.mkdir('weight_mifs')
+# else:
+#   files = glob.glob('weight_mifs/*.mif')
+#   for file in files:
+#     os.remove(file)
 
 # Write weight MIFs
 # for l in range(num_layers):
@@ -133,46 +134,47 @@ else:
 
 # Write weight MIFs in hexadecimal format
 for l in range(num_layers):
-  layer_mvms = num_mvms[l]
-  mvm_idx = 0
-  limx = int(padded_weights[l].shape[1] / native_dim)
-  limy = int(padded_weights[l].shape[0] / native_dim)
+    layer_mvms = num_mvms[l]
+    mvm_idx = 0
+    limx = int(padded_weights[l].shape[1] / native_dim)
+    limy = int(padded_weights[l].shape[0] / native_dim)
 
-  for m in range(layer_mvms):
-    # Open a single MIF file for each MVM
-    with open('weight_mifs/layer'+str(l)+'_mvm'+str(m)+'.mif', 'w') as mif_file:
-      for i in range(limx):
-        for j in range(limy):
-          for d in range(native_dim):
-            # Write all dot products for this MVM to the same file in hexadecimal
-            for e in range(native_dim):
-              # Convert to hexadecimal, remove '0x', and format with 2 digits
-              hex_value = format(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e], '02x')
-              mif_file.write(hex_value + ' ')
-            mif_file.write('\n')
-    # Move to the next MVM
-    if mvm_idx == layer_mvms - 1:
-      mvm_idx = 0
-    else:
-      mvm_idx += 1
+    for m in range(layer_mvms):
+        # Open a single MIF file for each MVM
+        with open('layer'+str(l)+'_mvm'+str(m)+'.mif', 'w') as mif_file:
+            for i in range(limx):
+                for j in range(limy):
+                    for d in range(native_dim):
+                        # Write all dot products for this MVM to the same file in decimal format
+                        for e in range(native_dim):
+                            # Convert to decimal and format with a space
+                            decimal_value = str(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e])
+                            mif_file.write(decimal_value + ' ')
+                        mif_file.write('\n')
+        # Move to the next MVM
+        if mvm_idx == layer_mvms - 1:
+            mvm_idx = 0
+        else:
+            mvm_idx += 1
 
 
-# Prepare instruction MIFs directory
-if(not(os.path.exists('./inst_mifs'))):
-  os.mkdir('inst_mifs')
-else:
-  files = glob.glob('inst_mifs/*.mif')
-  for file in files:
-    os.remove(file)
+
+# # Prepare instruction MIFs directory
+# if(not(os.path.exists('./inst_mifs'))):
+#   os.mkdir('inst_mifs')
+# else:
+#   files = glob.glob('inst_mifs/*.mif')
+#   for file in files:
+#     os.remove(file)
 
 # Generate instruction MIFs
-# release_op, release_dest, rf_raddr, accum_raddr, last, release, accum_en, reduce
+#release_op, release_dest, rf_raddr, accum_raddr, last, release, accum_en, reduce
 for l in range(num_layers):
   layer_mvms = num_mvms[l]
   limx = int(padded_weights[l].shape[1] / native_dim / layer_mvms)
   limy = int(padded_weights[l].shape[0] / native_dim)
   for m in range(layer_mvms):
-    inst_mif = open('inst_mifs/layer'+str(l)+'_mvm'+str(m)+'.mif', 'w')
+    inst_mif = open('inst_layer'+str(l)+'_mvm'+str(m)+'.mif', 'w')
     for i in range(limx):
       for j in range(limy):
         # release_op
@@ -219,13 +221,13 @@ for l in range(num_layers):
           inst_mif.write('1\n')
     inst_mif.close()
 
-# Prepare input MIFs directory
-if(not(os.path.exists('./input_mifs'))):
-  os.mkdir('input_mifs')
-else:
-  files = glob.glob('input_mifs/*.mif')
-  for file in files:
-    os.remove(file)
+# # Prepare input MIFs directory
+# if(not(os.path.exists('./input_mifs'))):
+#   os.mkdir('input_mifs')
+# else:
+#   files = glob.glob('input_mifs/*.mif')
+#   for file in files:
+#     os.remove(file)
 
 # Generate test input MIFs
 padded_input_dim = int(math.ceil(input_dim * 1.0 / native_dim / num_mvms[0]) * native_dim * num_mvms[0])
@@ -233,7 +235,7 @@ test_inputs = np.zeros(shape=(num_test_inputs, padded_input_dim), dtype=int)
 test_inputs[:, :input_dim] = np.random.randint(-2, 2, size=(num_test_inputs, input_dim))
 input_files = []
 for i in range(num_mvms[0]):
-  input_files.append(open('input_mifs/inputs_mvm' + str(i) + '.mif', 'w'))
+  input_files.append(open('inputs_mvm' + str(i) + '.mif', 'w'))
 for i in range(num_test_inputs):
   for c in range(int(padded_input_dim / native_dim)):
     for e in range(native_dim):

@@ -45,3 +45,7 @@ venv
 sim/test_files/mvm_test/*.in
 sim/test_files/mvm_test/input_vec.in
 sim/test_files/mvm_test/rf_weights.in
+sim/test_files/*.clks
+sim/test_files/*.place
+sim/test_files/mlp/*.mif
+sim/test_files/mlp/*.in
