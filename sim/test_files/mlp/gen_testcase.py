@@ -133,16 +133,57 @@ for l in range(num_layers):
 #       mif.close()
 
 # Write weight MIFs in hexadecimal format
+# for l in range(num_layers):
+#     layer_mvms = num_mvms[l]
+#     print(layer_mvms)
+#     mvm_idx = 0
+#     limx = int(padded_weights[l].shape[1] / native_dim)
+#     limy = int(padded_weights[l].shape[0] / native_dim)
+
+#     # Number of tiles to be allocated per MVM in x and y direction
+#     tiles_per_mvm_x = limx // layer_mvms
+#     tiles_per_mvm_y = limy // layer_mvms
+
+#     for m in range(layer_mvms):
+#         # Open a single MIF file for each MVM
+#         with open('layer'+str(l)+'_mvm'+str(m)+'.mif', 'w') as mif_file:
+#             for i in range(limx):
+#                 for j in range(limy):
+#                     for d in range(native_dim):
+#                         # Write all dot products for this MVM to the same file in decimal format
+#                         for e in range(native_dim):
+#                             # Convert to decimal and format with a space
+#                             decimal_value = str(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e])
+#                             mif_file.write(decimal_value + ' ')
+#                         mif_file.write('\n')
+#         # Move to the next MVM
+#         if m == layer_mvms - 1:
+#             m = 0
+#         else:
+#             m += 1
+
+# Write weight MIFs in hexadecimal format
 for l in range(num_layers):
     layer_mvms = num_mvms[l]
+    print(layer_mvms)
     mvm_idx = 0
     limx = int(padded_weights[l].shape[1] / native_dim)
     limy = int(padded_weights[l].shape[0] / native_dim)
 
+    # Number of tiles to be allocated per MVM in x and y direction
+    tiles_per_mvm_x = limx // layer_mvms
+    tiles_per_mvm_y = limy // layer_mvms
+
+    rows_per_mvm = limx // layer_mvms  # Calculate how many rows each MVM should handle
+
     for m in range(layer_mvms):
         # Open a single MIF file for each MVM
-        with open('layer'+str(l)+'_mvm'+str(m)+'.mif', 'w') as mif_file:
-            for i in range(limx):
+        with open(f'layer{l}_mvm{m}.mif', 'w') as mif_file:
+            start_row = m * rows_per_mvm  # Determine the starting row for this MVM
+            end_row = (m + 1) * rows_per_mvm  # Determine the ending row for this MVM
+            
+            # Loop through the specific rows assigned to this MVM
+            for i in range(start_row, end_row):
                 for j in range(limy):
                     for d in range(native_dim):
                         # Write all dot products for this MVM to the same file in decimal format
@@ -151,12 +192,6 @@ for l in range(num_layers):
                             decimal_value = str(padded_weights[l][(j * native_dim) + d][(i * native_dim) + e])
                             mif_file.write(decimal_value + ' ')
                         mif_file.write('\n')
-        # Move to the next MVM
-        if mvm_idx == layer_mvms - 1:
-            mvm_idx = 0
-        else:
-            mvm_idx += 1
-
 
 
 # # Prepare instruction MIFs directory
