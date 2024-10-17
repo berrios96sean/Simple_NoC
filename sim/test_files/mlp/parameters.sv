@@ -32,6 +32,13 @@ parameter int FIFOD = 64;
 parameter int DATAPATH_DELAY = 12;
 parameter int USE_RELU = 1;
 
+parameter int INPUT_SIZE = 128;
+parameter int NUM_INSTRUCTIONS = 1;
+parameter int NUM_LAYERS = 2;
+parameter int LAYER_DIMENSION[NUM_LAYERS] = '{256,64};
+parameter int NUM_MVMS[NUM_LAYERS] = '{1,1};
+parameter int DEST_ROUTERS[2] = '{1,2};
+
 // Mesh Parameters
 // 4x4 Mesh is verified but exceeds intel recommended design size
 // this causes the simulation to finish extremely slowly. For testing 
@@ -42,6 +49,15 @@ parameter int TDATAW       = DATAW + USERW;
 parameter int TIDW         = 4;
 parameter int TDESTW       = 12;
 parameter int NUM_PACKETS  = 1;
+
+// Number of available routers
+parameter int NUM_ROUTERS = 2;
+
+// Array of router addresses
+parameter [11:0] router_list [0:NUM_ROUTERS-1] = '{
+    12'h001,
+    12'h002
+};
 
 // Directories
 localparam string ROUTING_TABLES_DIR = 

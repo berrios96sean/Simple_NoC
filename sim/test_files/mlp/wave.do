@@ -1,8 +1,26 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/inst_accum_en}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/inst_reduce}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/reduction_fifo_idata}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/reduction_fifo_full}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/reduction_fifo_empty}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/reduction_fifo_idata}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/reduction_fifo_odata}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rr_input_operands}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/i_dataa}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/i_datab}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/dpe_result}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/o_result}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_result}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_valid}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/o_valid}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_datac}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_rdata}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rr_reduction_operands}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rr_inst_reduce}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rr_inst_accum_en}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rr_inst_accum_raddr}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_rdata}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_waddr}
 add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/rf_wdata}
@@ -72,10 +90,37 @@ add wave -noupdate {/mlp_noc_tb/top/axis_in_tdata[0][0]}
 add wave -noupdate {/mlp_noc_tb/top/axis_in_tdata[0][1]}
 add wave -noupdate {/mlp_noc_tb/top/axis_in_tdata[1][0]}
 add wave -noupdate {/mlp_noc_tb/top/axis_in_tdata[1][1]}
+add wave -noupdate /mlp_noc_tb/last_rf_addr_used
+add wave -noupdate /mlp_noc_tb/data_word
+add wave -noupdate /mlp_noc_tb/start_dest_s
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[62]/datapath_inst/dpe_result}
+add wave -noupdate -divider ACCUM
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/accum_mem_waddr}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/accum_mem_wdata}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/accum_mem_wdata}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/accum_mem_rdata}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/i_valid}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/i_data}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/i_addr}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/i_accum}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/r_accum}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/rr_accum}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/r_valid}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/rr_valid}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/rrr_valid}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/r_last}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/rr_last}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/r_addr}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/rr_addr}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/r_data}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/rr_data}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/r_result}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/o_valid}
+add wave -noupdate {/mlp_noc_tb/top/NUM_ROWS[0]/NUM_COLUMNS[1]/genblk1/genblk1/mvm_inst/generate_datapath[63]/datapath_inst/accum_inst/o_result}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {852708 ps} 0}
+WaveRestoreCursors {{Cursor 1} {4264062 ps} 0}
 quietly wave cursor active 1
-configure wave -namecolwidth 485
+configure wave -namecolwidth 583
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -89,4 +134,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {3314629 ps}
+WaveRestoreZoom {3946872 ps} {4603128 ps}

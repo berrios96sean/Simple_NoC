@@ -124,12 +124,12 @@ module mvm_top (
     ) axis_passthrough_inst2 (
         .CLK(CLK),
         .RST_N(RST_N),
-        .AXIS_S_TVALID(axis_out_tvalid [1][1]),
-        .AXIS_S_TREADY(axis_out_tready [1][1]),
-        .AXIS_S_TDATA (axis_out_tdata  [1][1]),
-        .AXIS_S_TLAST (axis_out_tlast  [1][1]),
-        // .AXIS_S_TUSER (axis_out_tuser  [1][1]),
-        .AXIS_S_TDEST (axis_out_tdest  [1][1]),
+        .AXIS_S_TVALID(axis_out_tvalid [ROWS-1][COLUMNS-1]),
+        .AXIS_S_TREADY(axis_out_tready [ROWS-1][COLUMNS-1]),
+        .AXIS_S_TDATA (axis_out_tdata  [ROWS-1][COLUMNS-1]),
+        .AXIS_S_TLAST (axis_out_tlast  [ROWS-1][COLUMNS-1]),
+        //.AXIS_S_TUSER (axis_out_tuser  [ROWS-1][COLUMNS-1]),
+        .AXIS_S_TDEST (axis_out_tdest  [ROWS-1][COLUMNS-1]),
         .AXIS_M_TVALID(AXIS_M_TVALID),
         .AXIS_M_TREADY(AXIS_M_TREADY),
         .AXIS_M_TDATA (AXIS_M_TDATA),
@@ -145,7 +145,7 @@ module mvm_top (
             for (j = 0; j < COLUMNS; j = j + 1) begin : NUM_COLUMNS
 
                 // Skipping [1][1] for now to use a passthrough block
-                if (!(i == 0 && j == 0) && !(i == 1 && j == 1)) begin  // Skip [0][0]
+                if (!(i == 0 && j == 0)) begin  // Skip [0][0]
 
                     if (i != ROWS-1 || j != COLUMNS-1) begin
 
@@ -198,47 +198,7 @@ module mvm_top (
                             .axis_tx_tready(axis_in_tready[i][j])
                         );
 
-                    end else begin
-
-                        rtl_mvm #(
-                            .DATAW(DATAW),
-                            .BYTEW(BYTEW),
-                            .IDW(IDW),
-                            .DESTW(DESTW),
-                            .USERW(USERW),
-                            .IPRECISION(8),
-                            .OPRECISION(32),
-                            .LANES(DATAW / IPRECISION),
-                            .DPES(LANES),
-                            .NODES(512),
-                            .NODESW($clog2(NODES)),
-                            .RFDEPTH(512),
-                            .RFADDRW($clog2(RFDEPTH)),
-                            .INSTW(1 + NODESW + 2 * RFADDRW + 4),
-                            .INSTD(512),
-                            .INSTADDRW($clog2(INSTD)),
-                            .AXIS_OPS(4),
-                            .AXIS_OPSW($clog2(AXIS_OPS)),
-                            .FIFOD(64),
-                            .DATAPATH_DELAY(2)
-                        ) mvm_inst (
-                            .clk(CLK),
-                            .rst(~RST_N),
-                            .axis_rx_tvalid(axis_out_tvalid[i][j]),
-                            .axis_rx_tdata(axis_out_tdata[i][j][DATAW-1:0]),
-                            .axis_rx_tdest(axis_out_tdest[i][j]),
-                            .axis_rx_tuser(axis_out_tuser[i][j]),
-                            .axis_rx_tlast(axis_out_tlast[i][j]),
-                            .axis_rx_tready(axis_out_tready[i][j]),
-                            .axis_tx_tvalid(AXIS_M_TVALID),
-                            .axis_tx_tdata(AXIS_M_TDATA[DATAW-1:0]),
-                            .axis_tx_tdest(AXIS_M_TDEST),
-                            .axis_tx_tuser(AXIS_M_TUSER),
-                            .axis_tx_tlast(AXIS_M_TLAST),
-                            .axis_tx_tready(AXIS_M_TREADY)
-                        );
-                        
-                    end
+                    end 
                 end
             end
         end

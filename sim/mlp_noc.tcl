@@ -54,7 +54,7 @@ close $file_id
 #
 
 vlog +acc $QSYS_SIMDIR/testbench/mlp_noc_tb.sv \
-    $QSYS_SIMDIR/parameters.sv \
+    $QSYS_SIMDIR/test_files/mlp/parameters.sv \
     $QSYS_SIMDIR/../src/axis/axis_passthrough.sv \
     $QSYS_SIMDIR/../src/mvm/*v \
     $QSYS_SIMDIR/../src/noc/*sv \
