@@ -47,12 +47,28 @@ module datapath # (
 );
 
 localparam DPE_LATENCY = 8;
-localparam ACCUM_LATENCY = 3;
+localparam ACCUM_LATENCY = 2;
 
 wire dpe_valid, dpe_accum, dpe_last, accum_valid, accum_reduce;
+wire dpe_valid_delayed, dpe_accum_delayed, dpe_last_delayed;
 wire [OPREC-1:0] dpe_result, accum_result;
+wire [OPREC-1:0] dpe_result_delayed;
 wire [IPREC-1:0] accum_datac;
 wire [ADDRW-1:0] dpe_accum_addr;
+wire [ADDRW-1:0] dpe_accum_addr_delayed;
+
+reg [7:0] valid_counter;  // Counter to track the number of valid signals
+wire      v_count_rst;
+
+// Counter logic
+always @(posedge clk or posedge rst) begin
+	if (v_count_rst || rst) begin
+		valid_counter <= 8'd0;
+	end else if (i_valid) begin
+		valid_counter <= valid_counter + 8'd1;
+	end
+end
+
 
 pipeline # (
 	.DELAY(DPE_LATENCY),
@@ -100,7 +116,9 @@ accum # (
 	.i_addr(dpe_accum_addr),
 	.i_accum(dpe_accum),
 	.i_last(dpe_last),
+	.num_valids(valid_counter),
 	.o_valid(accum_valid),
+	.v_count_rst(v_count_rst),
 	.o_result(accum_result)
 );
 
