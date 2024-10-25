@@ -166,7 +166,7 @@ module mvm_top (
                             .AXIS_OPS(4),
                             .AXIS_OPSW($clog2(AXIS_OPS)),
                             .FIFOD(64),
-                            .DATAPATH_DELAY(12)
+                            .DATAPATH_DELAY(25)
                         ) mvm_inst (
                             .clk(CLK),
                             .rst(~RST_N),

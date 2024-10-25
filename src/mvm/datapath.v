@@ -49,9 +49,9 @@ module datapath # (
 localparam DPE_LATENCY = 8;
 localparam ACCUM_LATENCY = 2;
 
-wire dpe_valid, dpe_accum, dpe_last, accum_valid, accum_reduce;
+wire dpe_valid, dpe_accum, dpe_last, accum_valid, accum_valid_r, accum_reduce;
 wire dpe_valid_delayed, dpe_accum_delayed, dpe_last_delayed;
-wire [OPREC-1:0] dpe_result, accum_result;
+wire [OPREC-1:0] dpe_result, accum_result, accum_result_r;
 wire [OPREC-1:0] dpe_result_delayed;
 wire [IPREC-1:0] accum_datac;
 wire [ADDRW-1:0] dpe_accum_addr;
@@ -81,7 +81,7 @@ pipeline # (
 );
 
 pipeline # (
-	.DELAY(DPE_LATENCY+ACCUM_LATENCY),
+	.DELAY(DPE_LATENCY+ACCUM_LATENCY+2),
 	.WIDTH(IPREC+1)
 ) accum_pipeline (
 	.clk(clk),
@@ -122,14 +122,24 @@ accum # (
 	.o_result(accum_result)
 );
 
+pipeline # (
+	.DELAY(ACCUM_LATENCY),
+	.WIDTH(OPREC+1)
+) accum_pipeline2 (
+	.clk(clk),
+	.rst(rst),
+	.data_in({accum_result, accum_valid}),
+	.data_out({accum_result_r, accum_valid_r})
+);
+
 reduce # (
 	.IPREC(IPREC),
 	.OPREC(OPREC)
 ) reduce_inst (
 	.clk(clk),
 	.rst(rst),
-	.i_valid(accum_valid),
-	.i_dataa(accum_result),
+	.i_valid(accum_valid_r),
+	.i_dataa(accum_result_r),
 	.i_datab(accum_datac),
 	.i_reduce(accum_reduce),
 	.o_valid(o_valid),
